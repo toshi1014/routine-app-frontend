@@ -7,10 +7,13 @@ import {
     CardContent,
     CardActions,
     Card,
+    CardHeader,
     Button,
     Box,
-    Container,
 } from "@mui/material";
+import IconButton from '@mui/material/IconButton';
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ShareIcon from "@mui/icons-material/Share";
 
 
 // TEMP:
@@ -22,52 +25,101 @@ const hashtagList = [
     "fishing",
     "hoby",
 ];
+const routineElementList: Array<RoutineElement> = [
+    {
+        title: "Go to fishing shops",
+        subtitle: "Why not?",
+        desc: "Firstly, ...",
+    },
+    {
+        title: "Buy goods",
+        subtitle: "e.g. hooks, rots",
+        desc: "I recommend you to ..."
+    },
+    {
+        title: "Go to sea",
+        subtitle: "Beware the sunburn",
+        desc: "When you get..."
+    },
+]
+
+
+type RoutineElement = {
+    title: string;
+    subtitle: string;
+    desc: string;
+}
 
 
 function RoutineContents() {
     const avatarSize = 35;
 
-    const cardContent = (
-        <React.Fragment>
-            <CardContent>
-                Foo
-        </CardContent>
-            <CardActions>
-                <Button size="small">Learn More</Button>
-            </CardActions>
-        </React.Fragment>
+    const handleFavorite = () => {
+        console.log("Favorite");
+    }
+
+    const handleShare = () => {
+        console.log("Share");
+    }
+
+    const header = (
+        <Box ml={3}>
+            <h1>{title}</h1>
+            <h3>{desc}</h3>
+
+            <Stack direction="row">
+                <Avatar
+                    alt="Smiley"
+                    src="static/demo/face.jpg"
+                    sx={{ width: avatarSize, height: avatarSize }}
+                />
+                <h3>{contributor}</h3>
+            </Stack>
+
+            <Stack direction="row">
+                {hashtagList.map((hashtag: string) =>
+                    <Chip clickable label={"# " + hashtag} />
+                )}
+            </Stack>
+
+            <h4>last updated: {lastUpdated}</h4>
+
+            <Stack direction="row">
+                <IconButton onClick={handleFavorite}>
+                    <FavoriteIcon />
+                </IconButton>
+                <IconButton onClick={handleShare}>
+                    <ShareIcon />
+                </IconButton>
+            </Stack>
+        </Box >
     );
 
 
     return (
         <div>
-            <div>
+            <Stack spacing={3}>
                 <Paper>
-                    <h1>{title}</h1>
-                    <h3>{desc}</h3>
-                    <Stack direction="row">
-                        <Avatar
-                            alt="Smiley"
-                            src="static/demo/face.jpg"
-                            sx={{ width: avatarSize, height: avatarSize }}
-                        />
-                        <h3>{contributor}</h3>
-                    </Stack>
-
-                    <Stack direction="row">
-                        {hashtagList.map((hashtag: string) =>
-                            <Chip label={"# " + hashtag} />
-                        )}
-                    </Stack>
-
-                    <h4>last updated: {lastUpdated}</h4>
+                    {header}
                 </Paper>
-            </div>
-            
-            <Box sx={{ minWidth: 275 }}>
-                <Card variant="outlined">{cardContent}</Card>
-            </Box>
 
+                <Stack direction="column" spacing={1}>
+                    {routineElementList.map((routineElement: RoutineElement, idx: number) =>
+                        <Card>
+                            <CardHeader
+                                title={(idx + 1) + ". " + routineElement.title}
+                                subheader={routineElement.subtitle}
+                            />
+                            <CardContent>
+                                {routineElement.desc}
+                            </CardContent>
+                            <CardActions>
+                                <Button size="small">Learn More</Button>
+                            </CardActions>
+                        </Card>
+                    )}
+                </Stack>
+            </Stack>
         </div>
     );
 }
