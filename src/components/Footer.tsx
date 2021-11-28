@@ -34,73 +34,68 @@ function Footer() {
         <div>
             <Grid
                 container
-                direction="row"
+                direction="column"
                 justifyContent="center"
                 alignItems="center"
+                spacing="20px"
             >
-                <img
-                    src={logoFilename}
-                    width={logoSize}
-                    height={logoSize}
-                    alt="logo"
-                />
-                <h2>Foo</h2>
-            </Grid>
-
-            <Grid
-                container
-                direction="row"
-                justifyContent="center"
-                alignItems="center"
-            >
-                <div>
-                    <Stack direction="row" spacing={6}>
-                        <Link
-                            to="/"
-                            style={{
-                                textDecoration: "none"
-                            }}
-                        >
-                            Top
-                        </Link>
-                        <Link
-                            to="/routine_contents"
-                            style={{
-                                textDecoration: "none"
-                            }}
-                        >
-                            RoutineContents
-                        </Link>
+                <Grid item>
+                    <Stack direction="row" spacing={3}>
+                        <img
+                            src={logoFilename}
+                            width={logoSize}
+                            height={logoSize}
+                            alt="logo"
+                        />
+                        <h2>Foo</h2>
                     </Stack>
-                </div>
-            </Grid>
+                </Grid>
 
-            <Grid
-                container
-                direction="row"
-                justifyContent="center"
-                alignItems="center"
-            >
-                <Stack direction="row" spacing={2}>
-                    <IconButton onClick={handleFacebook}>
-                        <Facebookicon />
-                    </IconButton>
-                    <IconButton onClick={handleTwitter}>
-                        <Twitter />
-                    </IconButton>
-                    <IconButton onClick={handleInstagram}>
-                        <Instagram />
-                    </IconButton>
-                </Stack>
-            </Grid>
+                <Grid item>
+                    <div>
+                        <Stack direction="row" spacing={6}>
+                            <Link
+                                to="/"
+                                style={{
+                                    textDecoration: "none"
+                                }}
+                            >
+                                Top
+                        </Link>
+                            <Link
+                                to="/routine_contents"
+                                style={{
+                                    textDecoration: "none"
+                                }}
+                            >
+                                RoutineContents
+                        </Link>
+                        </Stack>
+                    </div>
+                </Grid>
 
-            <Box
-                sx={{
-                    textAlign: "center",
-                }}
-            >
-                <h5 style={{ color: "gray" }}>{copyright}</h5>
-            </Box>
+                <Grid item>
+                    <Stack direction="row" spacing={2}>
+                        <IconButton onClick={handleFacebook}>
+                            <Facebookicon />
+                        </IconButton>
+                        <IconButton onClick={handleTwitter}>
+                            <Twitter />
+                        </IconButton>
+                        <IconButton onClick={handleInstagram}>
+                            <Instagram />
+                        </IconButton>
+                    </Stack>
+                </Grid>
+
+                <Box
+                    sx={{
+                        textAlign: "center",
+                    }}
+                >
+                    <h5 style={{ color: "gray" }}>{copyright}</h5>
+                </Box>
+            </Grid>
         </div>
     );
 }
