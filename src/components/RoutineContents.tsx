@@ -70,6 +70,10 @@ function RoutineContents() {
         console.log("Share");
     }
 
+    const hashtagChipList = hashtagList.map((hashtag: string) =>
+        <Chip clickable label={"# " + hashtag} />
+    );
+
     const header = (
         <Paper>
             <Box ml={3}>
@@ -81,9 +85,7 @@ function RoutineContents() {
                                 <h3>{desc}</h3>
 
                                 <Stack direction="row" spacing={1}>
-                                    {hashtagList.map((hashtag: string) =>
-                                        <Chip clickable label={"# " + hashtag} />
-                                    )}
+                                    {hashtagChipList}
                                 </Stack>
 
                             </Grid>
