@@ -1,7 +1,7 @@
 import React from 'react';
 import AliceCarousel from 'react-alice-carousel';
 import "react-alice-carousel/lib/alice-carousel.css";
-import { range } from "../utils";
+import { range } from "../utils/utils";
 
 function ImageSlider() {
     const slideImageNum = 3;

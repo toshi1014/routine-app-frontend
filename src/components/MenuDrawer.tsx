@@ -10,9 +10,9 @@ import {
     Card,
     CardContent,
     CardHeader,
+    CardActions,
     Avatar,
     Collapse,
-    CardActions,
 } from "@mui/material";
 import {
     styled,
@@ -29,13 +29,6 @@ const email = "john.smith@gmail.com";
 const userinfo = "foo";
 
 
-type Props = {
-    openMenuDrawer: boolean;
-    toggleMenuDrawer: () =>
-        (event: React.KeyboardEvent | React.MouseEvent) =>
-            void;
-}
-
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
 }
@@ -50,6 +43,13 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
         duration: theme.transitions.duration.shortest,
     }),
 }));
+
+type Props = {
+    openMenuDrawer: boolean;
+    toggleMenuDrawer: () =>
+        (event: React.KeyboardEvent | React.MouseEvent) =>
+            void;
+}
 
 
 function MenuDrawer(props: Props) {
