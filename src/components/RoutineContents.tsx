@@ -2,15 +2,19 @@ import React from 'react';
 import {
     Paper,
     Avatar,
+    Grid,
     Chip,
     Stack,
     CardContent,
     CardActions,
     Card,
+    Typography,
     CardHeader,
+    CardMedia,
     Button,
     Box,
     IconButton,
+    Container,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
@@ -18,7 +22,7 @@ import ShareIcon from "@mui/icons-material/Share";
 
 // TEMP:
 const title = "Fishing for Biginners";
-const desc = "This content tells you about...";
+const desc = "Firstly, Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a";
 const contributor = "John Smith";
 const lastUpdated = "2021, Jul 4";
 const hashtagList = [
@@ -29,17 +33,20 @@ const routineElementList: Array<RoutineElement> = [
     {
         title: "Go to fishing shops",
         subtitle: "Why not?",
-        desc: "Firstly, ...",
+        desc: "Firstly, Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a",
+        imagePath: "logo192.png",
     },
     {
         title: "Buy goods",
         subtitle: "e.g. hooks, rots",
-        desc: "I recommend you to ..."
+        desc: "I recommend you to ...",
+        imagePath: "logo192.png",
     },
     {
         title: "Go to sea",
         subtitle: "Beware the sunburn",
-        desc: "When you get..."
+        desc: "When you get...",
+        imagePath: "logo192.png",
     },
 ]
 
@@ -48,6 +55,7 @@ type RoutineElement = {
     title: string;
     subtitle: string;
     desc: string;
+    imagePath: string;
 }
 
 
@@ -63,59 +71,105 @@ function RoutineContents() {
     }
 
     const header = (
-        <Box ml={3}>
-            <h1>{title}</h1>
-            <h3>{desc}</h3>
+        <Paper>
+            <Box ml={3}>
+                <Grid container spacing={2} columns={10}>
+                    <Grid item xs={8}>
+                        <Grid container spacing={3} direction="column">
+                            <Grid item>
+                                <h1>{title}</h1>
+                                <h3>{desc}</h3>
 
-            <Stack direction="row">
-                <Avatar
-                    alt="Smiley"
-                    src="static/demo/face.jpg"
-                    sx={{ width: avatarSize, height: avatarSize }}
-                />
-                <h3>{contributor}</h3>
-            </Stack>
+                                <Stack direction="row" spacing={1}>
+                                    {hashtagList.map((hashtag: string) =>
+                                        <Chip clickable label={"# " + hashtag} />
+                                    )}
+                                </Stack>
 
-            <Stack direction="row">
-                {hashtagList.map((hashtag: string) =>
-                    <Chip clickable label={"# " + hashtag} />
-                )}
-            </Stack>
+                            </Grid>
+                            <Grid item>
+                                <Stack direction="row" spacing={1}>
+                                    <FavoriteIcon />
+                                    <h4>30</h4>
+                                </Stack>
+                            </Grid>
+                        </Grid>
+                    </Grid>
 
-            <h4>last updated: {lastUpdated}</h4>
+                    <Grid item xs={2}>
+                        <Paper variant="outlined">
+                            <Container>
+                                <Grid container spacing={2} direction="column">
+                                    <Grid item>
+                                        <Stack direction="row">
+                                            <Avatar
+                                                alt="Smiley"
+                                                src="static/demo/face.png"
+                                                sx={{ width: avatarSize, height: avatarSize }}
+                                            />
+                                            <h3>{contributor}</h3>
+                                        </Stack>
+                                        <Chip clickable variant="outlined" label="follow" />
+                                    </Grid>
 
-            <Stack direction="row">
-                <IconButton onClick={handleFavorite}>
-                    <FavoriteIcon />
-                </IconButton>
-                <IconButton onClick={handleShare}>
-                    <ShareIcon />
-                </IconButton>
-            </Stack>
-        </Box >
+                                    <Grid item>
+                                        <h4>last updated: {lastUpdated}</h4>
+                                    </Grid>
+
+                                    <Grid item>
+                                        <Stack direction="row">
+                                            <IconButton onClick={handleFavorite}>
+                                                <FavoriteIcon />
+                                            </IconButton>
+                                            <IconButton onClick={handleShare}>
+                                                <ShareIcon />
+                                            </IconButton>
+                                        </Stack>
+                                    </Grid>
+                                </Grid>
+                            </Container>
+                        </Paper>
+                    </Grid>
+                </Grid>
+            </Box >
+        </Paper>
     );
 
 
     return (
         <div>
             <Stack spacing={3}>
-                <Paper>
-                    {header}
-                </Paper>
+                {header}
 
                 <Stack direction="column" spacing={1}>
                     {routineElementList.map((routineElement: RoutineElement, idx: number) =>
-                        <Card>
-                            <CardHeader
-                                title={(idx + 1) + ". " + routineElement.title}
-                                subheader={routineElement.subtitle}
-                            />
-                            <CardContent>
-                                {routineElement.desc}
-                            </CardContent>
-                            <CardActions>
-                                <Button size="small">Learn More</Button>
-                            </CardActions>
+                        <Card variant="outlined">
+                            <Grid container spacing={2} columns={10}>
+                                <Grid item xs={8}>
+                                    <Card>
+                                        <CardHeader
+                                            title={(idx + 1) + ". " + routineElement.title}
+                                            subheader={routineElement.subtitle}
+                                        />
+                                        <CardContent>
+                                            <Typography paragraph>
+                                                {routineElement.desc}
+                                            </Typography>
+                                        </CardContent>
+                                        <CardActions>
+                                            <Button size="small">Learn More</Button>
+                                        </CardActions>
+                                    </Card>
+                                </Grid>
+
+                                <Grid item xs={1}>
+                                    <img
+                                        height="200"
+                                        src={routineElement.imagePath}
+                                        alt="img"
+                                    />
+                                </Grid>
+                            </Grid>
                         </Card>
                     )}
                 </Stack>
