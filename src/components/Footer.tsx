@@ -7,6 +7,7 @@ import {
     Box,
     Grid,
     IconButton,
+    Divider,
 } from "@mui/material";
 import Facebookicon from "@mui/icons-material/Facebook";
 import Twitter from "@mui/icons-material/Twitter";
@@ -32,6 +33,25 @@ function Footer() {
 
     return (
         <div>
+            <Box
+                component="div"
+                sx={{
+                    whiteSpace: 'nowrap',
+                    my: 10,
+                }}
+            >
+            </Box>
+
+            <Divider
+                sx={{
+                    m: 3
+                }}
+                orientation="horizontal"
+                textAlign="center"
+            >
+                Foo
+            </Divider>
+
             <Grid
                 container
                 direction="column"
@@ -96,7 +116,7 @@ function Footer() {
                     <h5 style={{ color: "gray" }}>{copyright}</h5>
                 </Box>
             </Grid>
-        </div>
+        </div >
     );
 }
 

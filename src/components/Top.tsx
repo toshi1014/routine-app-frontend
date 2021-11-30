@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import {
     Paper,
     Grid,
@@ -6,16 +6,27 @@ import {
     Stack,
     Container,
     Chip,
+    Button,
 } from "@mui/material";
+import AliceCarousel from 'react-alice-carousel';
+import "react-alice-carousel/lib/alice-carousel.css";
 import ImageSlider from './ImageSlider';
 import RoutinePack from './RoutinePack';
+import SearchBox from './SearchBox';
 import { range } from "../utils/utils";
+import useWindowSize from "../utils/useWindowSize";
+
 
 // TEMP:
 const hashtagList = [
     "fishing",
     "hoby",
+    "cooking",
+    "DIY",
+    "English",
+    "workout",
 ];
+const menuContentList = hashtagList;
 const contributor = "John Smith";
 const title = "Happy Coding";
 const desc = "Best Way to Create App, set aside off of the heat to let rest for 10 minutes, and then serve.";
@@ -25,6 +36,9 @@ const descStep1 = "Choose best computer for you, set aside off of the heat to le
 
 
 function Top() {
+    const [innerWidth, innerHeight] = useWindowSize();
+    const [searchBoxValue, setSearchBoxValue] = React.useState("");
+
     const polularHashtagChipList = hashtagList.map((hashtag: string) =>
         <Chip clickable label={"# " + hashtag} />
     );
@@ -32,13 +46,40 @@ function Top() {
     const polularRoutineList = range(0, 5).map((idx: number) =>
         <RoutinePack
             contributor={contributor}
-            title={title}
+            title={title + idx}
             desc={desc}
             lastUpdated={lastUpdated}
             titleStep1={titleStep1}
             descStep1={descStep1}
         />
     );
+
+    const handleSearchBox = (
+        event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+    ) => {
+        const input = event.target.value;
+        setSearchBoxValue(input);
+    }
+
+    // Menu
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const handleMenuClick = (
+        event: React.MouseEvent<HTMLButtonElement>
+    ) => {
+        setAnchorEl(event.currentTarget);
+    }
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    }
+    const handleMenuContentClick = (
+        event: React.MouseEvent<HTMLElement>,
+        idx: number
+    ) => {
+        setSearchBoxValue(menuContentList[idx]);
+        handleMenuClose();
+    }
+    // end; Menu
+
 
     return (
         <div>
@@ -54,6 +95,22 @@ function Top() {
                     </Paper>
                 </Grid>
 
+
+                <Grid item>
+                    <CardContent>
+                        <h1>Find Routines</h1>
+                        <SearchBox
+                            anchorEl={anchorEl}
+                            searchBoxValue={searchBoxValue}
+                            onChange={handleSearchBox}
+                            menuContents={menuContentList}
+                            handleMenuClick={handleMenuClick}
+                            handleMenuClose={handleMenuClose}
+                            handleMenuContentClick={handleMenuContentClick}
+                        />
+                    </CardContent>
+                </Grid>
+
                 <Grid item>
                     <CardContent>
                         <h2>Polular Hashtags</h2>
@@ -66,14 +123,25 @@ function Top() {
                 <Grid item>
                     <CardContent>
                         <h2>Polular Routines</h2>
-                        <Stack direction="row" spacing={1}>
-                            {polularRoutineList}
-                        </Stack>
                     </CardContent>
                 </Grid>
             </Grid>
+
+            <div>
+                <AliceCarousel
+                    mouseTracking
+                    items={polularRoutineList}
+                    autoPlay={false}
+                    animationDuration={400}
+                    disableButtonsControls={true}
+                    disableDotsControls={true}
+                    paddingLeft={50}
+                    paddingRight={innerWidth - 450}
+                />
+            </div>
         </div>
     );
 }
 
 export default Top;
+
