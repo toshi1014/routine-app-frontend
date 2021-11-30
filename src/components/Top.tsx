@@ -20,7 +20,7 @@ import useWindowSize from "../utils/useWindowSize";
 // TEMP:
 const hashtagList = [
     "fishing",
-    "hoby",
+    "hobby",
     "cooking",
     "DIY",
     "English",
