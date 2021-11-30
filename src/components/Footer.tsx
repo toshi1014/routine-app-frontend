@@ -81,7 +81,7 @@ function Footer() {
                                 }}
                             >
                                 Top
-                        </Link>
+                            </Link>
                             <Link
                                 to="/routine_contents"
                                 style={{
@@ -89,7 +89,15 @@ function Footer() {
                                 }}
                             >
                                 RoutineContents
-                        </Link>
+                            </Link>
+                            <Link
+                                to="/search_results"
+                                style={{
+                                    textDecoration: "none"
+                                }}
+                            >
+                                SearchResults
+                            </Link>
                         </Stack>
                     </div>
                 </Grid>

@@ -12,6 +12,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Top from "./components/Top";
 import RoutineContents from "./components/RoutineContents";
+import SearchResults from "./components/SearchResults";
 
 
 const theme = createTheme({
@@ -35,6 +36,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Top />} />
                     <Route path="/routine_contents" element={<RoutineContents />} />
+                    <Route path="/search_results" element={<SearchResults />} />
                 </Routes>
                 <Footer />
             </BrowserRouter>
