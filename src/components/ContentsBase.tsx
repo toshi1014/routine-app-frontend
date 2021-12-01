@@ -31,6 +31,7 @@ type Props = {
     hashtagChipList: any;        // TEMP: type any
     handleFavorite: () => void;
     handleShare: () => void;
+    uniqueCompHeader?: React.ReactElement;
     uniqueComp?: React.ReactElement;
 }
 
@@ -48,9 +49,16 @@ function ContentsBase(props: Props) {
                                 <h1>{props.routineHeader.title}</h1>
                                 <h3>{props.routineHeader.desc}</h3>
 
-                                <Stack direction="row" spacing={1}>
-                                    {props.hashtagChipList}
-                                </Stack>
+                                <Grid container direction="column" spacing={2}>
+                                    <Grid item>
+                                        <Stack direction="row" spacing={1}>
+                                            {props.hashtagChipList}
+                                        </Stack>
+                                    </Grid>
+                                    <Grid item>
+                                        {props.uniqueCompHeader}
+                                    </Grid>
+                                </Grid>
                             </Grid>
 
                             <Grid item>
@@ -122,7 +130,7 @@ function ContentsBase(props: Props) {
                     </Grid>
                 </Grid>
             </Box >
-        </Paper>
+        </Paper >
     );
 
     const contents = props.routineElementList.map(

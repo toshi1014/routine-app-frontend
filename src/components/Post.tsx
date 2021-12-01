@@ -7,7 +7,10 @@ import {
     Grid,
     Box,
     Button,
+    IconButton,
     CardContent,
+    Container,
+    InputBase,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -29,6 +32,11 @@ const contributor = username;
 const lastUpdated = "----, -- --";
 const hashtagList = <h1>b</h1>;
 
+
+type ChipData = {
+    key: number;
+    label: string;
+}
 
 function Post() {
     const title = (
@@ -129,13 +137,79 @@ function Post() {
         console.log("Share");
     }
 
-    // const hashtagChipList = hashtagList.map((hashtag: string) =>
-    //     <Chip clickable label={"# " + hashtag} />
-    // );
+    const [hashtagAddedList, setHashtagAddedList] =
+        React.useState<Array<ChipData>>([{ key: 0, label: "ShareYourRoutine" }]);
 
-    // React.useEffect(() => {
-    //     console.log(routineElementList[0].title);
-    // }, [routineElementList])
+    const handleAddHashtag = () => {
+        hashtagRef.value = hashtagRef.value.replace(/\s/g, '');
+        if (hashtagRef.value !== "") {
+            let hashtagAddedListTmp = hashtagAddedList;
+            if (hashtagAddedListTmp) {
+                hashtagAddedListTmp.push({
+                    key: hashtagAddedListTmp.length,
+                    label: hashtagRef.value
+                });
+            } else {
+                throw new Error;
+            }
+
+            setHashtagAddedList(hashtagAddedListTmp);
+            hashtagRef.value = "";
+            update();
+        }
+    }
+
+    const handleDeleteHashtag = (hashtag2bDeleted: ChipData) => () => {
+        setHashtagAddedList((chips) => chips.filter((chip) => chip.key !== hashtag2bDeleted.key));
+    }
+
+    let hashtagRef = {
+        value: ""
+    }
+
+    const hashtagChipList = hashtagAddedList.map((hashtagAdded: ChipData) =>
+        <Chip
+            label={"# " + hashtagAdded.label}
+            onDelete={handleDeleteHashtag(hashtagAdded)}
+            key={hashtagAdded.key}
+        />
+    );
+
+    const hashtagInput = (
+        <Chip
+            label={
+                <Stack direction="row">
+                    <Box sx={{ my: -10 }}>
+                        <></>
+                    </Box>
+
+                    <Box sx={{ my: 5 }}>
+                        <p>#</p>
+                    </Box>
+
+                    <Box sx={{ my: 5.9, mx: 1 }}>
+                        <InputBase
+                            sx={{
+                                width: 150,
+                                maxWidth: "200%"
+                            }}
+                            fullWidth
+                            inputRef={ref => { hashtagRef = ref; }}
+                        />
+                    </Box>
+                    <Box sx={{ my: 5.9 }}>
+                        <IconButton size="small" onClick={handleAddHashtag}>
+                            <AddIcon />
+                        </IconButton>
+                    </Box>
+                </Stack>
+            }
+        />
+    );
+
+    React.useEffect(() => {
+        console.log(routineElementList[0].title);
+    }, [routineElementList])
 
     const removeNullFromInput = (routineElementRefList: Array<RoutineElementRef>) => {
         let withoutNull: Array<RoutineElement> = [];
@@ -174,17 +248,19 @@ function Post() {
     };
 
     const handlePost = () => {
-        const routineElementsInputValue:Array<RoutineElement> = removeNullFromInput(routineElementRefList);
+        const routineElementsInputValue: Array<RoutineElement> = removeNullFromInput(routineElementRefList);
 
         console.log("============================")
         console.log("routineHeader")
         console.log("title:", routineHeaderRef.title.value);
         console.log("desc:", routineHeaderRef.desc.value);
+        console.log("hashtag:")
+        hashtagAddedList.map(hashtag =>console.log(hashtag.label));
         console.log("\nroutineElements")
 
-        for (let i=0; i < routineElementsInputValue.length; i++) {
+        for (let i = 0; i < routineElementsInputValue.length; i++) {
             const r = routineElementsInputValue[i];
-            console.log(i+1 + ".");
+            console.log(i + 1 + ".");
             console.log("title:", r.title);
             console.log("subtitle:", r.subtitle);
             console.log("desc:", r.desc);
@@ -294,9 +370,10 @@ function Post() {
         <ContentsBase
             routineHeader={routineHeaderInput}
             routineElementList={routineElementList}
-            hashtagChipList="aaa"
+            hashtagChipList={hashtagChipList}
             handleFavorite={handleFavorite}
             handleShare={handleShare}
+            uniqueCompHeader={hashtagInput}
             uniqueComp={submitButtonsComp}
         />
     );
