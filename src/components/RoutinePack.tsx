@@ -80,12 +80,10 @@ function RoutinePack(props: Props) {
                 />
 
                 <CardContent>
-                    <Typography variant="body2" color="text.secondary">
                         <TextWithLimitation
                             maxWidth={packMaxWidth}
                             text={props.desc}
                         />
-                    </Typography>
                 </CardContent>
 
                 <CardActions disableSpacing>

@@ -39,8 +39,8 @@ function Top() {
     const [innerWidth, innerHeight] = useWindowSize();
     const [searchBoxValue, setSearchBoxValue] = React.useState("");
 
-    const polularHashtagChipList = hashtagList.map((hashtag: string) =>
-        <Chip clickable label={"# " + hashtag} />
+    const polularHashtagChipList = hashtagList.map((hashtag: string, idx: number) =>
+        <Chip clickable label={"# " + hashtag} key={idx} />
     );
 
     const polularRoutineList = range(0, 5).map((idx: number) =>
@@ -51,6 +51,7 @@ function Top() {
             lastUpdated={lastUpdated}
             titleStep1={titleStep1}
             descStep1={descStep1}
+            key={idx}
         />
     );
 

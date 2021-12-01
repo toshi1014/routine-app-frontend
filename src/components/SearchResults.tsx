@@ -56,7 +56,7 @@ function SearchResults() {
     // end; Menu
 
     const resultList = range(0, 5).map((idx: number) =>
-        <Grid item>
+        <Grid item key={idx}>
             <RoutinePack
                 contributor={contributor}
                 title={title + idx}

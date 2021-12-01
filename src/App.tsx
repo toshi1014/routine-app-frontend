@@ -13,6 +13,7 @@ import Footer from "./components/Footer";
 import Top from "./components/Top";
 import RoutineContents from "./components/RoutineContents";
 import SearchResults from "./components/SearchResults";
+import Post from "./components/Post";
 
 
 const theme = createTheme({
@@ -37,6 +38,7 @@ function App() {
                     <Route path="/" element={<Top />} />
                     <Route path="/routine_contents" element={<RoutineContents />} />
                     <Route path="/search_results" element={<SearchResults />} />
+                    <Route path="/post" element={<Post />} />
                 </Routes>
                 <Footer />
             </BrowserRouter>
