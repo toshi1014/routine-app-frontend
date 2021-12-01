@@ -40,6 +40,7 @@ function SearchBox(props: Props) {
     const menuItemList = props.menuContents.map((menuContent: string, idx: number) =>
         <MenuItem
             onClick={(event) => props.handleMenuContentClick(event, idx)}
+            key={idx}
         >
             {menuContent}
         </MenuItem>

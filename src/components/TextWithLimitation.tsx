@@ -12,18 +12,19 @@ type Props = {
 
 function TextWithLimitation(props: Props) {
     return (
-        <Typography paragraph>
-            <Grid
-                container
-                wrap="nowrap"
-                spacing={2}
-                sx={{ maxWidth: props.maxWidth }}
-            >
-                <Grid item xs zeroMinWidth>
-                    <Typography noWrap>{props.text}</Typography>
-                </Grid>
-            </Grid >
-        </Typography>
+        <Grid
+            container
+            wrap="nowrap"
+            spacing={2}
+            sx={{ maxWidth: props.maxWidth }}
+        >
+            <Grid item xs zeroMinWidth>
+
+                <Typography noWrap variant="body2" color="text.secondary">
+                    {props.text}
+                </Typography>
+            </Grid>
+        </Grid >
     );
 }
 

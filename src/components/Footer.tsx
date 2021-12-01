@@ -73,7 +73,7 @@ function Footer() {
 
                 <Grid item>
                     <div>
-                        <Stack direction="row" spacing={6}>
+                        <Stack direction="row" spacing={4}>
                             <Link
                                 to="/"
                                 style={{
@@ -82,6 +82,7 @@ function Footer() {
                             >
                                 Top
                             </Link>
+
                             <Link
                                 to="/routine_contents"
                                 style={{
@@ -90,6 +91,7 @@ function Footer() {
                             >
                                 RoutineContents
                             </Link>
+
                             <Link
                                 to="/search_results"
                                 style={{
@@ -97,6 +99,15 @@ function Footer() {
                                 }}
                             >
                                 SearchResults
+                            </Link>
+
+                            <Link
+                                to="/post"
+                                style={{
+                                    textDecoration: "none"
+                                }}
+                            >
+                                Post
                             </Link>
                         </Stack>
                     </div>
