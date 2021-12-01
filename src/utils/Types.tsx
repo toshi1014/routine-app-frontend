@@ -29,3 +29,18 @@ export type RoutineElementInput = {
     desc: React.ReactElement;
     imagePath: string;
 }
+
+export type RoutineHeaderRef = {
+    title: {
+        value: string;
+    },
+    desc: {
+        value: string;
+    },
+}
+
+export type RoutineElementRef = RoutineHeaderRef & {
+    subtitle: {
+        value: string;
+    },
+}

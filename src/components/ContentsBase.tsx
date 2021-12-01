@@ -142,7 +142,7 @@ function ContentsBase(props: Props) {
                                     subheader={routineElement.subtitle}
                                 />
                                 <CardContent>
-                                        {routineElement.desc}
+                                    {routineElement.desc}
                                 </CardContent>
                                 <CardActions>
                                     <Button size="small">Learn More</Button>
