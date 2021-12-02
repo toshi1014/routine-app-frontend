@@ -5,7 +5,10 @@ import {
     Toolbar,
     Box,
     AppBar,
+    Avatar,
     Typography,
+    Paper,
+    Stack,
 } from "@mui/material";
 import {
     styled,
@@ -13,6 +16,8 @@ import {
 } from "@mui/material/styles";
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import LoginIcon from '@mui/icons-material/Login';
+import LogoutIcon from '@mui/icons-material/Logout';
 import MenuDrawer from "./MenuDrawer";
 
 
@@ -59,7 +64,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 
-function ApplicationBar() {
+type Props = {
+    boolLoginStatus: boolean;
+}
+
+function ApplicationBar(props: Props) {
+    const avatarSize = 35;
     const [openMenuDrawer, setOpenMenuDrawer] = React.useState(false);
 
     const toggleMenuDrawer =
@@ -76,6 +86,21 @@ function ApplicationBar() {
 
                 setOpenMenuDrawer(!openMenuDrawer);
             };
+
+    let userStatus;
+    if (props.boolLoginStatus) {
+        userStatus = (
+            <IconButton>
+                <LoginIcon />
+            </IconButton>
+        );
+    } else {
+        userStatus = (
+            <IconButton>
+                <LogoutIcon />
+            </IconButton>
+        );
+    }
 
 
     return (
@@ -105,7 +130,33 @@ function ApplicationBar() {
                             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
                         >
                             Foo
-          </Typography>
+                        </Typography>
+
+                        {props.boolLoginStatus ?
+                            <Stack direction="row" spacing={2}>
+                                <Avatar
+                                    alt="Smiley"
+                                    src="static/demo/face.png"
+                                    sx={{
+                                        width: avatarSize,
+                                        height: avatarSize,
+                                        my: 0.2,
+                                    }}
+                                />
+                                <Paper elevation={20} sx={{ height: 40 }} >
+                                    <IconButton>
+                                        <LogoutIcon />
+                                    </IconButton>
+                                </Paper>
+                            </Stack>
+                            :
+                            <Paper elevation={20} sx={{ height: 40 }} >
+                                <IconButton>
+                                    <LoginIcon />
+                                </IconButton>
+                            </Paper>
+                        }
+
                         <Search>
                             <SearchIconWrapper>
                                 <SearchIcon />

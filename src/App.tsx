@@ -14,6 +14,8 @@ import Top from "./components/Top";
 import RoutineContents from "./components/RoutineContents";
 import SearchResults from "./components/SearchResults";
 import Post from "./components/Post";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
 
 
 const theme = createTheme({
@@ -39,6 +41,8 @@ function App() {
                     <Route path="/routine_contents" element={<RoutineContents />} />
                     <Route path="/search_results" element={<SearchResults />} />
                     <Route path="/post" element={<Post />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
                 </Routes>
                 <Footer />
             </BrowserRouter>
