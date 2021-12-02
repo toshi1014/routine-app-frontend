@@ -109,6 +109,24 @@ function Footer() {
                             >
                                 Post
                             </Link>
+
+                            <Link
+                                to="/login"
+                                style={{
+                                    textDecoration: "none"
+                                }}
+                            >
+                                Login
+                            </Link>
+
+                            <Link
+                                to="/signup"
+                                style={{
+                                    textDecoration: "none"
+                                }}
+                            >
+                                Signup
+                            </Link>
                         </Stack>
                     </div>
                 </Grid>

@@ -5,17 +5,15 @@ import {
 } from "react-router-dom";
 import ApplicationBar from "./ApplicationBar";
 
+// TEMP:
+const boolLoginStatus = true;
 
-// <h1>Header</h1>
-//     <ul>
-//         <li><Link to="/">Top</Link></li>
-//         <li><Link to="/routine_contents">RoutineContents</Link></li>
-//     </ul>
 function Header() {
     return (
         <div>
-            <ApplicationBar />
-
+            <ApplicationBar
+                boolLoginStatus={boolLoginStatus}
+            />
         </div>
     );
 }
