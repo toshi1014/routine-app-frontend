@@ -1,32 +1,43 @@
 import {
-    EmailStatus,
-    PasswordStatus,
+    ValidationStatus
 } from "./Types";
 
-export const isValidEmail = (email: string): EmailStatus => {
-    let boolValidEmail = true;
-    let helperTextEmail = "";
+export const isValidEmail = (email: string): ValidationStatus => {
+    let boolValid = true;
+    let helperText = "";
 
     // TODO: add email validation
 
     if (!email.includes("@")) {
-        helperTextEmail = "no @";
-        boolValidEmail = false;
+        helperText = "no @";
+        boolValid = false;
     }
     return {
-        boolValidEmail: boolValidEmail,
-        helperTextEmail: helperTextEmail
+        boolValid: boolValid,
+        helperText: helperText
     };
 };
 
-export const isValidPassword = (password: string): PasswordStatus => {
-    let boolValidPassword = true;
-    let helperTextPassword = "";
+export const isValidPassword = (password: string): ValidationStatus => {
+    let boolValid = true;
+    let helperText = "";
 
     // TODO: add password validation
 
     return {
-        boolValidPassword: boolValidPassword,
-        helperTextPassword: helperTextPassword
+        boolValid: boolValid,
+        helperText: helperText
+    };
+};
+
+export const isValidUsername = (username: string): ValidationStatus => {
+    let boolValid = true;
+    let helperText = "";
+
+    // TODO: add username validation
+
+    return {
+        boolValid: boolValid,
+        helperText: helperText
     };
 };
