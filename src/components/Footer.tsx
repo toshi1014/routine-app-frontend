@@ -20,7 +20,51 @@ const logoSize = "40";
 const copyright = "(c) 2021 Foo. All rights reserved";
 
 
+type LinkName = {
+    name: string;
+    link: string;
+}
+
+const footerLinkList: Array<LinkName> = [
+    {
+        name: "Top",
+        link: ""
+    },
+    {
+        name: "RoutineContents",
+        link: "routine_contents"
+    },
+    {
+        name: "SearchResults",
+        link: "search_results"
+    },
+    {
+        name: "Post",
+        link: "post"
+    },
+    {
+        name: "Login",
+        link: "login"
+    },
+    {
+        name: "Signup",
+        link: "signup"
+    },
+];
+
 function Footer() {
+    const footerLinks = footerLinkList.map((linkName: LinkName, idx: number) =>
+        <Link
+            to={"/" + linkName.link}
+            style={{
+                textDecoration: "none"
+            }}
+            key={idx}
+        >
+            {linkName.name}
+        </Link>
+    );
+
     const handleFacebook = () => {
         console.log("Facebook");
     }
@@ -72,63 +116,9 @@ function Footer() {
                 </Grid>
 
                 <Grid item>
-                    <div>
-                        <Stack direction="row" spacing={4}>
-                            <Link
-                                to="/"
-                                style={{
-                                    textDecoration: "none"
-                                }}
-                            >
-                                Top
-                            </Link>
-
-                            <Link
-                                to="/routine_contents"
-                                style={{
-                                    textDecoration: "none"
-                                }}
-                            >
-                                RoutineContents
-                            </Link>
-
-                            <Link
-                                to="/search_results"
-                                style={{
-                                    textDecoration: "none"
-                                }}
-                            >
-                                SearchResults
-                            </Link>
-
-                            <Link
-                                to="/post"
-                                style={{
-                                    textDecoration: "none"
-                                }}
-                            >
-                                Post
-                            </Link>
-
-                            <Link
-                                to="/login"
-                                style={{
-                                    textDecoration: "none"
-                                }}
-                            >
-                                Login
-                            </Link>
-
-                            <Link
-                                to="/signup"
-                                style={{
-                                    textDecoration: "none"
-                                }}
-                            >
-                                Signup
-                            </Link>
-                        </Stack>
-                    </div>
+                    <Stack direction="row" spacing={4}>
+                        {footerLinks}
+                    </Stack>
                 </Grid>
 
                 <Grid item>
