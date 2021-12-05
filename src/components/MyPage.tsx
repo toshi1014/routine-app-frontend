@@ -1,4 +1,7 @@
 import React from 'react';
+import {
+    Typography,
+} from "@mui/material";
 import { RoutinePackContents, MenuChildProps } from "../utils/Types";
 import MyPageBase from "./MyPageBase";
 
@@ -25,6 +28,13 @@ const followingNum = 10;
 
 
 function MyPage() {
+    const usernameComp = (
+        <h1>{username}</h1>
+    );
+    const statusMessageComp = (
+        <Typography paragraph>{statusMessage}</Typography>
+    );
+
     const postedList: Array<RoutinePackContents> = [
         {
             contributor: contributor,
@@ -62,8 +72,8 @@ function MyPage() {
 
     return (
         <MyPageBase
-            username={username}
-            statusMessage={statusMessage}
+            usernameComp={usernameComp}
+            statusMessageComp={statusMessageComp}
             followingNum={followingNum}
             followersNum={followersNum}
             hashtagList={hashtagList}
