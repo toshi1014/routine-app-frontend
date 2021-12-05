@@ -50,6 +50,10 @@ const footerLinkList: Array<LinkName> = [
         name: "Signup",
         link: "signup"
     },
+    {
+        name: "MyPage",
+        link: "mypage"
+    },
 ];
 
 function Footer() {
