@@ -22,8 +22,8 @@ import { MenuChildProps, RoutinePackContents } from "../utils/Types";
 
 
 type Props = {
-    username: string;
-    statusMessage: string;
+    usernameComp: React.ReactElement;
+    statusMessageComp: React.ReactElement;
     followingNum: number;
     followersNum: number;
     hashtagList: Array<string>;
@@ -124,7 +124,7 @@ function MyPageBase(props: Props) {
                                         }}
                                     >
                                     </Box>
-                                    <h1>{props.username}</h1>
+                                    {props.usernameComp}
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -132,7 +132,7 @@ function MyPageBase(props: Props) {
                         <Grid item sx={{ mx: 2, my: -3 }}>
                             <Stack direction="row" spacing={1}>
                                 <ChatBubbleOutlineIcon />
-                                <Typography paragraph>{props.statusMessage}</Typography>
+                                {props.statusMessageComp}
                             </Stack>
                             <Box
                                 component="div"

@@ -17,6 +17,7 @@ import Post from "./components/Post";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import MyPage from "./components/MyPage";
+import MyPageLogin from "./components/MyPageLogin";
 
 
 const theme = createTheme({
@@ -45,6 +46,7 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/mypage" element={<MyPage />} />
+                    <Route path="/mypage_login" element={<MyPageLogin />} />
                 </Routes>
                 <Footer />
             </BrowserRouter>

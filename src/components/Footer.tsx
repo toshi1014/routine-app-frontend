@@ -54,6 +54,10 @@ const footerLinkList: Array<LinkName> = [
         name: "MyPage",
         link: "mypage"
     },
+    {
+        name: "MyPageLogin",
+        link: "mypage_login"
+    },
 ];
 
 function Footer() {
