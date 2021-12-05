@@ -1,12 +1,16 @@
 import React from 'react';
 import {
     TextField,
+    Paper,
     Button,
+    Grid,
+    CardContent,
 } from "@mui/material";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SendIcon from "@mui/icons-material/Send";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import CheckIcon from "@mui/icons-material/Check";
 import LoginSignupBase from "./LoginSignupBase";
+import PasswordIcon from "@mui/icons-material/Password";
 import {
     isValidEmail,
     isValidPassword,
@@ -21,21 +25,24 @@ function Signup() {
     const [errorEmail, setErrorEmail] = React.useState(false);
     const [errorPassword, setErrorPassword] = React.useState(false);
     const [errorUsername, setErrorUsername] = React.useState(false);
+    const [errorAuthCode, setErrorAuthCode] = React.useState(false);
 
     const [helperTextEmail, setHelperTextEmail] = React.useState("");
     const [helperTextPassword, setHelperTextPassword] = React.useState("");
     const [helperTextUsername, setHelperTextUsername] = React.useState("");
-
+    const [helperTextAuthCode, setHelperTextAuthCode] = React.useState("");
 
     const inputRef = {
         email: {
             value: "",
-
         },
         password: {
             value: "",
         },
         username: {
+            value: "",
+        },
+        authCode: {
             value: "",
         },
     }
@@ -57,23 +64,25 @@ function Signup() {
         setHelperTextPassword(passwordStatus.helperText);
         setHelperTextUsername(usernameStatus.helperText);
 
+        console.log(emailStatus.boolValid && passwordStatus.boolValid && usernameStatus.boolValid);
         return (emailStatus.boolValid && passwordStatus.boolValid && usernameStatus.boolValid);
     };
 
-    const handleSendEmail = () => {
-        if ((inputRef.email.value !== "") && (inputRef.password.value !== "")) {
-            const valid = isValid();
+    const [boolValidInput, setBoolValidInput] = React.useState(false);
 
-            console.log("==========================");
-            if (valid) {
-                console.log("valid");
-            } else {
-                console.log("invalid");
-            }
-            console.log(inputRef.email.value);
-            console.log(inputRef.password.value);
-            console.log(inputRef.username.value);
+    const handleSendEmail = () => {
+        const valid = isValid();
+
+        setBoolValidInput(valid);
+
+        if (valid) {
+            setAuthCodeComp(authCodeCompBase);
         }
+
+        console.log("==========================");
+        console.log(inputRef.email.value);
+        console.log(inputRef.password.value);
+        console.log(inputRef.username.value);
     }
 
     const elementList = [
@@ -81,7 +90,7 @@ function Signup() {
             <div>
                 <BorderColorIcon
                     sx={{
-                        fontSize: 45,
+                        fontSize: 40,
                         mx: 2,
                         my: 0.5,
                     }}
@@ -91,7 +100,7 @@ function Signup() {
                     label="Username"
                     error={errorUsername}
                     helperText={helperTextUsername}
-                    inputRef={ref => {inputRef.username = ref; }}
+                    inputRef={ref => { inputRef.username = ref; }}
                 />
             </div>
         ),
@@ -100,12 +109,59 @@ function Signup() {
                 color="primary"
                 variant="contained"
                 onClick={handleSendEmail}
-                endIcon={<SendIcon />}
+                endIcon={boolValidInput ? <CheckIcon /> : <SendIcon />}
+                disabled={boolValidInput}
             >
                 Send Email
             </Button>
         ),
     ];
+
+    const handleAuthCode = () => {
+        console.log("handleAuthCode");
+        console.log(inputRef.authCode.value);
+    }
+
+    const [authCodeComp, setAuthCodeComp] = React.useState<React.ReactElement>();
+    const authCodeCompBase = (
+        <Paper variant="outlined" sx={{ width: 450 }}>
+            <CardContent sx={{ my: 1 }}>
+                <Grid
+                    container
+                    direction="column"
+                    spacing={2}
+                    justifyContent="center"
+                    alignItems="center"
+                >
+                    <Grid item>
+                        <PasswordIcon
+                            sx={{
+                                fontSize: 40,
+                                mx: 2,
+                                my: 0.5,
+                            }}
+                        />
+                        <TextField
+                            variant="outlined"
+                            label="Code"
+                            error={errorAuthCode}
+                            helperText={helperTextAuthCode}
+                            inputRef={ref => { inputRef.authCode = ref; }}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <Button
+                            color="primary"
+                            variant="contained"
+                            onClick={handleAuthCode}
+                        >
+                            Create Account
+                        </Button>
+                    </Grid>
+                </Grid>
+            </CardContent>
+        </Paper>
+    )
 
 
     return (
@@ -117,6 +173,7 @@ function Signup() {
             errorPassword={errorPassword}
             helperTextPassword={helperTextPassword}
             elementList={elementList}
+            uniqueComp={authCodeComp}
         />
     );
 }
