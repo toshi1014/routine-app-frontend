@@ -45,12 +45,7 @@ export type RoutineElementRef = RoutineHeaderRef & {
     },
 }
 
-export type EmailStatus = {
-    boolValidEmail: boolean;
-    helperTextEmail: string;
-}
-
-export type PasswordStatus = {
-    boolValidPassword: boolean;
-    helperTextPassword: string;
+export type ValidationStatus = {
+    boolValid: boolean;
+    helperText: string;
 }

@@ -4,25 +4,28 @@ import {
     Button,
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import KeyIcon from "@mui/icons-material/Key";
 import SendIcon from "@mui/icons-material/Send";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
 import LoginSignupBase from "./LoginSignupBase";
 import {
     isValidEmail,
     isValidPassword,
+    isValidUsername,
 } from "../utils/validations";
 import {
-    EmailStatus,
-    PasswordStatus,
+    ValidationStatus,
 } from "../utils/Types";
 
 
 function Signup() {
     const [errorEmail, setErrorEmail] = React.useState(false);
     const [errorPassword, setErrorPassword] = React.useState(false);
+    const [errorUsername, setErrorUsername] = React.useState(false);
 
     const [helperTextEmail, setHelperTextEmail] = React.useState("");
     const [helperTextPassword, setHelperTextPassword] = React.useState("");
+    const [helperTextUsername, setHelperTextUsername] = React.useState("");
+
 
     const inputRef = {
         email: {
@@ -31,25 +34,31 @@ function Signup() {
         },
         password: {
             value: "",
-        }
+        },
+        username: {
+            value: "",
+        },
     }
 
     const isValid = () => {
         const email = inputRef.email.value;
         const password = inputRef.password.value;
+        const username = inputRef.username.value;
 
-        const emailStatus: EmailStatus= isValidEmail(email);
-        const passwordStatus:PasswordStatus = isValidPassword(password);
+        const emailStatus: ValidationStatus = isValidEmail(email);
+        const passwordStatus: ValidationStatus = isValidPassword(password);
+        const usernameStatus: ValidationStatus = isValidUsername(username);
 
-        setErrorEmail(!emailStatus.boolValidEmail);
-        setErrorPassword(!passwordStatus.boolValidPassword);
+        setErrorEmail(!emailStatus.boolValid);
+        setErrorPassword(!passwordStatus.boolValid);
+        setErrorUsername(!usernameStatus.boolValid);
 
-        setHelperTextEmail(emailStatus.helperTextEmail);
-        setHelperTextPassword(passwordStatus.helperTextPassword);
+        setHelperTextEmail(emailStatus.helperText);
+        setHelperTextPassword(passwordStatus.helperText);
+        setHelperTextUsername(usernameStatus.helperText);
 
-        return (emailStatus.boolValidEmail && passwordStatus.boolValidPassword);
+        return (emailStatus.boolValid && passwordStatus.boolValid && usernameStatus.boolValid);
     };
-
 
     const handleSendEmail = () => {
         if ((inputRef.email.value !== "") && (inputRef.password.value !== "")) {
@@ -63,14 +72,14 @@ function Signup() {
             }
             console.log(inputRef.email.value);
             console.log(inputRef.password.value);
+            console.log(inputRef.username.value);
         }
     }
-
 
     const elementList = [
         (
             <div>
-                <AccountCircleIcon
+                <BorderColorIcon
                     sx={{
                         fontSize: 45,
                         mx: 2,
@@ -79,48 +88,36 @@ function Signup() {
                 />
                 <TextField
                     variant="outlined"
-                    label="Email Address"
-                    error={errorEmail}
-                    helperText={helperTextEmail}
-                    inputRef={ref => { inputRef.email = ref; }}
+                    label="Username"
+                    error={errorUsername}
+                    helperText={helperTextUsername}
+                    inputRef={ref => {inputRef.username = ref; }}
                 />
             </div>
         ),
         (
-            <div>
-                <KeyIcon
-                    sx={{
-                        fontSize: 45,
-                        mx: 2,
-                        my: 0.5,
-                    }}
-                />
-                <TextField
-                    variant="outlined"
-                    label="Password"
-                    type="password"
-                    error={errorPassword}
-                    helperText={helperTextPassword}
-                    inputRef={ref => { inputRef.password = ref; }}
-                />
-            </div>
-        ),
-        (
-            <div>
-                <Button
-                    color="primary"
-                    variant="contained"
-                    onClick={handleSendEmail}
-                    endIcon={<SendIcon />}
-                >
-                    Send Email
-                </Button>
-            </div>
+            <Button
+                color="primary"
+                variant="contained"
+                onClick={handleSendEmail}
+                endIcon={<SendIcon />}
+            >
+                Send Email
+            </Button>
         ),
     ];
 
+
     return (
-        <LoginSignupBase header="Signup" elementList={elementList} />
+        <LoginSignupBase
+            header="Signup"
+            inputRef={inputRef}
+            errorEmail={errorEmail}
+            helperTextEmail={helperTextEmail}
+            errorPassword={errorPassword}
+            helperTextPassword={helperTextPassword}
+            elementList={elementList}
+        />
     );
 }
 

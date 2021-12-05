@@ -1,11 +1,8 @@
 import React from 'react';
 import {
-    TextField,
     Stack,
     Button,
 } from "@mui/material";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import KeyIcon from "@mui/icons-material/Key";
 import {
     Link,
 } from "react-router-dom";
@@ -15,8 +12,7 @@ import {
     isValidPassword,
 } from "../utils/validations";
 import {
-    EmailStatus,
-    PasswordStatus,
+    ValidationStatus,
 } from "../utils/Types";
 
 
@@ -41,16 +37,16 @@ function Login() {
         const email = inputRef.email.value;
         const password = inputRef.password.value;
 
-        const emailStatus: EmailStatus= isValidEmail(email);
-        const passwordStatus:PasswordStatus = isValidPassword(password);
+        const emailStatus: ValidationStatus = isValidEmail(email);
+        const passwordStatus: ValidationStatus = isValidPassword(password);
 
-        setErrorEmail(!emailStatus.boolValidEmail);
-        setErrorPassword(!passwordStatus.boolValidPassword);
+        setErrorEmail(!emailStatus.boolValid);
+        setErrorPassword(!passwordStatus.boolValid);
 
-        setHelperTextEmail(emailStatus.helperTextEmail);
-        setHelperTextPassword(passwordStatus.helperTextPassword);
+        setHelperTextEmail(emailStatus.helperText);
+        setHelperTextPassword(passwordStatus.helperText);
 
-        return (emailStatus.boolValidEmail && passwordStatus.boolValidPassword);
+        return (emailStatus.boolValid && passwordStatus.boolValid);
     };
 
 
@@ -72,52 +68,13 @@ function Login() {
 
     const elementList = [
         (
-            <div>
-                <AccountCircleIcon
-                    sx={{
-                        fontSize: 45,
-                        mx: 2,
-                        my: 0.5,
-                    }}
-                />
-                <TextField
-                    variant="outlined"
-                    label="Email Address"
-                    error={errorEmail}
-                    helperText={helperTextEmail}
-                    inputRef={ref => { inputRef.email = ref; }}
-                />
-            </div>
-        ),
-        (
-            <div>
-                <KeyIcon
-                    sx={{
-                        fontSize: 45,
-                        mx: 2,
-                        my: 0.5,
-                    }}
-                />
-                <TextField
-                    variant="outlined"
-                    label="Password"
-                    type="password"
-                    error={errorPassword}
-                    helperText={helperTextPassword}
-                    inputRef={ref => { inputRef.password = ref; }}
-                />
-            </div>
-        ),
-        (
-            <div>
-                <Button
-                    color="primary"
-                    variant="contained"
-                    onClick={handleLogin}
-                >
-                    Login
+            <Button
+                color="primary"
+                variant="contained"
+                onClick={handleLogin}
+            >
+                Login
                 </Button>
-            </div>
         ),
     ];
 
@@ -138,7 +95,16 @@ function Login() {
     );
 
     return (
-        <LoginSignupBase header="Login" elementList={elementList} uniqueComp={uniqueComp} />
+        <LoginSignupBase
+            header="Login"
+            inputRef={inputRef}
+            errorEmail={errorEmail}
+            helperTextEmail={helperTextEmail}
+            errorPassword={errorPassword}
+            helperTextPassword={helperTextPassword}
+            elementList={elementList}
+            uniqueComp={uniqueComp}
+        />
     );
 }
 
