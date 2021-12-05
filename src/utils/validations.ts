@@ -10,8 +10,16 @@ export const isValidEmail = (email: string): ValidationStatus => {
 
     if (!email.includes("@")) {
         helperText = "no @";
+    }
+
+    if (email === ""){
+        helperText = "required";
+    }
+
+    if (helperText !== "") {
         boolValid = false;
     }
+
     return {
         boolValid: boolValid,
         helperText: helperText
@@ -24,6 +32,14 @@ export const isValidPassword = (password: string): ValidationStatus => {
 
     // TODO: add password validation
 
+    if (password === ""){
+        helperText = "required";
+    }
+
+    if (helperText !== "") {
+        boolValid = false;
+    }
+
     return {
         boolValid: boolValid,
         helperText: helperText
@@ -35,6 +51,14 @@ export const isValidUsername = (username: string): ValidationStatus => {
     let helperText = "";
 
     // TODO: add username validation
+
+    if (username === ""){
+        helperText = "required";
+    }
+
+    if (helperText !== "") {
+        boolValid = false;
+    }
 
     return {
         boolValid: boolValid,

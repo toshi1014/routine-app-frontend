@@ -19,7 +19,7 @@ type InputRef = {
         value: string;
     };
     password: {
-        value:string;
+        value: string;
     }
 }
 
@@ -40,7 +40,7 @@ function LoginSignupBase(props: Props) {
         <Grid item>
             <AccountCircleIcon
                 sx={{
-                    fontSize: 45,
+                    fontSize: 40,
                     mx: 2,
                     my: 0.5,
                 }}
@@ -59,7 +59,7 @@ function LoginSignupBase(props: Props) {
         <Grid item>
             <KeyIcon
                 sx={{
-                    fontSize: 45,
+                    fontSize: 40,
                     mx: 2,
                     my: 0.5,
                 }}
@@ -95,7 +95,6 @@ function LoginSignupBase(props: Props) {
                                 {element}
                             </Grid>
                         )}
-
                     </Grid>
                 </CardContent>
             </Paper>
