@@ -31,6 +31,7 @@ type Props = {
     chipInputComp?: React.ReactElement;
     postedList: Array<RoutinePackContents>;
     faboriteList: Array<RoutinePackContents>;
+    draftList?: Array<RoutinePackContents>;
     menuChildProps: MenuChildProps;
 }
 
@@ -71,18 +72,19 @@ function MyPageBase(props: Props) {
         </Grid>
     );
 
-    const faboriteListComp = props.faboriteList.map((posted, idx: number) =>
+    const faboriteListComp = props.faboriteList.map((faborite, idx: number) =>
         <Grid item key={idx}>
             <RoutinePack
-                contributor={posted.contributor}
-                title={posted.title + idx}
-                desc={posted.desc}
-                lastUpdated={posted.lastUpdated}
-                titleStep1={posted.titleStep1}
-                descStep1={posted.descStep1}
+                contributor={faborite.contributor}
+                title={faborite.title + idx}
+                desc={faborite.desc}
+                lastUpdated={faborite.lastUpdated}
+                titleStep1={faborite.titleStep1}
+                descStep1={faborite.descStep1}
             />
         </Grid>
     );
+
 
     const handleFacebook = () => {
         console.log("Facebook");
@@ -226,6 +228,30 @@ function MyPageBase(props: Props) {
                         {faboriteListComp}
                     </Grid>
                 </CardContent>
+
+                {
+                    (props.draftList)
+                        ?
+                        <CardContent>
+                            <h2>Drafts</h2>
+                            <Grid container direction="row" spacing={1}>
+                                {props.draftList.map((draft, idx: number) =>
+                                    <Grid item key={idx}>
+                                        <RoutinePack
+                                            contributor={draft.contributor}
+                                            title={draft.title + idx}
+                                            desc={draft.desc}
+                                            lastUpdated={draft.lastUpdated}
+                                            titleStep1={draft.titleStep1}
+                                            descStep1={draft.descStep1}
+                                            editable={props.chipInputComp ? true : false}
+                                        />
+                                    </Grid>
+                                )}
+                            </Grid>
+                        </CardContent>
+                        : <div></div>
+                }
             </Grid>
         </div >
     );
