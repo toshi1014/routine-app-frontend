@@ -64,3 +64,8 @@ export type MenuChildProps = {
     setSearchBoxValue: React.Dispatch<React.SetStateAction<string>>;
     handleSearchBox: (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
 }
+
+export type ChipData = {
+    key: number;
+    label: string;
+}

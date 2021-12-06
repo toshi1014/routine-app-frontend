@@ -4,6 +4,7 @@ import {
 } from "@mui/material";
 import { RoutineHeader, RoutineElement } from "../utils/Types";
 import ContentsBase from "./ContentsBase";
+import { ListItem } from "../utils/ListItem";
 
 
 // TEMP:
@@ -59,7 +60,9 @@ function RoutineContents() {
     }
 
     const hashtagChipList = hashtagList.map((hashtag: string, idx: number) =>
-        <Chip clickable label={"# " + hashtag} key={idx} />
+        <ListItem key={idx}>
+            <Chip clickable label={"# " + hashtag} key={idx} />
+        </ListItem>
     );
 
     const handlePost = () => {

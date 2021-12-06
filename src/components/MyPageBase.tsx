@@ -27,9 +27,11 @@ type Props = {
     followingNum: number;
     followersNum: number;
     hashtagList: Array<string>;
+    hashtagChipList: Array<React.ReactElement>;
+    uniqueComp?: React.ReactElement;
     postedList: Array<RoutinePackContents>;
     faboriteList: Array<RoutinePackContents>;
-    menuChildProps:MenuChildProps;
+    menuChildProps: MenuChildProps;
 }
 
 
@@ -54,10 +56,6 @@ function MyPageBase(props: Props) {
         handleMenuClose();
     }
     // end; Menu
-
-    const hashtagChipList = props.hashtagList.map((hashtag: string, idx: number) =>
-        <Chip clickable label={"# " + hashtag} key={idx} />
-    );
 
     const postedListComp = props.postedList.map((posted, idx: number) =>
         <Grid item key={idx}>
@@ -145,9 +143,22 @@ function MyPageBase(props: Props) {
                         </Grid>
 
                         <Grid item>
-                            <Stack direction="row" spacing={1}>
-                                {hashtagChipList}
-                            </Stack>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexWrap: 'wrap',
+                                    listStyle: 'none',
+                                    p: 0.5,
+                                    m: 0,
+                                }}
+                                component="ul"
+                            >
+                                {props.hashtagChipList}
+                            </Box>
+                        </Grid>
+
+                        <Grid item>
+                            {props.uniqueComp}
                         </Grid>
 
                         <Grid item>
