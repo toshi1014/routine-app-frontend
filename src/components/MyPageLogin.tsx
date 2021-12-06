@@ -277,7 +277,7 @@ function MyPageLogin() {
                 followersNum={followersNum}
                 hashtagList={hashtagList}
                 hashtagChipList={hashtagChipList}
-                uniqueComp={hashtagInput}
+                chipInputComp={hashtagInput}
                 postedList={postedList}
                 faboriteList={faboriteList}
                 menuChildProps={menuChildProps}
