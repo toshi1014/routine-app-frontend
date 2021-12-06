@@ -1,26 +1,57 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {
+    createTheme,
+    ThemeProvider,
+} from "@mui/material/styles";
+import { CssBaseline } from "@mui/material";
+import {
+    BrowserRouter, Route, Link, Routes,
+} from "react-router-dom";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Top from "./components/Top";
+import RoutineContents from "./components/RoutineContents";
+import SearchResults from "./components/SearchResults";
+import Post from "./components/Post";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
+import MyPage from "./components/MyPage";
+import MyPageLogin from "./components/MyPageLogin";
+
+
+const theme = createTheme({
+    typography: {
+        button: {
+            textTransform: "none",
+        },
+    },
+    palette: {
+        mode: "dark",
+    },
+})
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+    return (
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <BrowserRouter>
+                <Header />
+                <Routes>
+                    <Route path="/" element={<Top />} />
+                    <Route path="/routine_contents" element={<RoutineContents />} />
+                    <Route path="/search_results" element={<SearchResults />} />
+                    <Route path="/post" element={<Post />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
+                    <Route path="/mypage" element={<MyPage />} />
+                    <Route path="/mypage_login" element={<MyPageLogin />} />
+                </Routes>
+                <Footer />
+            </BrowserRouter>
+        </ThemeProvider>
+    );
 }
 
 export default App;
