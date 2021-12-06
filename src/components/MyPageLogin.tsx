@@ -201,6 +201,7 @@ function MyPageLogin() {
         },
     ];
     const faboriteList = postedList;
+    const draftList = postedList;
 
     // Menu
     const [searchBoxValue, setSearchBoxValue] = React.useState("");
@@ -280,6 +281,7 @@ function MyPageLogin() {
                 chipInputComp={hashtagInput}
                 postedList={postedList}
                 faboriteList={faboriteList}
+                draftList={draftList}
                 menuChildProps={menuChildProps}
             />
         </div>
