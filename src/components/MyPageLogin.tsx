@@ -3,13 +3,22 @@ import {
     TextField,
     Backdrop,
     Stack,
+    Chip,
     IconButton,
+    Box,
     Typography,
     Button,
+    InputBase,
 } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
-import { RoutinePackContents, MenuChildProps } from "../utils/Types";
+import {
+    RoutinePackContents,
+    MenuChildProps,
+    ChipData,
+} from "../utils/Types";
 import MyPageBase from "./MyPageBase";
+import { ListItem } from "../utils/ListItem";
 
 
 // TEMP:
@@ -23,6 +32,12 @@ const hashtagList = [
 ];
 const usernameOrgn = "John Smith";
 const contributor = usernameOrgn;
+const hashtagListOrgn: Array<ChipData> = hashtagList.map((val: string, idx: number) => {
+    return {
+        key: idx,
+        label: val,
+    }
+});
 const title = "Happy Coding";
 const desc = "Best Way to Create App, set aside off of the heat to let rest for 10 minutes, and then serve.";
 const lastUpdated = "2021, Dec 31";
@@ -63,8 +78,10 @@ function MyPageLogin() {
     const handleChangeClick = () => {
         if (textFieldLabel === EnumTextFieldLabel.Username) {
             setUsername(textInputValue);
+            console.log("username changed");
         } else if (textFieldLabel === EnumTextFieldLabel.StatusMessage) {
             setStatusMessage(textInputValue);
+            console.log("statusMessage changed");
         } else {
             throw new Error;
         }
@@ -86,6 +103,84 @@ function MyPageLogin() {
             </IconButton>
         </Typography>
     );
+
+
+    // hashtag
+    const [hashtagAddedList, setHashtagAddedList] =
+        React.useState<Array<ChipData>>(hashtagListOrgn);
+
+    const handleAddHashtag = () => {
+        hashtagRef.value = hashtagRef.value.replace(/\s/g, '');
+        if (hashtagRef.value !== "") {
+            let hashtagAddedListTmp = hashtagAddedList;
+            if (hashtagAddedListTmp) {
+                hashtagAddedListTmp.push({
+                    key: hashtagAddedListTmp.length,
+                    label: hashtagRef.value
+                });
+            } else {
+                throw new Error;
+            }
+
+            console.log("Hashtag added");
+
+            setHashtagAddedList(hashtagAddedListTmp);
+            hashtagRef.value = "";
+            update();
+        }
+    }
+
+    const handleDeleteHashtag = (hashtag2bDeleted: ChipData) => () => {
+        setHashtagAddedList((chips) => chips.filter((chip) => chip.key !== hashtag2bDeleted.key));
+        console.log("Hashtag removed");
+    }
+
+    let hashtagRef = {
+        value: ""
+    }
+
+    const hashtagChipList = hashtagAddedList.map((hashtagAdded: ChipData) =>
+        <ListItem key={hashtagAdded.key}>
+            <Chip
+                label={"# " + hashtagAdded.label}
+                onDelete={handleDeleteHashtag(hashtagAdded)}
+                key={hashtagAdded.key}
+            />
+        </ListItem>
+    );
+
+    const hashtagInput = (
+        <Chip
+            label={
+                <Stack direction="row">
+                    <Box sx={{ my: -10 }}>
+                        <></>
+                    </Box>
+
+                    <Box sx={{ my: 5 }}>
+                        <p>#</p>
+                    </Box>
+
+                    <Box sx={{ my: 5.9, mx: 1 }}>
+                        <InputBase
+                            sx={{
+                                width: 150,
+                                maxWidth: "200%"
+                            }}
+                            fullWidth
+                            inputRef={ref => { hashtagRef = ref; }}
+                        />
+                    </Box>
+                    <Box sx={{ my: 5.9 }}>
+                        <IconButton size="small" onClick={handleAddHashtag}>
+                            <AddIcon />
+                        </IconButton>
+                    </Box>
+                </Stack>
+            }
+        />
+    );
+    // end; hashtag
 
     const postedList: Array<RoutinePackContents> = [
         {
@@ -139,6 +234,19 @@ function MyPageLogin() {
         console.log("focus");
     };
 
+    // XXX:
+    const [foo, setFoo] = React.useState(0);
+    const update = () => {
+        setFoo(foo + 1);
+    };
+    React.useEffect(() => {
+        if (foo % 2 === 1) {
+            update();
+        }
+    }, [foo]);
+    // end; XXX
+
+
     return (
         <div>
             <Backdrop
@@ -168,6 +276,8 @@ function MyPageLogin() {
                 followingNum={followingNum}
                 followersNum={followersNum}
                 hashtagList={hashtagList}
+                hashtagChipList={hashtagChipList}
+                uniqueComp={hashtagInput}
                 postedList={postedList}
                 faboriteList={faboriteList}
                 menuChildProps={menuChildProps}

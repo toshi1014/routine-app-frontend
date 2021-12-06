@@ -20,8 +20,10 @@ import {
     RoutineElementInput,
     RoutineHeaderRef,
     RoutineElementRef,
+    ChipData,
 } from "../utils/Types";
 import ContentsBase from "./ContentsBase";
+import { ListItem } from "../utils/ListItem";
 
 
 // TEMP:
@@ -32,11 +34,6 @@ const contributor = username;
 const lastUpdated = "----, -- --";
 const hashtagList = <h1>b</h1>;
 
-
-type ChipData = {
-    key: number;
-    label: string;
-}
 
 function Post() {
     const title = (
@@ -137,6 +134,7 @@ function Post() {
         console.log("Share");
     }
 
+    // hashtag
     const [hashtagAddedList, setHashtagAddedList] =
         React.useState<Array<ChipData>>([{ key: 0, label: "ShareYourRoutine" }]);
 
@@ -168,11 +166,13 @@ function Post() {
     }
 
     const hashtagChipList = hashtagAddedList.map((hashtagAdded: ChipData) =>
-        <Chip
-            label={"# " + hashtagAdded.label}
-            onDelete={handleDeleteHashtag(hashtagAdded)}
-            key={hashtagAdded.key}
-        />
+        <ListItem key={hashtagAdded.key}>
+            <Chip
+                label={"# " + hashtagAdded.label}
+                onDelete={handleDeleteHashtag(hashtagAdded)}
+                key={hashtagAdded.key}
+            />
+        </ListItem>
     );
 
     const hashtagInput = (
@@ -206,6 +206,7 @@ function Post() {
             }
         />
     );
+    // end; hashtag
 
     React.useEffect(() => {
         console.log(routineElementList[0].title);
@@ -255,7 +256,7 @@ function Post() {
         console.log("title:", routineHeaderRef.title.value);
         console.log("desc:", routineHeaderRef.desc.value);
         console.log("hashtag:")
-        hashtagAddedList.map(hashtag =>console.log(hashtag.label));
+        hashtagAddedList.map(hashtag => console.log(hashtag.label));
         console.log("\nroutineElements")
 
         for (let i = 0; i < routineElementsInputValue.length; i++) {

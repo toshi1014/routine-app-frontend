@@ -1,12 +1,11 @@
-import React, { useLayoutEffect } from 'react';
+import React from 'react';
 import {
     Paper,
     Grid,
     CardContent,
-    Stack,
     Container,
+    Box,
     Chip,
-    Button,
 } from "@mui/material";
 import AliceCarousel from 'react-alice-carousel';
 import "react-alice-carousel/lib/alice-carousel.css";
@@ -15,6 +14,7 @@ import RoutinePack from './RoutinePack';
 import SearchBox from './SearchBox';
 import { range } from "../utils/utils";
 import useWindowSize from "../utils/useWindowSize";
+import { ListItem } from "../utils/ListItem";
 
 
 // TEMP:
@@ -40,7 +40,9 @@ function Top() {
     const [searchBoxValue, setSearchBoxValue] = React.useState("");
 
     const polularHashtagChipList = hashtagList.map((hashtag: string, idx: number) =>
-        <Chip clickable label={"# " + hashtag} key={idx} />
+        <ListItem key={idx}>
+            <Chip clickable label={"# " + hashtag} key={idx} />
+        </ListItem>
     );
 
     const polularRoutineList = range(0, 5).map((idx: number) =>
@@ -115,9 +117,18 @@ function Top() {
                 <Grid item>
                     <CardContent>
                         <h2>Polular Hashtags</h2>
-                        <Stack direction="row" spacing={1}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                listStyle: 'none',
+                                p: 0.5,
+                                m: 0,
+                            }}
+                            component="ul"
+                        >
                             {polularHashtagChipList}
-                        </Stack>
+                        </Box>
                     </CardContent>
                 </Grid>
 

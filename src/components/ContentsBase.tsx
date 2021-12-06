@@ -28,7 +28,7 @@ import {
 type Props = {
     routineHeader: RoutineHeader | RoutineHeaderInput;
     routineElementList: Array<RoutineElement | RoutineElementInput>;
-    hashtagChipList: any;        // TEMP: type any
+    hashtagChipList: Array<React.ReactElement>;
     handleFavorite: () => void;
     handleShare: () => void;
     uniqueCompHeader?: React.ReactElement;
@@ -51,9 +51,18 @@ function ContentsBase(props: Props) {
 
                                 <Grid container direction="column" spacing={2}>
                                     <Grid item>
-                                        <Stack direction="row" spacing={1}>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                flexWrap: 'wrap',
+                                                listStyle: 'none',
+                                                p: 0.5,
+                                                m: 0,
+                                            }}
+                                            component="ul"
+                                        >
                                             {props.hashtagChipList}
-                                        </Stack>
+                                        </Box>
                                     </Grid>
                                     <Grid item>
                                         {props.uniqueCompHeader}

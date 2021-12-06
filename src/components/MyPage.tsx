@@ -1,9 +1,11 @@
 import React from 'react';
 import {
     Typography,
+    Chip,
 } from "@mui/material";
 import { RoutinePackContents, MenuChildProps } from "../utils/Types";
 import MyPageBase from "./MyPageBase";
+import { ListItem } from "../utils/ListItem";
 
 
 // TEMP:
@@ -70,6 +72,13 @@ function MyPage() {
     }
     // end; Menu
 
+    const hashtagChipList = hashtagList.map((hashtag: string, idx: number) =>
+        <ListItem key={idx}>
+            <Chip clickable label={"# " + hashtag} key={idx} />
+        </ListItem>
+    );
+
+
     return (
         <MyPageBase
             usernameComp={usernameComp}
@@ -77,6 +86,7 @@ function MyPage() {
             followingNum={followingNum}
             followersNum={followersNum}
             hashtagList={hashtagList}
+            hashtagChipList={hashtagChipList}
             postedList={postedList}
             faboriteList={faboriteList}
             menuChildProps={menuChildProps}
