@@ -28,7 +28,7 @@ type Props = {
     followersNum: number;
     hashtagList: Array<string>;
     hashtagChipList: Array<React.ReactElement>;
-    uniqueComp?: React.ReactElement;
+    chipInputComp?: React.ReactElement;
     postedList: Array<RoutinePackContents>;
     faboriteList: Array<RoutinePackContents>;
     menuChildProps: MenuChildProps;
@@ -66,6 +66,7 @@ function MyPageBase(props: Props) {
                 lastUpdated={posted.lastUpdated}
                 titleStep1={posted.titleStep1}
                 descStep1={posted.descStep1}
+                editable={props.chipInputComp ? true : false}
             />
         </Grid>
     );
@@ -158,7 +159,7 @@ function MyPageBase(props: Props) {
                         </Grid>
 
                         <Grid item>
-                            {props.uniqueComp}
+                            {props.chipInputComp}
                         </Grid>
 
                         <Grid item>

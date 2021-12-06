@@ -17,6 +17,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ShareIcon from "@mui/icons-material/Share";
+import EditIcon from "@mui/icons-material/Edit";
 import TextWithLimitation from "./TextWithLimitation";
 
 
@@ -42,6 +43,7 @@ type Props = {
     lastUpdated: string;
     titleStep1: string;
     descStep1: string;
+    editable?: boolean;
 }
 
 function RoutinePack(props: Props) {
@@ -80,10 +82,10 @@ function RoutinePack(props: Props) {
                 />
 
                 <CardContent>
-                        <TextWithLimitation
-                            maxWidth={packMaxWidth}
-                            text={props.desc}
-                        />
+                    <TextWithLimitation
+                        maxWidth={packMaxWidth}
+                        text={props.desc}
+                    />
                 </CardContent>
 
                 <CardActions disableSpacing>
@@ -93,6 +95,14 @@ function RoutinePack(props: Props) {
                     <IconButton aria-label="share">
                         <ShareIcon />
                     </IconButton>
+                    {
+                        (props.editable)
+                            ?
+                            <IconButton>
+                                <EditIcon />
+                            </IconButton>
+                            : <div />
+                    }
                     <ExpandMore
                         expand={expanded}
                         onClick={handleExpandMoreClick}
