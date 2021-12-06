@@ -65,7 +65,7 @@ function Footer() {
         <Link
             to={"/" + linkName.link}
             style={{
-                textDecoration: "none"
+                textDecoration: "none",
             }}
             key={idx}
         >
