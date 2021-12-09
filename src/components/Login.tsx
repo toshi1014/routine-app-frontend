@@ -2,9 +2,12 @@ import React from 'react';
 import {
     Stack,
     Button,
+    Alert,
+    Snackbar,
 } from "@mui/material";
 import {
     Link,
+    useNavigate,
 } from "react-router-dom";
 import LoginSignupBase from "./LoginSignupBase";
 import {
@@ -14,9 +17,12 @@ import {
 import {
     ValidationStatus,
 } from "../utils/Types";
+import { loginApi } from "../api_handlers/handle";
 
 
 function Login() {
+    const navigate = useNavigate();
+
     const [errorEmail, setErrorEmail] = React.useState(false);
     const [errorPassword, setErrorPassword] = React.useState(false);
 
@@ -50,18 +56,31 @@ function Login() {
     };
 
 
-    const handleLogin = () => {
-        if ((inputRef.email.value !== "") && (inputRef.password.value !== "")) {
+    const handleLogin = async () => {
+        const email = inputRef.email.value;
+        const password = inputRef.password.value;
+
+        if ((email !== "") && (password !== "")) {
             const valid = isValid();
 
             console.log("==========================");
             if (valid) {
                 console.log("valid");
+
+                const boolSuccess = await loginApi(email, password);
+                if (boolSuccess) {
+                    navigate("/mypage_login");
+                } else {
+                    console.log("login failed");
+                    setErrorMessage("login failed");
+                    setOpenSnackBar(true);
+                }
+
             } else {
                 console.log("invalid");
             }
-            console.log(inputRef.email.value);
-            console.log(inputRef.password.value);
+            console.log("email:", email);
+            console.log("password: ", password);
         }
     }
 
@@ -94,17 +113,46 @@ function Login() {
         </Stack>
     );
 
+    // error snackbar
+    const [errorMessage, setErrorMessage] = React.useState("");
+    const [openSnackBar, setOpenSnackBar] = React.useState(false);
+    const handleCloseSnackBar = (
+        event?: React.SyntheticEvent,
+        reason?: string
+    ) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setOpenSnackBar(false);
+    };
+    // end; error snackbar
+
+
     return (
-        <LoginSignupBase
-            header="Login"
-            inputRef={inputRef}
-            errorEmail={errorEmail}
-            helperTextEmail={helperTextEmail}
-            errorPassword={errorPassword}
-            helperTextPassword={helperTextPassword}
-            elementList={elementList}
-            uniqueComp={uniqueComp}
-        />
+        <div>
+            <Snackbar
+                open={openSnackBar}
+                onClose={handleCloseSnackBar}
+                anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                }}
+            >
+                <Alert severity="error" onClose={handleCloseSnackBar}>
+                    {errorMessage}
+                </Alert>
+            </Snackbar>
+            <LoginSignupBase
+                header="Login"
+                inputRef={inputRef}
+                errorEmail={errorEmail}
+                helperTextEmail={helperTextEmail}
+                errorPassword={errorPassword}
+                helperTextPassword={helperTextPassword}
+                elementList={elementList}
+                uniqueComp={uniqueComp}
+            />
+        </div>
     );
 }
 

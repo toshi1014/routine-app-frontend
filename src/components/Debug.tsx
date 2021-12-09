@@ -1,37 +1,25 @@
 import React from 'react';
-import axios from "axios";
+import { getApi, postApi } from "../api_handlers/handle";
 
-
-const url = "http://localhost:8000/debug";
 
 function Debug() {
-    const [name, setName] = React.useState("John Doe");
+    const [username, setUsername] = React.useState("John Doe");
     const handleName = (event: any) => {
-        setName(event.target.value);
+        setUsername(event.target.value);
     }
 
     const getMethod = async () => {
-        try {
-            const res = await axios.get(url);
-            console.log(...res.data);
-        } catch (err) {
-            console.log("Err");
-            console.log(err);
-        }
+        const val = await getApi();
+        console.log(val);
     }
 
     const postMethod = async () => {
-        try {
-            const res = await axios.post(
-                url,
-                {
-                    "name": name
-                });
-            console.log(...res.data);
-        } catch (err){
-            console.log("Err");
-            console.log(err);
-        }
+        const val = await postApi(username);
+        console.log(val);
+    }
+
+    const showToken = () => {
+        console.log(localStorage.getItem("token"));
     }
 
     return (
@@ -42,6 +30,7 @@ function Debug() {
                 <input type="text" onChange={handleName} />
                 <button onClick={postMethod}>POST</button>
             </div>
+            <div><button onClick={showToken}>SHOW_TOKEN</button></div>
         </div>
     );
 }
