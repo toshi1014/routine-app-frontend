@@ -12,6 +12,9 @@ import CheckIcon from "@mui/icons-material/Check";
 import LoginSignupBase from "./LoginSignupBase";
 import PasswordIcon from "@mui/icons-material/Password";
 import {
+    useNavigate,
+} from "react-router-dom";
+import {
     isValidEmail,
     isValidPassword,
     isValidUsername,
@@ -19,9 +22,15 @@ import {
 import {
     ValidationStatus,
 } from "../utils/Types";
+import {
+    generateAuthCode,
+} from "../utils/utils";
+import { signupApi } from "../api_handlers/handle";
 
 
 function Signup() {
+    const navigate = useNavigate();
+
     const [errorEmail, setErrorEmail] = React.useState(false);
     const [errorPassword, setErrorPassword] = React.useState(false);
     const [errorUsername, setErrorUsername] = React.useState(false);
@@ -30,9 +39,10 @@ function Signup() {
     const [helperTextEmail, setHelperTextEmail] = React.useState("");
     const [helperTextPassword, setHelperTextPassword] = React.useState("");
     const [helperTextUsername, setHelperTextUsername] = React.useState("");
-    const [helperTextAuthCode, setHelperTextAuthCode] = React.useState("");
 
-    const inputRef = {
+    const authCode = generateAuthCode(5);
+
+    let inputRef = {
         email: {
             value: "",
         },
@@ -42,17 +52,14 @@ function Signup() {
         username: {
             value: "",
         },
-        authCode: {
-            value: "",
-        },
     }
 
-    const isValid = () => {
+    const isValid = async () => {
         const email = inputRef.email.value;
         const password = inputRef.password.value;
         const username = inputRef.username.value;
 
-        const emailStatus: ValidationStatus = isValidEmail(email);
+        const emailStatus: ValidationStatus = await isValidEmail(email);
         const passwordStatus: ValidationStatus = isValidPassword(password);
         const usernameStatus: ValidationStatus = isValidUsername(username);
 
@@ -65,24 +72,44 @@ function Signup() {
         setHelperTextUsername(usernameStatus.helperText);
 
         console.log(emailStatus.boolValid && passwordStatus.boolValid && usernameStatus.boolValid);
+
         return (emailStatus.boolValid && passwordStatus.boolValid && usernameStatus.boolValid);
     };
 
     const [boolValidInput, setBoolValidInput] = React.useState(false);
 
-    const handleSendEmail = () => {
-        const valid = isValid();
+    const handleSendEmail = async () => {
+        // XXX: become null afterward
+        const email = inputRef.email.value;
+        const password = inputRef.password.value;
+        const username = inputRef.username.value;
+        // end; XXX
+
+        const valid = await isValid();
 
         setBoolValidInput(valid);
 
         if (valid) {
             setAuthCodeComp(authCodeCompBase);
+            // TODO: send email
+            console.log("authCode:", authCode)
         }
 
         console.log("==========================");
-        console.log(inputRef.email.value);
-        console.log(inputRef.password.value);
-        console.log(inputRef.username.value);
+        console.log(email, password, username);
+
+        // XXX: fix nulled properties
+        inputRef = {
+            email: {
+                value: email,
+            },
+            password: {
+                value: password,
+            },
+            username: {
+                value: username,
+            },
+        }
     }
 
     const elementList = [
@@ -98,6 +125,7 @@ function Signup() {
                 <TextField
                     variant="outlined"
                     label="Username"
+                    disabled={boolValidInput}
                     error={errorUsername}
                     helperText={helperTextUsername}
                     inputRef={ref => { inputRef.username = ref; }}
@@ -117,9 +145,28 @@ function Signup() {
         ),
     ];
 
-    const handleAuthCode = () => {
-        console.log("handleAuthCode");
-        console.log(inputRef.authCode.value);
+    const handleChangeAuthCode = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.value == authCode) {
+            callSignupApi();
+        } else if (event.target.value.length >= authCode.length) {
+            setErrorMessage("bad code");
+            setOpenSnackBar(true);
+        }
+    }
+
+    const callSignupApi = async () => {
+        const boolSuccess: boolean = await signupApi(
+            inputRef.email.value,
+            inputRef.password.value,
+            inputRef.username.value,
+        );
+
+        if (boolSuccess) {
+            navigate("/mypage_login");
+        } else {
+            setErrorMessage("signup error");
+            setOpenSnackBar(true);
+        }
     }
 
     const [authCodeComp, setAuthCodeComp] = React.useState<React.ReactElement>();
@@ -145,23 +192,27 @@ function Signup() {
                             variant="outlined"
                             label="Code"
                             error={errorAuthCode}
-                            helperText={helperTextAuthCode}
-                            inputRef={ref => { inputRef.authCode = ref; }}
+                            onChange={handleChangeAuthCode}
                         />
-                    </Grid>
-                    <Grid item>
-                        <Button
-                            color="primary"
-                            variant="contained"
-                            onClick={handleAuthCode}
-                        >
-                            Create Account
-                        </Button>
                     </Grid>
                 </Grid>
             </CardContent>
         </Paper>
     )
+
+    // error snackbar
+    const [errorMessage, setErrorMessage] = React.useState("");
+    const [openSnackBar, setOpenSnackBar] = React.useState(false);
+    const handleCloseSnackBar = (
+        event?: React.SyntheticEvent,
+        reason?: string
+    ) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setOpenSnackBar(false);
+    };
+    // end; error snackbar
 
 
     return (
@@ -174,6 +225,11 @@ function Signup() {
             helperTextPassword={helperTextPassword}
             elementList={elementList}
             uniqueComp={authCodeComp}
+            disableTextField={boolValidInput}
+
+            openSnackBar={openSnackBar}
+            handleCloseSnackBar={handleCloseSnackBar}
+            errorMessage={errorMessage}
         />
     );
 }

@@ -39,11 +39,11 @@ function Login() {
         }
     }
 
-    const isValid = () => {
+    const isValid = async () => {
         const email = inputRef.email.value;
         const password = inputRef.password.value;
 
-        const emailStatus: ValidationStatus = isValidEmail(email);
+        const emailStatus: ValidationStatus = await isValidEmail(email);
         const passwordStatus: ValidationStatus = isValidPassword(password);
 
         setErrorEmail(!emailStatus.boolValid);
@@ -61,7 +61,7 @@ function Login() {
         const password = inputRef.password.value;
 
         if ((email !== "") && (password !== "")) {
-            const valid = isValid();
+            const valid = await isValid();
 
             console.log("==========================");
             if (valid) {
@@ -71,7 +71,6 @@ function Login() {
                 if (boolSuccess) {
                     navigate("/mypage_login");
                 } else {
-                    console.log("login failed");
                     setErrorMessage("login failed");
                     setOpenSnackBar(true);
                 }
@@ -129,30 +128,20 @@ function Login() {
 
 
     return (
-        <div>
-            <Snackbar
-                open={openSnackBar}
-                onClose={handleCloseSnackBar}
-                anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "center",
-                }}
-            >
-                <Alert severity="error" onClose={handleCloseSnackBar}>
-                    {errorMessage}
-                </Alert>
-            </Snackbar>
-            <LoginSignupBase
-                header="Login"
-                inputRef={inputRef}
-                errorEmail={errorEmail}
-                helperTextEmail={helperTextEmail}
-                errorPassword={errorPassword}
-                helperTextPassword={helperTextPassword}
-                elementList={elementList}
-                uniqueComp={uniqueComp}
-            />
-        </div>
+        <LoginSignupBase
+            header="Login"
+            inputRef={inputRef}
+            errorEmail={errorEmail}
+            helperTextEmail={helperTextEmail}
+            errorPassword={errorPassword}
+            helperTextPassword={helperTextPassword}
+            elementList={elementList}
+            uniqueComp={uniqueComp}
+
+            openSnackBar={openSnackBar}
+            handleCloseSnackBar={handleCloseSnackBar}
+            errorMessage={errorMessage}
+        />
     );
 }
 

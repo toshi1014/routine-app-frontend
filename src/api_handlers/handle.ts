@@ -3,6 +3,7 @@ import { ResLogin } from "./protocols";
 
 const baseUrl = "http://localhost:8000/";
 
+
 export const loginApi = async (email: string, password: string) => {
     const req = {
         "email": email,
@@ -16,6 +17,35 @@ export const loginApi = async (email: string, password: string) => {
     }
     return data.status;
 }
+
+
+export const isUniqueApi = async (column: string, val: string) => {
+    const req = {
+        "column": column,
+        "val": val,
+    }
+    const res = await axios.post(baseUrl + "is_unique/", req);
+    const boolUnique: boolean = res.data[0].status;
+
+    return boolUnique;
+}
+
+
+export const signupApi = async (email: string, password: string, username: string) => {
+    const req = {
+        "email": email,
+        "password": password,
+        "username": username,
+    }
+    const res = await axios.post(baseUrl + "signup/", req);
+    const data: ResLogin = res.data[0];
+
+    if (data.status){
+        localStorage.setItem("token", data.token);
+    }
+    return data.status;
+}
+
 
 export const getApi = async () => {
     try {

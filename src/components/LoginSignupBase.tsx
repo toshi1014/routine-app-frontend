@@ -5,13 +5,12 @@ import {
     Grid,
     Typography,
     Container,
-    Stack,
-    Button,
+    Alert,
+    Snackbar,
     CardContent,
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import KeyIcon from "@mui/icons-material/Key";
-import CheckIcon from '@mui/icons-material/Check';
 
 
 type InputRef = {
@@ -31,7 +30,12 @@ type Props = {
     errorPassword: boolean;
     helperTextPassword: string;
     elementList: Array<React.ReactElement>;
+    disableTextField?: boolean;
     uniqueComp?: React.ReactElement;
+
+    openSnackBar: boolean;
+    handleCloseSnackBar: () => void;
+    errorMessage: string;
 }
 
 
@@ -48,6 +52,7 @@ function LoginSignupBase(props: Props) {
             <TextField
                 variant="outlined"
                 label="Email Address"
+                disabled={props.disableTextField}
                 error={props.errorEmail}
                 helperText={props.helperTextEmail}
                 inputRef={ref => { props.inputRef.email = ref; }}
@@ -68,6 +73,7 @@ function LoginSignupBase(props: Props) {
                 variant="outlined"
                 label="Password"
                 type="password"
+                disabled={props.disableTextField}
                 error={props.errorPassword}
                 helperText={props.helperTextPassword}
                 inputRef={ref => { props.inputRef.password = ref; }}
@@ -75,33 +81,49 @@ function LoginSignupBase(props: Props) {
         </Grid>
     );
 
+
     return (
-        <Container maxWidth="sm">
-            <h1>{props.header}</h1>
-            <Paper variant="outlined" sx={{ width: 450 }}>
-                <CardContent sx={{ my: 3 }}>
-                    <Grid
-                        container
-                        direction="column"
-                        spacing={2}
-                        justifyContent="center"
-                        alignItems="center"
-                    >
-                        {emailComp}
-                        {passwordComp}
+        <div>
+            <Snackbar
+                open={props.openSnackBar}
+                onClose={props.handleCloseSnackBar}
+                anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                }}
+            >
+                <Alert severity="error" onClose={props.handleCloseSnackBar}>
+                    {props.errorMessage}
+                </Alert>
+            </Snackbar>
 
-                        {props.elementList.map((element: React.ReactElement, idx: number) =>
-                            <Grid item key={idx}>
-                                {element}
-                            </Grid>
-                        )}
-                    </Grid>
-                </CardContent>
-            </Paper>
+            <Container maxWidth="sm">
+                <h1>{props.header}</h1>
+                <Paper variant="outlined" sx={{ width: 450 }}>
+                    <CardContent sx={{ my: 3 }}>
+                        <Grid
+                            container
+                            direction="column"
+                            spacing={2}
+                            justifyContent="center"
+                            alignItems="center"
+                        >
+                            {emailComp}
+                            {passwordComp}
 
-            {props.uniqueComp}
+                            {props.elementList.map((element: React.ReactElement, idx: number) =>
+                                <Grid item key={idx}>
+                                    {element}
+                                </Grid>
+                            )}
+                        </Grid>
+                    </CardContent>
+                </Paper>
 
-        </Container>
+                {props.uniqueComp}
+
+            </Container>
+        </div>
     );
 }
 

@@ -1,18 +1,25 @@
 import {
     ValidationStatus
 } from "./Types";
+import { isUniqueApi } from "../api_handlers/handle";
 
-export const isValidEmail = (email: string): ValidationStatus => {
+
+export const isValidEmail = async (email: string): Promise<ValidationStatus> => {
     let boolValid = true;
     let helperText = "";
 
     // TODO: add email validation
 
+    const boolUnique = await isUniqueApi("email", email);
+    if (boolUnique) {
+        helperText = "already taken";
+    }
+
     if (!email.includes("@")) {
         helperText = "no @";
     }
 
-    if (email === ""){
+    if (email === "") {
         helperText = "required";
     }
 
@@ -32,7 +39,7 @@ export const isValidPassword = (password: string): ValidationStatus => {
 
     // TODO: add password validation
 
-    if (password === ""){
+    if (password === "") {
         helperText = "required";
     }
 
@@ -52,7 +59,7 @@ export const isValidUsername = (username: string): ValidationStatus => {
 
     // TODO: add username validation
 
-    if (username === ""){
+    if (username === "") {
         helperText = "required";
     }
 
