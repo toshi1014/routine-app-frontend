@@ -146,7 +146,7 @@ function Signup() {
     ];
 
     const handleChangeAuthCode = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.value == authCode) {
+        if (event.target.value === authCode) {
             callSignupApi();
         } else if (event.target.value.length >= authCode.length) {
             setErrorMessage("bad code");

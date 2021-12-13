@@ -19,6 +19,7 @@ import {
 } from "../utils/Types";
 import MyPageBase from "./MyPageBase";
 import { ListItem } from "../utils/ListItem";
+import { getMypageLoginApi } from "../api_handlers/handle";
 
 
 // TEMP:
@@ -51,6 +52,12 @@ const followingNum = 10;
 enum EnumTextFieldLabel {
     Username = "Edit Username",
     StatusMessage = "Edit Status Message",
+}
+
+const init = async () => {
+    const data = await getMypageLoginApi();
+    console.log("init");
+    console.log(data);
 }
 
 function MyPageLogin() {
@@ -246,6 +253,10 @@ function MyPageLogin() {
         }
     }, [foo]);
     // end; XXX
+
+    React.useEffect(() => {
+        init();
+    }, [])
 
 
     return (

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ResLogin } from "./protocols";
+import { Response, Mypage } from "./protocols";
 
 const baseUrl = "http://localhost:8000/";
 
@@ -10,7 +10,7 @@ export const loginApi = async (email: string, password: string) => {
         "password": password,
     }
     const res = await axios.post(baseUrl + "login/", req);
-    const data: ResLogin = res.data[0];
+    const data: Response<null> = res.data[0];
 
     if (data.status){
         localStorage.setItem("token", data.token);
@@ -33,17 +33,37 @@ export const isUniqueApi = async (column: string, val: string) => {
 
 export const signupApi = async (email: string, password: string, username: string) => {
     const req = {
-        "email": email,
-        "password": password,
-        "username": username,
+        email: email,
+        password: password,
+        username: username,
     }
     const res = await axios.post(baseUrl + "signup/", req);
-    const data: ResLogin = res.data[0];
+    const data: Response<null> = res.data[0];
 
     if (data.status){
         localStorage.setItem("token", data.token);
+        console.log("token created");
     }
     return data.status;
+}
+
+
+export const getMypageLoginApi = async () => {
+    const req = {
+        token: localStorage.getItem("token") + "jfa"
+    }
+    console.log(req.token);
+    const res = await axios.post(baseUrl + "mypage_login/", req);
+    const data: Response<Mypage> = res.data[0];
+
+    console.log("data:", data);
+
+    if (data.status){
+        localStorage.setItem("token", data.token);
+        return data.contents;
+    }else{
+        console.log("else");
+    }
 }
 
 
