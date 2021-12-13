@@ -11,9 +11,7 @@ const boolLoginStatus = true;
 function Header() {
     return (
         <div>
-            <ApplicationBar
-                boolLoginStatus={boolLoginStatus}
-            />
+            <ApplicationBar />
         </div>
     );
 }

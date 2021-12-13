@@ -27,12 +27,20 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
     Link,
+    useNavigate,
 } from "react-router-dom";
+import { decodeJwt } from "../utils/utils";
 
 
 // TEMP:
-const username = "John Smith";
-const email = "john.smith@gmail.com";
+const defaultUsername = "void";
+const defaultEmail = "void";
+
+const token = localStorage.getItem("token")
+const boolLoginStatus = (token === null) ? false : true;
+
+const username = (token === null) ? defaultUsername : decodeJwt(token).username;
+const email = (token === null) ? defaultEmail : decodeJwt(token).email;
 const userinfo = "foo";
 
 
@@ -87,27 +95,38 @@ const upperIconNameList: Array<IconName> = [
     },
 ];
 
-const lowerIconNameList: Array<IconName> = [
-    {
-        icon: <LoginIcon />,
-        name: "Login",
-        link: "login"
-    },
+const loginOrLogout: IconName = (boolLoginStatus) ?
     {
         icon: <LogoutIcon />,
         name: "Logout",
         link: "",        // TEMP: link for logout
-    },
+    }
+    :
+    {
+        icon: <LoginIcon />,
+        name: "Login",
+        link: "login"
+    };
+
+const lowerIconNameList: Array<IconName> = [
+    loginOrLogout,
 ];
 
 
 function MenuDrawer(props: Props) {
+    const navigate = useNavigate();
     const avatarSize = 35;
 
     const [expanded, setExpanded] = React.useState(false);
     const handleExpandMoreClick = () => {
         setExpanded(!expanded);
     };
+
+    const handleLogout = (link: string) => {
+        localStorage.removeItem("token");
+        navigate(link);
+        window.location.reload();
+    }
 
     const myStatus = (
         <Card sx={{ maxWidth: 345 }}>
@@ -180,7 +199,14 @@ function MenuDrawer(props: Props) {
                         }}
                         key={idx}
                     >
-                        <ListItem button>
+                        <ListItem
+                            button
+                            onClick={() => {
+                                if (iconNameLink.name === "Logout") {
+                                    handleLogout(iconNameLink.link);
+                                }
+                            }}
+                        >
                             <ListItemIcon>
                                 {iconNameLink.icon}
                             </ListItemIcon>
@@ -191,6 +217,7 @@ function MenuDrawer(props: Props) {
             </List>
         </Box>
     );
+
 
     return (
         <div>

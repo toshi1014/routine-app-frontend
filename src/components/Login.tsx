@@ -70,6 +70,7 @@ function Login() {
                 const boolSuccess = await loginApi(email, password);
                 if (boolSuccess) {
                     navigate("/mypage_login");
+                    window.location.reload();
                 } else {
                     setErrorMessage("login failed");
                     setOpenSnackBar(true);

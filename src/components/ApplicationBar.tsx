@@ -18,6 +18,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
+import {
+    Link,
+    useNavigate,
+} from "react-router-dom";
 import MenuDrawer from "./MenuDrawer";
 
 
@@ -64,11 +68,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 
-type Props = {
-    boolLoginStatus: boolean;
-}
+const token = localStorage.getItem("token")
+const boolLoginStatus = (token === null) ? false : true;
 
-function ApplicationBar(props: Props) {
+
+function ApplicationBar() {
+    const navigate = useNavigate();
     const avatarSize = 35;
     const [openMenuDrawer, setOpenMenuDrawer] = React.useState(false);
 
@@ -87,19 +92,10 @@ function ApplicationBar(props: Props) {
                 setOpenMenuDrawer(!openMenuDrawer);
             };
 
-    let userStatus;
-    if (props.boolLoginStatus) {
-        userStatus = (
-            <IconButton>
-                <LoginIcon />
-            </IconButton>
-        );
-    } else {
-        userStatus = (
-            <IconButton>
-                <LogoutIcon />
-            </IconButton>
-        );
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        navigate("");
+        window.location.reload();
     }
 
 
@@ -132,7 +128,7 @@ function ApplicationBar(props: Props) {
                             Foo
                         </Typography>
 
-                        {props.boolLoginStatus ?
+                        {boolLoginStatus ?
                             <Stack direction="row" spacing={2}>
                                 <Avatar
                                     alt="Smiley"
@@ -144,16 +140,24 @@ function ApplicationBar(props: Props) {
                                     }}
                                 />
                                 <Paper elevation={20} sx={{ height: 40 }} >
-                                    <IconButton>
+                                    <IconButton onClick={handleLogout}>
                                         <LogoutIcon />
                                     </IconButton>
                                 </Paper>
                             </Stack>
                             :
                             <Paper elevation={20} sx={{ height: 40 }} >
-                                <IconButton>
-                                    <LoginIcon />
-                                </IconButton>
+                                <Link
+                                    to="/login"
+                                    style={{
+                                        textDecoration: "none",
+                                        color: "white",
+                                    }}
+                                >
+                                    <IconButton>
+                                        <LoginIcon />
+                                    </IconButton>
+                                </Link>
                             </Paper>
                         }
 
