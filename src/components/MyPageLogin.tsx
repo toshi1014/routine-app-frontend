@@ -13,6 +13,9 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import {
+    useNavigate,
+} from "react-router-dom";
+import {
     RoutinePackContents,
     MenuChildProps,
     ChipData,
@@ -31,8 +34,6 @@ const hashtagList = [
     "English",
     "workout",
 ];
-const usernameOrgn = "John Smith";
-const contributor = usernameOrgn;
 const hashtagListOrgn: Array<ChipData> = hashtagList.map((val: string, idx: number) => {
     return {
         key: idx,
@@ -44,7 +45,6 @@ const desc = "Best Way to Create App, set aside off of the heat to let rest for 
 const lastUpdated = "2021, Dec 31";
 const titleStep1 = "Buy Computer";
 const descStep1 = "Choose best computer for you, set aside off of the heat to let rest for 10 minutes, and then serve.";
-const statusMessageOrgn = "G'day!";
 const followersNum = 10;
 const followingNum = 10;
 
@@ -54,15 +54,15 @@ enum EnumTextFieldLabel {
     StatusMessage = "Edit Status Message",
 }
 
-const init = async () => {
-    const data = await getMypageLoginApi();
-    console.log("init");
-    console.log(data);
-}
 
 function MyPageLogin() {
-    const [username, setUsername] = React.useState(usernameOrgn);
-    const [statusMessage, setStatusMessage] = React.useState(statusMessageOrgn);
+    const navigate = useNavigate();
+
+    const [username, setUsername] = React.useState("John Doe");
+    const [usernameOrgn, setUsernameOrgn] = React.useState("John Doe");
+    const contributor = usernameOrgn;
+
+    const [statusMessage, setStatusMessage] = React.useState("G'dai!");
 
     const [textInputValue, setTextInputValue] = React.useState("");
     const handleTextInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -255,6 +255,18 @@ function MyPageLogin() {
     // end; XXX
 
     React.useEffect(() => {
+        const init = async () => {
+            const contents = await getMypageLoginApi();
+            if (contents === null) {
+                console.log("is_authentication failed");
+                navigate("/login");
+            } else {
+                setUsername(contents.username);
+                setUsernameOrgn(contents.username);
+                setStatusMessage(contents.statusMessage);
+                console.log("contents:", contents);
+            }
+        }
         init();
     }, [])
 

@@ -42,7 +42,6 @@ export const signupApi = async (email: string, password: string, username: strin
 
     if (data.status){
         localStorage.setItem("token", data.token);
-        console.log("token created");
     }
     return data.status;
 }
@@ -50,19 +49,16 @@ export const signupApi = async (email: string, password: string, username: strin
 
 export const getMypageLoginApi = async () => {
     const req = {
-        token: localStorage.getItem("token") + "jfa"
+        token: localStorage.getItem("token")
     }
-    console.log(req.token);
     const res = await axios.post(baseUrl + "mypage_login/", req);
     const data: Response<Mypage> = res.data[0];
-
-    console.log("data:", data);
 
     if (data.status){
         localStorage.setItem("token", data.token);
         return data.contents;
     }else{
-        console.log("else");
+        return null;
     }
 }
 

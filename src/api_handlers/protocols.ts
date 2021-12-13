@@ -12,4 +12,5 @@ export type Response<T> =
 
 export type Mypage = {
     username: string;
+    statusMessage: string;
 }
