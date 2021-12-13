@@ -9,13 +9,13 @@ export const loginApi = async (email: string, password: string) => {
         "email": email,
         "password": password,
     }
-    const res = await axios.post(baseUrl + "login/", req);
-    const data: Response<null> = res.data[0];
+    const promiseRes = await axios.post(baseUrl + "login/", req);
+    const res: Response<null> = promiseRes.data[0];
 
-    if (data.status){
-        localStorage.setItem("token", data.token);
+    if (res.status) {
+        localStorage.setItem("token", res.token);
     }
-    return data.status;
+    return res.status;
 }
 
 
@@ -24,8 +24,8 @@ export const isUniqueApi = async (column: string, val: string) => {
         "column": column,
         "val": val,
     }
-    const res = await axios.post(baseUrl + "is_unique/", req);
-    const boolUnique: boolean = res.data[0].status;
+    const promiseRes = await axios.post(baseUrl + "is_unique/", req);
+    const boolUnique: boolean = promiseRes.data[0].status;
 
     return boolUnique;
 }
@@ -37,13 +37,13 @@ export const signupApi = async (email: string, password: string, username: strin
         password: password,
         username: username,
     }
-    const res = await axios.post(baseUrl + "signup/", req);
-    const data: Response<null> = res.data[0];
+    const promiseRes = await axios.post(baseUrl + "signup/", req);
+    const res: Response<null> = promiseRes.data[0];
 
-    if (data.status){
-        localStorage.setItem("token", data.token);
+    if (res.status) {
+        localStorage.setItem("token", res.token);
     }
-    return data.status;
+    return res.status;
 }
 
 
@@ -51,15 +51,29 @@ export const getMypageLoginApi = async () => {
     const req = {
         token: localStorage.getItem("token")
     }
-    const res = await axios.post(baseUrl + "mypage_login/", req);
-    const data: Response<Mypage> = res.data[0];
+    const promiseRes = await axios.post(baseUrl + "mypage_login/", req);
+    const res: Response<Mypage> = promiseRes.data[0];
 
-    if (data.status){
-        localStorage.setItem("token", data.token);
-        return data.contents;
-    }else{
-        return null;
+    if (res.status) {
+        localStorage.setItem("token", res.token);
     }
+    return res;
+}
+
+
+export const updateUserInfoApi = async (column: string, val: string) => {
+    const req = {
+        token: localStorage.getItem("token"),
+        column: column,
+        val: val,
+    }
+    const promiseRes = await axios.put(baseUrl + "mypage_login/update_user_info/", req);
+    const res: Response<null> = promiseRes.data[0];
+
+    if (res.status) {
+        localStorage.setItem("token", res.token);
+    }
+    return res;
 }
 
 
@@ -96,4 +110,10 @@ export const postApi = async (username: string) => {
     } else {
         console.log(data.reason);
     }
+}
+
+export const putApi = async (name: string) => {
+    const req = { name: "FOO" };
+    const res = await axios.put(baseUrl + "mypage_login/1/", req);
+    return res.data[0];
 }

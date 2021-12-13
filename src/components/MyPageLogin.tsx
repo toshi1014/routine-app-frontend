@@ -22,31 +22,26 @@ import {
 } from "../utils/Types";
 import MyPageBase from "./MyPageBase";
 import { ListItem } from "../utils/ListItem";
-import { getMypageLoginApi } from "../api_handlers/handle";
+import {
+    getMypageLoginApi,
+    updateUserInfoApi,
+} from "../api_handlers/handle";
 
 
 // TEMP:
-const hashtagList = [
-    "fishing",
-    "hobby",
-    "cooking",
-    "DIY",
-    "English",
-    "workout",
-];
-const hashtagListOrgn: Array<ChipData> = hashtagList.map((val: string, idx: number) => {
-    return {
-        key: idx,
-        label: val,
-    }
-});
+const defaultUsername = "John Doe";
+const defaultStatusMessage = "G'dai!";
+const defaultHashtagList = ["unhashable"];
+const defaultHashtagAddedList = [{ key: 0, label: defaultHashtagList[0] }];
+const defaultFollowingNum = 9999;
+const defaultFollowersNum = 9999;
+
+
 const title = "Happy Coding";
 const desc = "Best Way to Create App, set aside off of the heat to let rest for 10 minutes, and then serve.";
 const lastUpdated = "2021, Dec 31";
 const titleStep1 = "Buy Computer";
 const descStep1 = "Choose best computer for you, set aside off of the heat to let rest for 10 minutes, and then serve.";
-const followersNum = 10;
-const followingNum = 10;
 
 
 enum EnumTextFieldLabel {
@@ -58,11 +53,13 @@ enum EnumTextFieldLabel {
 function MyPageLogin() {
     const navigate = useNavigate();
 
-    const [username, setUsername] = React.useState("John Doe");
-    const [usernameOrgn, setUsernameOrgn] = React.useState("John Doe");
+    const [username, setUsername] = React.useState(defaultUsername);
+    const [usernameOrgn, setUsernameOrgn] = React.useState(defaultUsername);
     const contributor = usernameOrgn;
-
-    const [statusMessage, setStatusMessage] = React.useState("G'dai!");
+    const [statusMessage, setStatusMessage] = React.useState(defaultStatusMessage);
+    const [hashtagList, setHashtagList] = React.useState<Array<string>>(defaultHashtagList);
+    const [followingNum, setFollowingNum] = React.useState(defaultFollowingNum);
+    const [followersNum, setFollowersNum] = React.useState(defaultFollowersNum);
 
     const [textInputValue, setTextInputValue] = React.useState("");
     const handleTextInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,9 +79,16 @@ function MyPageLogin() {
 
     const [textFieldLabel, setTexFieldLabel] = React.useState("");
 
-    const handleChangeClick = () => {
+    const handleChangeClick = async () => {
         if (textFieldLabel === EnumTextFieldLabel.Username) {
             setUsername(textInputValue);
+            const res = await updateUserInfoApi("username", textInputValue);
+            if (!res.status) {
+                // force logout & redirect to login
+                localStorage.removeItem("token");
+                navigate("/login");
+                window.location.reload();
+            }
             console.log("username changed");
         } else if (textFieldLabel === EnumTextFieldLabel.StatusMessage) {
             setStatusMessage(textInputValue);
@@ -114,7 +118,7 @@ function MyPageLogin() {
 
     // hashtag
     const [hashtagAddedList, setHashtagAddedList] =
-        React.useState<Array<ChipData>>(hashtagListOrgn);
+        React.useState<Array<ChipData>>(defaultHashtagAddedList);
 
     const handleAddHashtag = () => {
         hashtagRef.value = hashtagRef.value.replace(/\s/g, '');
@@ -256,15 +260,30 @@ function MyPageLogin() {
 
     React.useEffect(() => {
         const init = async () => {
-            const contents = await getMypageLoginApi();
-            if (contents === null) {
-                console.log("is_authentication failed");
-                navigate("/login");
+            const res = await getMypageLoginApi();
+            if (res.status) {
+                setUsername(res.contents.username);
+                setUsernameOrgn(res.contents.username);
+                setStatusMessage(res.contents.statusMessage);
+                setHashtagList(res.contents.hashtagList);
+
+                const hashtagAddedListTmp: Array<ChipData> = res.contents.hashtagList.map((val: string, idx: number) => {
+                    return {
+                        key: idx,
+                        label: val,
+                    }
+                });
+                setHashtagAddedList(hashtagAddedListTmp);
+                setFollowingNum(res.contents.followingNum);
+                setFollowersNum(res.contents.followersNum);
+                console.log("contents:", res.contents);
             } else {
-                setUsername(contents.username);
-                setUsernameOrgn(contents.username);
-                setStatusMessage(contents.statusMessage);
-                console.log("contents:", contents);
+                console.log("is_authentication failed");
+
+                // force logout & redirect to login
+                localStorage.removeItem("token");
+                navigate("/login");
+                window.location.reload();
             }
         }
         init();

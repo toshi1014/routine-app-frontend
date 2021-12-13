@@ -1,5 +1,5 @@
 import React from 'react';
-import { getApi, postApi } from "../api_handlers/handle";
+import { getApi, postApi, putApi } from "../api_handlers/handle";
 
 
 function Debug() {
@@ -18,6 +18,11 @@ function Debug() {
         console.log(val);
     }
 
+    const updateMethod = async () => {
+        const val = await putApi(username);
+        console.log(val);
+    }
+
     const showToken = () => {
         console.log(localStorage.getItem("token"));
     }
@@ -30,6 +35,7 @@ function Debug() {
                 <input type="text" onChange={handleName} />
                 <button onClick={postMethod}>POST</button>
             </div>
+            <div><button onClick={updateMethod}>UPDATE</button></div>
             <div><button onClick={showToken}>SHOW_TOKEN</button></div>
         </div>
     );
