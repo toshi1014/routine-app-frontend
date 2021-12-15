@@ -49,7 +49,6 @@ export type RoutinePackContents = {
     contributor: string,
     title: string,
     desc: string,
-    lastUpdated: string,
     titleStep1: string,
     descStep1: string,
 }

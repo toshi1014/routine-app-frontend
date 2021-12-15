@@ -64,7 +64,6 @@ function MyPageBase(props: Props) {
                 contributor={posted.contributor}
                 title={posted.title + idx}
                 desc={posted.desc}
-                lastUpdated={posted.lastUpdated}
                 titleStep1={posted.titleStep1}
                 descStep1={posted.descStep1}
                 editable={props.chipInputComp ? true : false}
@@ -78,7 +77,6 @@ function MyPageBase(props: Props) {
                 contributor={faborite.contributor}
                 title={faborite.title + idx}
                 desc={faborite.desc}
-                lastUpdated={faborite.lastUpdated}
                 titleStep1={faborite.titleStep1}
                 descStep1={faborite.descStep1}
             />
@@ -241,7 +239,6 @@ function MyPageBase(props: Props) {
                                             contributor={draft.contributor}
                                             title={draft.title + idx}
                                             desc={draft.desc}
-                                            lastUpdated={draft.lastUpdated}
                                             titleStep1={draft.titleStep1}
                                             descStep1={draft.descStep1}
                                             editable={props.chipInputComp ? true : false}

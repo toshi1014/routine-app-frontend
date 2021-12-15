@@ -37,11 +37,11 @@ const defaultFollowingNum = 9999;
 const defaultFollowersNum = 9999;
 
 
-const title = "Happy Coding";
-const desc = "Best Way to Create App, set aside off of the heat to let rest for 10 minutes, and then serve.";
-const lastUpdated = "2021, Dec 31";
-const titleStep1 = "Buy Computer";
-const descStep1 = "Choose best computer for you, set aside off of the heat to let rest for 10 minutes, and then serve.";
+const defaultTitle = "Happy Coding";
+const defaultContributor = defaultUsername;
+const defaultDesc = "Best Way to Create App, set aside off of the heat to let rest for 10 minutes, and then serve.";
+const defaultTitleStep1 = "Buy Computer";
+const defaultDescStep1 = "Choose best computer for you, set aside off of the heat to let rest for 10 minutes, and then serve.";
 
 
 enum EnumTextFieldLabel {
@@ -204,24 +204,16 @@ function MyPageLogin() {
     );
     // end; hashtag
 
-    const postedList: Array<RoutinePackContents> = [
-        {
-            contributor: contributor,
-            title: title,
-            desc: desc,
-            lastUpdated: lastUpdated,
-            titleStep1: titleStep1,
-            descStep1: descStep1,
-        },
-        {
-            contributor: contributor,
-            title: title,
-            desc: desc,
-            lastUpdated: lastUpdated,
-            titleStep1: titleStep1,
-            descStep1: descStep1,
-        },
-    ];
+    const [postedList, setPostedList] =
+        React.useState<Array<RoutinePackContents>>([
+            {
+                contributor: defaultContributor,
+                title: defaultTitle,
+                desc: defaultDesc,
+                titleStep1: defaultTitleStep1,
+                descStep1: defaultDescStep1,
+            }
+        ]);
     const faboriteList = postedList;
     const draftList = postedList;
 
@@ -273,20 +265,22 @@ function MyPageLogin() {
         const init = async () => {
             const res = await getMypageLoginApi();
             if (res.status) {
-                setUsername(res.contents.username);
-                setUsernameOrgn(res.contents.username);
-                setStatusMessage(res.contents.statusMessage);
-                setHashtagList(res.contents.hashtagList);
+                setUsername(res.contents.header.username);
+                setUsernameOrgn(res.contents.header.username);
+                setStatusMessage(res.contents.header.statusMessage);
+                setHashtagList(res.contents.header.hashtagList);
 
-                const hashtagAddedListTmp: Array<ChipData> = res.contents.hashtagList.map((val: string, idx: number) => {
-                    return {
-                        key: idx,
-                        label: val,
-                    }
-                });
+                const hashtagAddedListTmp: Array<ChipData> =
+                    res.contents.header.hashtagList.map((val: string, idx: number) => {
+                        return {
+                            key: idx,
+                            label: val,
+                        }
+                    });
                 setHashtagAddedList(hashtagAddedListTmp);
-                setFollowingNum(res.contents.followingNum);
-                setFollowersNum(res.contents.followersNum);
+                setFollowingNum(res.contents.header.followingNum);
+                setFollowersNum(res.contents.header.followersNum);
+                setPostedList(res.contents.postedList);
                 console.log("contents:", res.contents);
             } else {
                 console.log("is_authentication failed");

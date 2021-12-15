@@ -40,7 +40,6 @@ type Props = {
     contributor: string;
     title: string;
     desc: string;
-    lastUpdated: string;
     titleStep1: string;
     descStep1: string;
     editable?: boolean;
@@ -48,7 +47,7 @@ type Props = {
 
 function RoutinePack(props: Props) {
     const avatarSize = 35;
-    const packMaxWidth = 345;
+    const packWidth = 345;
 
     const [expanded, setExpanded] = React.useState(false);
     const handleExpandMoreClick = () => {
@@ -58,7 +57,10 @@ function RoutinePack(props: Props) {
 
     return (
         <div>
-            <Card sx={{ maxWidth: packMaxWidth }}>
+            <Card sx={{
+                minWidth: packWidth,
+                maxWidth: packWidth
+            }}>
                 <CardHeader
                     avatar={
                         <Avatar
@@ -83,7 +85,7 @@ function RoutinePack(props: Props) {
 
                 <CardContent>
                     <TextWithLimitation
-                        maxWidth={packMaxWidth}
+                        maxWidth={packWidth}
                         text={props.desc}
                     />
                 </CardContent>
@@ -116,11 +118,11 @@ function RoutinePack(props: Props) {
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <CardContent>
                         <TextWithLimitation
-                            maxWidth={packMaxWidth}
+                            maxWidth={packWidth}
                             text={"1. " + props.titleStep1}
                         />
                         <TextWithLimitation
-                            maxWidth={packMaxWidth}
+                            maxWidth={packWidth}
                             text={props.descStep1}
                         />
                         <Typography paragraph>...</Typography>

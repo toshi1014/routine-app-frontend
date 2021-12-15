@@ -1,3 +1,5 @@
+import {RoutinePackContents} from "../utils/Types";
+
 export type Response<T> =
     | {
         status: true;
@@ -11,9 +13,12 @@ export type Response<T> =
     }
 
 export type Mypage = {
-    username: string;
-    statusMessage: string;
-    hashtagList: Array<string>;
-    followersNum: number;
-    followingNum: number;
+    header: {
+        username: string;
+        statusMessage: string;
+        hashtagList: Array<string>;
+        followersNum: number;
+        followingNum: number;
+    },
+    postedList: Array<RoutinePackContents>,
 }

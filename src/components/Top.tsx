@@ -50,7 +50,6 @@ function Top() {
             contributor={contributor}
             title={title + idx}
             desc={desc}
-            lastUpdated={lastUpdated}
             titleStep1={titleStep1}
             descStep1={descStep1}
             key={idx}
