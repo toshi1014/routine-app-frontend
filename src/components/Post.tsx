@@ -15,6 +15,9 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import {
+    useNavigate,
+} from "react-router-dom";
+import {
     RoutineElement,
     RoutineHeaderInput,
     RoutineElementInput,
@@ -24,6 +27,10 @@ import {
 } from "../utils/Types";
 import ContentsBase from "./ContentsBase";
 import { ListItem } from "../utils/ListItem";
+import { isAuthenticated } from "../utils/utils";
+import {
+    postApi,
+} from "../api_handlers/handle";
 
 
 // TEMP:
@@ -36,6 +43,8 @@ const hashtagList = <h1>b</h1>;
 
 
 function Post() {
+    const navigate = useNavigate();
+
     const title = (
         <TextField
             fullWidth
@@ -248,26 +257,56 @@ function Post() {
         return withoutNullEmpty.reverse();
     };
 
-    const handlePost = () => {
+    const handlePost = async () => {
         const routineElementsInputValue: Array<RoutineElement> = removeNullFromInput(routineElementRefList);
+        const res = await postApi(
+            routineHeaderRef.title.value,
+            routineHeaderRef.desc.value,
+            hashtagAddedList.map(hashtagAdded => { return hashtagAdded.label }),        // get labels
+            routineElementsInputValue,
+        );
 
-        console.log("============================")
-        console.log("routineHeader")
-        console.log("title:", routineHeaderRef.title.value);
-        console.log("desc:", routineHeaderRef.desc.value);
-        console.log("hashtag:")
-        hashtagAddedList.map(hashtag => console.log(hashtag.label));
-        console.log("\nroutineElements")
-
-        for (let i = 0; i < routineElementsInputValue.length; i++) {
-            const r = routineElementsInputValue[i];
-            console.log(i + 1 + ".");
-            console.log("title:", r.title);
-            console.log("subtitle:", r.subtitle);
-            console.log("desc:", r.desc);
+        if (res.status) {
+            navigate("/mypage_login");
+        } else {
+            // force logout & redirect to login
+            localStorage.removeItem("token");
+            navigate("/login");
+            window.location.reload();
         }
+
+        try{
+            console.log("============================")
+            console.log("routineHeader")
+            console.log("title:", routineHeaderRef.title.value);
+            console.log("desc:", routineHeaderRef.desc.value);
+            console.log("hashtag:")
+            hashtagAddedList.map(hashtag => console.log(hashtag.label));
+            console.log("\nroutineElements")
+
+            for (let i = 0; i < routineElementsInputValue.length; i++) {
+                const r = routineElementsInputValue[i];
+                console.log(i + 1 + ".");
+                console.log("title:", r.title);
+                console.log("subtitle:", r.subtitle);
+                console.log("desc:", r.desc);
+            }
+        }catch{}
     };
 
+
+    React.useEffect(() => {
+        const init = async () => {
+            const boolAuthenated = isAuthenticated();
+            if (!boolAuthenated) {
+                // force logout & redirect to login
+                localStorage.removeItem("token");
+                navigate("/login");
+                window.location.reload();
+            }
+        }
+        init();
+    }, [])
 
     // XXX:
     const [foo, setFoo] = React.useState(0);

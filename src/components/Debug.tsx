@@ -1,5 +1,5 @@
 import React from 'react';
-import { getApi, postApi, putApi } from "../api_handlers/handle";
+import { getApi, postApiDebug, putApi } from "../api_handlers/handle";
 
 
 function Debug() {
@@ -14,7 +14,7 @@ function Debug() {
     }
 
     const postMethod = async () => {
-        const val = await postApi(username);
+        const val = await postApiDebug(username);
         console.log(val);
     }
 

@@ -25,3 +25,21 @@ export const decodeJwt = (token: string) => {
     }).join(''));
     return JSON.parse(jsonPayload);
 };
+
+
+export const isAuthenticated = () => {
+    const token = localStorage.getItem("token");
+    try {
+        if (token === null) return false;
+        const decodedToken = decodeJwt(token);
+        const d = new Date();
+        const now = d.getTime() * 0.001;
+        if (now < Number(decodedToken.exp)) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch{
+        return false;
+    }
+}

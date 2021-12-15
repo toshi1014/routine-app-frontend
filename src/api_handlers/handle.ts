@@ -1,5 +1,8 @@
 import axios from "axios";
 import { Response, Mypage } from "./protocols";
+import {
+    RoutineElement,
+} from "../utils/Types";
 
 const baseUrl = "http://localhost:8000/";
 
@@ -76,6 +79,28 @@ export const updateUserInfoApi = async (column: string, val: string) => {
     return res;
 }
 
+export const postApi = async (
+    title: string,
+    desc: string,
+    hashtagLabelList: Array<string>,
+    routineElements: Array<RoutineElement>,
+) => {
+    const req = {
+        token: localStorage.getItem("token"),
+        title: title,
+        desc: desc,
+        hashtagLabelList: hashtagLabelList,
+        routineElements: routineElements,
+    }
+    const promiseRes = await axios.post(baseUrl + "post/", req);
+    const res: Response<null> = promiseRes.data[0];
+
+    if (res.status) {
+        localStorage.setItem("token", res.token);
+    }
+    return res;
+}
+
 
 export const getApi = async () => {
     try {
@@ -93,9 +118,9 @@ export const getApi = async () => {
 }
 
 
-export const postApi = async (username: string) => {
+export const postApiDebug = async (username: string) => {
     const res = await axios.post(
-        baseUrl + "post/",
+        baseUrl + "post_debug/",
         {
             "username": username,
             "password": "8979",
