@@ -79,19 +79,24 @@ function MyPageLogin() {
 
     const [textFieldLabel, setTexFieldLabel] = React.useState("");
 
+    const updateUserInfoWrapper = async (column: string, val: string) => {
+        const res = await updateUserInfoApi(column, val);
+        if (!res.status) {
+            // force logout & redirect to login
+            localStorage.removeItem("token");
+            navigate("/login");
+            window.location.reload();
+        }
+    }
+
     const handleChangeClick = async () => {
         if (textFieldLabel === EnumTextFieldLabel.Username) {
             setUsername(textInputValue);
-            const res = await updateUserInfoApi("username", textInputValue);
-            if (!res.status) {
-                // force logout & redirect to login
-                localStorage.removeItem("token");
-                navigate("/login");
-                window.location.reload();
-            }
-            console.log("username changed");
+            await updateUserInfoWrapper("username", textInputValue);
+            console.log("username changed successfully");
         } else if (textFieldLabel === EnumTextFieldLabel.StatusMessage) {
             setStatusMessage(textInputValue);
+            await updateUserInfoWrapper("status_message", textInputValue);
             console.log("statusMessage changed");
         } else {
             throw new Error;
@@ -120,7 +125,7 @@ function MyPageLogin() {
     const [hashtagAddedList, setHashtagAddedList] =
         React.useState<Array<ChipData>>(defaultHashtagAddedList);
 
-    const handleAddHashtag = () => {
+    const handleAddHashtag = async () => {
         hashtagRef.value = hashtagRef.value.replace(/\s/g, '');
         if (hashtagRef.value !== "") {
             let hashtagAddedListTmp = hashtagAddedList;
@@ -136,6 +141,12 @@ function MyPageLogin() {
             console.log("Hashtag added");
 
             setHashtagAddedList(hashtagAddedListTmp);
+            await updateUserInfoWrapper(
+                "hashtag_list",
+                hashtagAddedListTmp.map(hashtagAdded => {
+                    return hashtagAdded.label
+                }).join(",")        // get label & concat with ","
+            );
             hashtagRef.value = "";
             update();
         }
