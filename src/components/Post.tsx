@@ -38,7 +38,7 @@ const username = "John Smith";
 
 const like = 0;
 const contributor = username;
-const lastUpdated = "----, -- --";
+const lastUpdated = "----, --:--";
 const hashtagList = <h1>b</h1>;
 
 

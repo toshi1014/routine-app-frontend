@@ -39,6 +39,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 
 type Props = RoutinePackContents & {
     editable?: boolean;
+    handleClickEdit?: ()=>void;
 }
 
 function RoutinePack(props: Props) {
@@ -96,7 +97,7 @@ function RoutinePack(props: Props) {
                     {
                         (props.editable)
                             ?
-                            <IconButton>
+                            <IconButton onClick={props.handleClickEdit}>
                                 <EditIcon />
                             </IconButton>
                             : <div />

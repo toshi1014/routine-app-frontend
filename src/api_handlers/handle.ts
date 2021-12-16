@@ -2,6 +2,7 @@ import axios from "axios";
 import { Response, Mypage } from "./protocols";
 import {
     RoutineElement,
+    RoutineContents,
 } from "../utils/Types";
 
 const baseUrl = "http://localhost:8000/";
@@ -98,6 +99,21 @@ export const postOrDraftApi = async (
     }
     const promiseRes = await axios.post(baseUrl + "post_or_draft/", req);
     const res: Response<null> = promiseRes.data[0];
+
+    if (res.status) {
+        localStorage.setItem("token", res.token);
+    }
+    return res;
+}
+
+
+export const getDraftApi = async (id: number) => {
+    const req = {
+        token: localStorage.getItem("token"),
+        id: id,
+    }
+    const promiseRes = await axios.post(baseUrl + "mypage_login/get_draft/", req);
+    const res: Response<RoutineContents> = promiseRes.data[0];
 
     if (res.status) {
         localStorage.setItem("token", res.token);

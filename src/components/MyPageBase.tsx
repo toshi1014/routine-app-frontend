@@ -18,6 +18,7 @@ import Facebookicon from "@mui/icons-material/Facebook";
 import Twitter from "@mui/icons-material/Twitter";
 import Instagram from "@mui/icons-material/Instagram";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import { useNavigate } from "react-router-dom";
 import { MenuChildProps, RoutinePackContents } from "../utils/Types";
 
 
@@ -37,6 +38,7 @@ type Props = {
 
 
 function MyPageBase(props: Props) {
+    const navigate = useNavigate();
     const avatarSize = 80;
 
     // Menu
@@ -58,16 +60,23 @@ function MyPageBase(props: Props) {
     }
     // end; Menu
 
+    const handleClickEdit = (strPostOrDraft: string, id: number) => {
+        navigate("edit/" + strPostOrDraft + "/" + id);
+    }
+
     const postedListComp = props.postedList.map((posted, idx: number) =>
         <Grid item key={idx}>
             <RoutinePack
-                id={1}
+                id={posted.id}
                 contributor={posted.contributor}
                 title={posted.title}
                 desc={posted.desc}
                 titleStep1={posted.titleStep1}
                 descStep1={posted.descStep1}
                 editable={props.chipInputComp ? true : false}
+                handleClickEdit={
+                    () => handleClickEdit("post", posted.id)
+                }
             />
         </Grid>
     );
@@ -75,7 +84,7 @@ function MyPageBase(props: Props) {
     const faboriteListComp = props.faboriteList.map((faborite, idx: number) =>
         <Grid item key={idx}>
             <RoutinePack
-                id={1}
+                id={faborite.id}
                 contributor={faborite.contributor}
                 title={faborite.title}
                 desc={faborite.desc}
@@ -246,13 +255,16 @@ function MyPageBase(props: Props) {
                                 {props.draftList.map((draft, idx: number) =>
                                     <Grid item key={idx}>
                                         <RoutinePack
-                                            id={1}
+                                            id={draft.id}
                                             contributor={draft.contributor}
                                             title={draft.title}
                                             desc={draft.desc}
                                             titleStep1={draft.titleStep1}
                                             descStep1={draft.descStep1}
                                             editable={props.chipInputComp ? true : false}
+                                            handleClickEdit={
+                                                () => handleClickEdit("draft", draft.id)
+                                            }
                                         />
                                     </Grid>
                                 )}

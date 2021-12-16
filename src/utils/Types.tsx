@@ -45,6 +45,11 @@ export type RoutineElementRef = RoutineHeaderRef & {
     },
 }
 
+export type RoutineContents = {
+    header: RoutineHeader;
+    elementList: Array<RoutineElement>;
+}
+
 export type RoutinePackContents = {
     id: number;
     contributor: string;
