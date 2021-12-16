@@ -58,6 +58,7 @@ function SearchResults() {
     const resultList = range(0, 5).map((idx: number) =>
         <Grid item key={idx}>
             <RoutinePack
+                id={1}
                 contributor={contributor}
                 title={title + idx}
                 desc={desc}

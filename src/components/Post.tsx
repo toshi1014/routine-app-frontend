@@ -29,7 +29,7 @@ import ContentsBase from "./ContentsBase";
 import { ListItem } from "../utils/ListItem";
 import { isAuthenticated } from "../utils/utils";
 import {
-    postApi,
+    postOrDraftApi,
 } from "../api_handlers/handle";
 
 
@@ -257,9 +257,10 @@ function Post() {
         return withoutNullEmpty.reverse();
     };
 
-    const handlePost = async () => {
+    const postDraftBase = async (strPostOrDraft: string) => {
         const routineElementsInputValue: Array<RoutineElement> = removeNullFromInput(routineElementRefList);
-        const res = await postApi(
+        const res = await postOrDraftApi(
+            strPostOrDraft,
             routineHeaderRef.title.value,
             routineHeaderRef.desc.value,
             hashtagAddedList.map(hashtagAdded => { return hashtagAdded.label }),        // get labels
@@ -275,7 +276,7 @@ function Post() {
             window.location.reload();
         }
 
-        try{
+        try {
             console.log("============================")
             console.log("routineHeader")
             console.log("title:", routineHeaderRef.title.value);
@@ -291,7 +292,16 @@ function Post() {
                 console.log("subtitle:", r.subtitle);
                 console.log("desc:", r.desc);
             }
-        }catch{}
+        } catch{ }
+
+    }
+
+    const handlePost = async () => {
+        await postDraftBase("post");
+    };
+
+    const handleDraft = async () => {
+        await postDraftBase("draft");
     };
 
 
@@ -398,7 +408,7 @@ function Post() {
                     variant="outlined"
                     color="secondary"
                     type="submit"
-                    onClick={handlePost}
+                    onClick={handleDraft}
                 >
                     SAVE
                 </Button>

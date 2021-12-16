@@ -79,20 +79,24 @@ export const updateUserInfoApi = async (column: string, val: string) => {
     return res;
 }
 
-export const postApi = async (
+export const postOrDraftApi = async (
+    strPostOrDraft: string,
     title: string,
     desc: string,
     hashtagLabelList: Array<string>,
     routineElements: Array<RoutineElement>,
 ) => {
+    if (strPostOrDraft !== "post" && strPostOrDraft !== "draft") throw new Error("");
+
     const req = {
+        postOrDraft: strPostOrDraft,
         token: localStorage.getItem("token"),
         title: title,
         desc: desc,
         hashtagLabelList: hashtagLabelList,
         routineElements: routineElements,
     }
-    const promiseRes = await axios.post(baseUrl + "post/", req);
+    const promiseRes = await axios.post(baseUrl + "post_or_draft/", req);
     const res: Response<null> = promiseRes.data[0];
 
     if (res.status) {

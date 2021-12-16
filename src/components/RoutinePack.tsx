@@ -19,6 +19,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ShareIcon from "@mui/icons-material/Share";
 import EditIcon from "@mui/icons-material/Edit";
 import TextWithLimitation from "./TextWithLimitation";
+import { RoutinePackContents } from "../utils/Types";
 
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -36,12 +37,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
     }),
 }));
 
-type Props = {
-    contributor: string;
-    title: string;
-    desc: string;
-    titleStep1: string;
-    descStep1: string;
+type Props = RoutinePackContents & {
     editable?: boolean;
 }
 

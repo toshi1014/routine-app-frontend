@@ -61,8 +61,9 @@ function MyPageBase(props: Props) {
     const postedListComp = props.postedList.map((posted, idx: number) =>
         <Grid item key={idx}>
             <RoutinePack
+                id={1}
                 contributor={posted.contributor}
-                title={posted.title + idx}
+                title={posted.title}
                 desc={posted.desc}
                 titleStep1={posted.titleStep1}
                 descStep1={posted.descStep1}
@@ -74,8 +75,9 @@ function MyPageBase(props: Props) {
     const faboriteListComp = props.faboriteList.map((faborite, idx: number) =>
         <Grid item key={idx}>
             <RoutinePack
+                id={1}
                 contributor={faborite.contributor}
-                title={faborite.title + idx}
+                title={faborite.title}
                 desc={faborite.desc}
                 titleStep1={faborite.titleStep1}
                 descStep1={faborite.descStep1}
@@ -215,20 +217,28 @@ function MyPageBase(props: Props) {
 
                 <CardContent>
                     <h2>Posted</h2>
-                    <Grid container direction="row" spacing={1}>
-                        {postedListComp}
-                    </Grid>
+                    {props.postedList.length == 0 ?
+                        <h4>no posts yet</h4>
+                        :
+                        <Grid container direction="row" spacing={1}>
+                            {postedListComp}
+                        </Grid>
+                    }
                 </CardContent>
 
                 <CardContent>
                     <h2>Faborites</h2>
-                    <Grid container direction="row" spacing={1}>
-                        {faboriteListComp}
-                    </Grid>
+                    {props.faboriteList.length == 0 ?
+                        <h4>no fabs yet</h4>
+                        :
+                        <Grid container direction="row" spacing={1}>
+                            {faboriteListComp}
+                        </Grid>
+                    }
                 </CardContent>
 
                 {
-                    (props.draftList)
+                    (props.draftList && props.draftList.length !== 0)
                         ?
                         <CardContent>
                             <h2>Drafts</h2>
@@ -236,8 +246,9 @@ function MyPageBase(props: Props) {
                                 {props.draftList.map((draft, idx: number) =>
                                     <Grid item key={idx}>
                                         <RoutinePack
+                                            id={1}
                                             contributor={draft.contributor}
-                                            title={draft.title + idx}
+                                            title={draft.title}
                                             desc={draft.desc}
                                             titleStep1={draft.titleStep1}
                                             descStep1={draft.descStep1}

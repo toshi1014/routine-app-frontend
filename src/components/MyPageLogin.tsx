@@ -29,6 +29,7 @@ import {
 
 
 // TEMP:
+const defaultId = 1;
 const defaultUsername = "John Doe";
 const defaultStatusMessage = "G'dai!";
 const defaultHashtagList = ["unhashable"];
@@ -207,6 +208,7 @@ function MyPageLogin() {
     const [postedList, setPostedList] =
         React.useState<Array<RoutinePackContents>>([
             {
+                id: defaultId,
                 contributor: defaultContributor,
                 title: defaultTitle,
                 desc: defaultDesc,
@@ -215,7 +217,18 @@ function MyPageLogin() {
             }
         ]);
     const faboriteList = postedList;
-    const draftList = postedList;
+
+    const [draftList, setDraftList] =
+        React.useState<Array<RoutinePackContents>>([
+            {
+                id: defaultId,
+                contributor: defaultContributor,
+                title: defaultTitle,
+                desc: defaultDesc,
+                titleStep1: defaultTitleStep1,
+                descStep1: defaultDescStep1,
+            }
+        ]);
 
     // Menu
     const [searchBoxValue, setSearchBoxValue] = React.useState("");
@@ -281,6 +294,7 @@ function MyPageLogin() {
                 setFollowingNum(res.contents.header.followingNum);
                 setFollowersNum(res.contents.header.followersNum);
                 setPostedList(res.contents.postedList);
+                setDraftList(res.contents.draftList);
                 console.log("contents:", res.contents);
             } else {
                 console.log("is_authentication failed");

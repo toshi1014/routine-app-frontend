@@ -38,6 +38,7 @@ function MyPage() {
 
     const postedList: Array<RoutinePackContents> = [
         {
+            id: 1,
             contributor: contributor,
             title: title,
             desc: desc,
@@ -45,6 +46,7 @@ function MyPage() {
             descStep1: descStep1,
         },
         {
+            id: 1,
             contributor: contributor,
             title: title,
             desc: desc,

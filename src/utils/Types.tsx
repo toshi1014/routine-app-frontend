@@ -46,11 +46,12 @@ export type RoutineElementRef = RoutineHeaderRef & {
 }
 
 export type RoutinePackContents = {
-    contributor: string,
-    title: string,
-    desc: string,
-    titleStep1: string,
-    descStep1: string,
+    id: number;
+    contributor: string;
+    title: string;
+    desc: string;
+    titleStep1: string;
+    descStep1: string;
 }
 
 export type ValidationStatus = {
