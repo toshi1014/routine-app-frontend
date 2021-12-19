@@ -47,6 +47,7 @@ const hashtagList = <h1>None</h1>;  // dummy
 type Props = {
     header?: RoutineHeader;
     elementList?: Array<RoutineElement>;
+    postId?: number;
 }
 
 function PostEditBase(props: Props) {
@@ -115,7 +116,11 @@ function PostEditBase(props: Props) {
                     fullWidth
                     label="title"
                     variant="filled"
-                    defaultValue={props.elementList ? props.elementList[idx].title : null}
+                    defaultValue={
+                        props.elementList && props.elementList[idx]
+                            ? props.elementList[idx].title
+                            : null
+                    }
                     inputRef={ref => { routineElementRefList[idx].title = ref; }}
                 />
             ),
@@ -126,7 +131,11 @@ function PostEditBase(props: Props) {
                     label="subtitle"
                     variant="standard"
                     sx={{ my: 3 }}
-                    defaultValue={props.elementList ? props.elementList[idx].subtitle : null}
+                    defaultValue={
+                        props.elementList && props.elementList[idx]
+                            ? props.elementList[idx].subtitle
+                            : null
+                    }
                     inputRef={ref => { routineElementRefList[idx].subtitle = ref; }}
                 />
             ),
@@ -137,7 +146,11 @@ function PostEditBase(props: Props) {
                     multiline
                     label="desc"
                     variant="outlined"
-                    defaultValue={props.elementList ? props.elementList[idx].desc : null}
+                    defaultValue={
+                        props.elementList && props.elementList[idx]
+                            ? props.elementList[idx].desc
+                            : null
+                    }
                     inputRef={ref => { routineElementRefList[idx].desc = ref; }}
                 />
             ),
@@ -282,6 +295,7 @@ function PostEditBase(props: Props) {
         const routineElementsInputValue: Array<RoutineElement> = removeNullFromInput(routineElementRefList);
         const res = await postOrDraftApi(
             strPostOrDraft,
+            (props.postId ? props.postId : null),
             routineHeaderRef.title.value,
             routineHeaderRef.desc.value,
             hashtagAddedList.map(hashtagAdded => { return hashtagAdded.label }),        // get labels
@@ -340,7 +354,6 @@ function PostEditBase(props: Props) {
 
             setUsername(decodeJwt(token).username);
 
-
             if (props.elementList) {
                 props.elementList.map((element: RoutineElement, idx: number) => {
                     if (idx !== 0) {    // skip first element, cuz routineElement got init in useState
@@ -389,6 +402,17 @@ function PostEditBase(props: Props) {
         let routineElementListTmp = routineElementList;
         routineElementListTmp.pop();
         setRoutineElementList(routineElementListTmp);
+
+        const deletedIdx = routineElementListTmp.length;
+        if (props.elementList && props.elementList[deletedIdx]) {
+            props.elementList[deletedIdx] = {
+                title: "",
+                subtitle: "",
+                desc: "",
+                imagePath: "",
+            };
+            console.log("deleted", deletedIdx);
+        }
 
         // XXX: not working
         // let routineElementRefListTmp = routineElementRefList;

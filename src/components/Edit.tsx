@@ -41,11 +41,14 @@ const defaultElementList: Array<RoutineElement> = [
     },
 ]
 
+const defaultPostId = 0;
+
 function Edit() {
     const navigate = useNavigate();
 
     const [header, setHeader] = React.useState<RoutineHeader>(defaultHeader);
     const [elementList, setElementList] = React.useState<Array<RoutineElement>>(defaultElementList);
+    const [postId, setPostId] = React.useState(defaultPostId);
 
     React.useEffect(() => {
         const init = async () => {
@@ -54,12 +57,14 @@ function Edit() {
             const splitHrefLength = splitHref.length;
             const postOrDraft = splitHref[splitHrefLength - 2];
             const id = Number(splitHref[splitHrefLength - 1]);
+            setPostId(id);
 
             const res = await getDraftApi(id);
 
             if (res.status) {
                 console.log(res.contents);
                 setHeader(res.contents.header);
+                setElementList(res.contents.elementList);
                 update();
             } else {
                 console.log("is_authentication failed");
@@ -92,12 +97,18 @@ function Edit() {
 
 
     return (
-        <PostEditBase
-            header={header}
-            elementList={elementList}
-        />
+        (
+            // XXX: useState don't got updated
+            (header !== defaultHeader) && (elementList !== defaultElementList) && (postId !== defaultPostId)
+                ?
+                <PostEditBase
+                    header={header}
+                    elementList={elementList}
+                    postId={postId}
+                />
+                : <div><h3>Thanks for your patience!</h3></div>
+        )
     );
 }
 
 export default Edit;
-

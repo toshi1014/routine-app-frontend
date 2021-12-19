@@ -82,6 +82,7 @@ export const updateUserInfoApi = async (column: string, val: string) => {
 
 export const postOrDraftApi = async (
     strPostOrDraft: string,
+    postId: number | null,
     title: string,
     desc: string,
     hashtagLabelList: Array<string>,
@@ -90,8 +91,9 @@ export const postOrDraftApi = async (
     if (strPostOrDraft !== "post" && strPostOrDraft !== "draft") throw new Error("");
 
     const req = {
-        postOrDraft: strPostOrDraft,
         token: localStorage.getItem("token"),
+        postOrDraft: strPostOrDraft,
+        postId: postId,
         title: title,
         desc: desc,
         hashtagLabelList: hashtagLabelList,
