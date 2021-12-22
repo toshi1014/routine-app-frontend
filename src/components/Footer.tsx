@@ -32,7 +32,7 @@ const footerLinkList: Array<LinkName> = [
     },
     {
         name: "RoutineContents",
-        link: "routine_contents"
+        link: "routine_contents/0"
     },
     {
         name: "SearchResults",

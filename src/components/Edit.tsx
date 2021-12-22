@@ -73,7 +73,6 @@ function Edit() {
                 console.log(res.contents);
                 setHeader(res.contents.header);
                 setElementList(res.contents.elementList);
-                update();
             } else {
                 console.log("is_authentication failed");
 
@@ -87,21 +86,6 @@ function Edit() {
         }
         init();
     }, [])
-
-    // XXX:
-    const [foo, setFoo] = React.useState(0);
-    const update = () => {
-        setFoo(foo + 1);
-    };
-    React.useEffect(() => {
-        if (foo % 2 === 1) {
-            update();
-        }
-    }, [foo]);
-    React.useEffect(() => {
-        update();
-    }, [header, elementList]);
-    // end; XXX
 
 
     return (

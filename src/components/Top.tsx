@@ -47,13 +47,13 @@ function Top() {
 
     const polularRoutineList = range(0, 5).map((idx: number) =>
         <RoutinePack
-            id={1}
-            contributor = { contributor }
-            title = { title + idx }
-            desc = { desc }
-            titleStep1 = { titleStep1 }
-            descStep1 = { descStep1 }
-            key = { idx }
+            id={0}
+            contributor={contributor}
+            title={title + idx}
+            desc={desc}
+            titleStep1={titleStep1}
+            descStep1={descStep1}
+            key={idx}
         />
     );
 

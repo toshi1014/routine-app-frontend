@@ -9,6 +9,7 @@ import {
     CardHeader,
     CardMedia,
     Button,
+    ButtonBase,
     CardContent,
     MenuItem,
     Menu,
@@ -30,6 +31,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ReportIcon from "@mui/icons-material/Report";
+import { Link } from "react-router-dom";
 import TextWithLimitation from "./TextWithLimitation";
 import { RoutinePackContents } from "../utils/Types";
 
@@ -81,6 +83,11 @@ function RoutinePack(props: Props) {
         setOpenDialog(false);
     }
 
+    const handleClickCard = () => {
+        console.log("Card clicked");
+    }
+
+
     const dialogComp = (
         <Dialog
             open={openDialog}
@@ -107,12 +114,14 @@ function RoutinePack(props: Props) {
 
     return (
         <div>
+
             {dialogComp}
 
             <Card sx={{
                 minWidth: packWidth,
                 maxWidth: packWidth
             }}>
+
                 <CardHeader
                     avatar={
                         <Avatar
@@ -148,12 +157,21 @@ function RoutinePack(props: Props) {
                     }
                     title={props.title}
                 />
-                <CardMedia
-                    component="img"
-                    height="194"
-                    image={process.env.PUBLIC_URL + "/logo192.png"}
-                    alt="Paella dish"
-                />
+
+                <Link
+                    to={"/routine_contents/" + props.id}
+                    style={{
+                        textDecoration: "none",
+                        color: "white",
+                    }}
+                >
+                    <CardMedia
+                        component="img"
+                        height="194"
+                        image={process.env.PUBLIC_URL + "/logo192.png"}
+                        alt="Paella dish"
+                    />
+                </Link>
 
                 <CardContent>
                     <TextWithLimitation

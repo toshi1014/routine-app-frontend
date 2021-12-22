@@ -42,7 +42,7 @@ function App() {
                 <Header />
                 <Routes>
                     <Route path="/" element={<Top />} />
-                    <Route path="/routine_contents" element={<RoutineContents />} />
+                    <Route path="/routine_contents/:id" element={<RoutineContents />} />
                     <Route path="/search_results" element={<SearchResults />} />
                     <Route path="/post" element={<Post />} />
                     <Route path="/login" element={<Login />} />
