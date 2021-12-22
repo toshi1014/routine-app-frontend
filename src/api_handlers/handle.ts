@@ -112,6 +112,12 @@ export const postOrDraftApi = async (
 }
 
 
+export const getContentsApi = async (id: number) => {
+    const promiseRes = await axios.get(baseUrl + "contents/" + id + "/");
+    const res: Response<RoutineContents> = promiseRes.data[0];
+    return res;
+}
+
 export const getDraftApi = async (id: number) => {
     const req = {
         token: localStorage.getItem("token"),

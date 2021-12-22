@@ -1,7 +1,10 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
 import PostEditBase from "./PostEditBase";
-import { getDraftApi } from "../api_handlers/handle";
+import {
+    getContentsApi,
+    getDraftApi,
+} from "../api_handlers/handle";
 import {
     RoutineHeader,
     RoutineElement,
@@ -60,7 +63,11 @@ function Edit() {
         const init = async () => {
             setPostId(id);
 
-            const res = await getDraftApi(id);
+            const res = (
+                postOrDraft === "post"
+                    ? await getContentsApi(id)
+                    : await getDraftApi(id)
+            );
 
             if (res.status) {
                 console.log(res.contents);
