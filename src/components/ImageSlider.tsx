@@ -11,7 +11,7 @@ function ImageSlider() {
     const items = range(1, slideImageNum + 1).map((idx: number) =>
         <img
             src={
-                "static/slide_images/slide_image" + idx + ".png"
+                process.env.PUBLIC_URL + "/static/slide_images/slide_image" + idx + ".png"
             }
             onDragStart={handleDragStart}
             role="presentation"

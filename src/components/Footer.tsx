@@ -118,7 +118,7 @@ function Footer() {
                 <Grid item>
                     <Stack direction="row" spacing={3}>
                         <img
-                            src={logoFilename}
+                            src={process.env.PUBLIC_URL + "/" + logoFilename}
                             width={logoSize}
                             height={logoSize}
                             alt="logo"

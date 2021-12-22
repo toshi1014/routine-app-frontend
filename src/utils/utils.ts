@@ -8,13 +8,17 @@ export const range = (start: number, end: number) => {
 }
 
 export const generateAuthCode = (length: number) => {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const chars = "abcdefghijklmnopqrstuvwxyz";
     let authCode = "";
     for (let i = 0; i < length; i++) {
         authCode += chars.charAt(Math.floor(Math.random() * chars.length));
     }
 
-    return authCode;
+    // always start with Uppercase
+    const upperedFirstLetter = authCode.charAt(0).toUpperCase();
+    const firstLetterUpperedAuthCode = upperedFirstLetter + authCode.substring(1, length);
+
+    return firstLetterUpperedAuthCode;
 }
 
 export const decodeJwt = (token: string) => {

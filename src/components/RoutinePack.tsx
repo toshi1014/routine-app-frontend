@@ -117,7 +117,7 @@ function RoutinePack(props: Props) {
                     avatar={
                         <Avatar
                             alt="Smiley"
-                            src="static/demo/face.png"
+                            src={process.env.PUBLIC_URL + "/static/demo/face.png"}
                             sx={{ width: avatarSize, height: avatarSize }}
                         />
                     }
@@ -151,7 +151,7 @@ function RoutinePack(props: Props) {
                 <CardMedia
                     component="img"
                     height="194"
-                    image="logo192.png"
+                    image={process.env.PUBLIC_URL + "/logo192.png"}
                     alt="Paella dish"
                 />
 
