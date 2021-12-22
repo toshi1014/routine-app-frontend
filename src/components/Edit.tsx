@@ -46,17 +46,18 @@ const defaultPostId = 0;
 function Edit() {
     const navigate = useNavigate();
 
+    const href = window.location.href;
+    const splitHref = href.split('/');
+    const splitHrefLength = splitHref.length;
+    const postOrDraft = splitHref[splitHrefLength - 2];
+    const id = Number(splitHref[splitHrefLength - 1]);
+
     const [header, setHeader] = React.useState<RoutineHeader>(defaultHeader);
     const [elementList, setElementList] = React.useState<Array<RoutineElement>>(defaultElementList);
     const [postId, setPostId] = React.useState(defaultPostId);
 
     React.useEffect(() => {
         const init = async () => {
-            const href = window.location.href;
-            const splitHref = href.split('/');
-            const splitHrefLength = splitHref.length;
-            const postOrDraft = splitHref[splitHrefLength - 2];
-            const id = Number(splitHref[splitHrefLength - 1]);
             setPostId(id);
 
             const res = await getDraftApi(id);
@@ -105,6 +106,7 @@ function Edit() {
                     header={header}
                     elementList={elementList}
                     postId={postId}
+                    boolEditedDraft={postOrDraft == "draft" ? true : false}
                 />
                 : <div><h3>Thanks for your patience!</h3></div>
         )

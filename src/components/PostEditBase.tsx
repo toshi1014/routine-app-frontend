@@ -48,6 +48,7 @@ type Props = {
     header?: RoutineHeader;
     elementList?: Array<RoutineElement>;
     postId?: number;
+    boolEditedDraft?: boolean;
 }
 
 function PostEditBase(props: Props) {
@@ -296,6 +297,7 @@ function PostEditBase(props: Props) {
         const res = await postOrDraftApi(
             strPostOrDraft,
             (props.postId ? props.postId : null),
+            (props.boolEditedDraft ? props.boolEditedDraft : false),
             routineHeaderRef.title.value,
             routineHeaderRef.desc.value,
             hashtagAddedList.map(hashtagAdded => { return hashtagAdded.label }),        // get labels

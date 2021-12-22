@@ -83,6 +83,7 @@ export const updateUserInfoApi = async (column: string, val: string) => {
 export const postOrDraftApi = async (
     strPostOrDraft: string,
     postId: number | null,
+    boolEditedDraft: boolean,
     title: string,
     desc: string,
     hashtagLabelList: Array<string>,
@@ -94,11 +95,13 @@ export const postOrDraftApi = async (
         token: localStorage.getItem("token"),
         postOrDraft: strPostOrDraft,
         postId: postId,
+        boolEditedDraft: boolEditedDraft,
         title: title,
         desc: desc,
         hashtagLabelList: hashtagLabelList,
         routineElements: routineElements,
     }
+    console.log("req:", req);
     const promiseRes = await axios.post(baseUrl + "post_or_draft/", req);
     const res: Response<null> = promiseRes.data[0];
 
