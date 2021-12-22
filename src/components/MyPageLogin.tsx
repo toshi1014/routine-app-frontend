@@ -216,7 +216,8 @@ function MyPageLogin() {
                 descStep1: defaultDescStep1,
             }
         ]);
-    const faboriteList = postedList;
+    // const faboriteList = postedList;
+    const faboriteList: Array<RoutinePackContents> = [];    // TEMP: fab list
 
     const [draftList, setDraftList] =
         React.useState<Array<RoutinePackContents>>([

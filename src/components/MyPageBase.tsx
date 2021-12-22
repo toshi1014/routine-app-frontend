@@ -20,6 +20,7 @@ import Instagram from "@mui/icons-material/Instagram";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { useNavigate } from "react-router-dom";
 import { MenuChildProps, RoutinePackContents } from "../utils/Types";
+import { deleteApi } from "../api_handlers/handle";
 
 
 type Props = {
@@ -63,6 +64,15 @@ function MyPageBase(props: Props) {
     const handleClickEdit = (strPostOrDraft: string, id: number) => {
         navigate("edit/" + strPostOrDraft + "/" + id);
     }
+    const handleClickDelete = async (strPostOrDraft: string, id: number) => {
+        const res = await deleteApi(strPostOrDraft, id);
+        if (!res.status) {
+            // force logout & redirect to login
+            localStorage.removeItem("token");
+            navigate("/login");
+        }
+        window.location.reload();
+    }
 
     const postedListComp = props.postedList.map((posted, idx: number) =>
         <Grid item key={idx}>
@@ -76,6 +86,9 @@ function MyPageBase(props: Props) {
                 editable={props.chipInputComp ? true : false}
                 handleClickEdit={
                     () => handleClickEdit("post", posted.id)
+                }
+                handleClickDelete={
+                    () => handleClickDelete("post", posted.id)
                 }
             />
         </Grid>
@@ -264,6 +277,9 @@ function MyPageBase(props: Props) {
                                             editable={props.chipInputComp ? true : false}
                                             handleClickEdit={
                                                 () => handleClickEdit("draft", draft.id)
+                                            }
+                                            handleClickDelete={
+                                                () => handleClickDelete("draft", draft.id)
                                             }
                                         />
                                     </Grid>

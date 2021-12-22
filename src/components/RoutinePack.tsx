@@ -1,9 +1,19 @@
 import React from 'react';
 import {
     Card,
+    Dialog,
+    DialogActions,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
     CardHeader,
     CardMedia,
+    Button,
     CardContent,
+    MenuItem,
+    Menu,
+    ListItemText,
+    ListItemIcon,
     CardActions,
     Typography,
     Avatar,
@@ -18,6 +28,8 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ShareIcon from "@mui/icons-material/Share";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ReportIcon from "@mui/icons-material/Report";
 import TextWithLimitation from "./TextWithLimitation";
 import { RoutinePackContents } from "../utils/Types";
 
@@ -39,7 +51,8 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 
 type Props = RoutinePackContents & {
     editable?: boolean;
-    handleClickEdit?: ()=>void;
+    handleClickEdit?: () => void;
+    handleClickDelete?: () => void;
 }
 
 function RoutinePack(props: Props) {
@@ -51,9 +64,51 @@ function RoutinePack(props: Props) {
         setExpanded(!expanded);
     };
 
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const openMenu = Boolean(anchorEl);
+    const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    }
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    }
+
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    }
+
+    const dialogComp = (
+        <Dialog
+            open={openDialog}
+            onClose={handleCloseDialog}
+        >
+            <DialogTitle>
+                {"Delete for sure?"}
+            </DialogTitle>
+
+            <DialogContent>
+                <DialogContentText>
+                    After this confirmation, this contents would be deleted permanently.
+                </DialogContentText>
+            </DialogContent>
+
+            <DialogActions>
+                <Button onClick={handleCloseDialog}>Cancel</Button>
+                <Button onClick={props.handleClickDelete} autoFocus>Delete</Button>
+            </DialogActions>
+
+        </Dialog>
+    );
+
 
     return (
         <div>
+            {dialogComp}
+
             <Card sx={{
                 minWidth: packWidth,
                 maxWidth: packWidth
@@ -67,9 +122,29 @@ function RoutinePack(props: Props) {
                         />
                     }
                     action={
-                        <IconButton aria-label="settings">
-                            <MoreVertIcon />
-                        </IconButton>
+                        <div>
+                            <IconButton
+                                aria-expanded={openMenu ? "true" : undefined}
+                                aria-label="settings"
+                                onClick={handleMenuClick}
+                            >
+                                <MoreVertIcon />
+                            </IconButton>
+
+                            <Menu
+                                id="basic-menu"
+                                anchorEl={anchorEl}
+                                open={openMenu}
+                                onClose={handleMenuClose}
+                            >
+                                <MenuItem>
+                                    <ListItemIcon>
+                                        <ReportIcon />
+                                    </ListItemIcon>
+                                    <ListItemText>Report</ListItemText>
+                                </MenuItem>
+                            </Menu>
+                        </div>
                     }
                     title={props.title}
                 />
@@ -88,18 +163,27 @@ function RoutinePack(props: Props) {
                 </CardContent>
 
                 <CardActions disableSpacing>
-                    <IconButton aria-label="add to favorites">
+                    <IconButton
+                        aria-label="add to favorites"
+                        disabled={(props.editable ? true : false)}
+                    >
                         <FavoriteIcon />
                     </IconButton>
+
                     <IconButton aria-label="share">
                         <ShareIcon />
                     </IconButton>
                     {
                         (props.editable)
                             ?
-                            <IconButton onClick={props.handleClickEdit}>
-                                <EditIcon />
-                            </IconButton>
+                            <div>
+                                <IconButton onClick={props.handleClickEdit}>
+                                    <EditIcon />
+                                </IconButton>
+                                <IconButton onClick={handleOpenDialog}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            </div>
                             : <div />
                     }
                     <ExpandMore

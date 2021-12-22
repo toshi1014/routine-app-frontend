@@ -80,6 +80,7 @@ export const updateUserInfoApi = async (column: string, val: string) => {
     return res;
 }
 
+
 export const postOrDraftApi = async (
     strPostOrDraft: string,
     postId: number | null,
@@ -118,6 +119,7 @@ export const getContentsApi = async (id: number) => {
     return res;
 }
 
+
 export const getDraftApi = async (id: number) => {
     const req = {
         token: localStorage.getItem("token"),
@@ -125,6 +127,22 @@ export const getDraftApi = async (id: number) => {
     }
     const promiseRes = await axios.post(baseUrl + "mypage_login/get_draft/", req);
     const res: Response<RoutineContents> = promiseRes.data[0];
+
+    if (res.status) {
+        localStorage.setItem("token", res.token);
+    }
+    return res;
+}
+
+
+export const deleteApi = async (strPostOrDraft: string, id: number) => {
+    const req = {
+        token: localStorage.getItem("token"),
+        postOrDraft: strPostOrDraft,
+        id: id,
+    }
+    const promiseRes = await axios.post(baseUrl + "mypage_login/delete_post_or_draft/", req);
+    const res: Response<null> = promiseRes.data[0];
 
     if (res.status) {
         localStorage.setItem("token", res.token);
