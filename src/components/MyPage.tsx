@@ -38,20 +38,22 @@ function MyPage() {
 
     const postedList: Array<RoutinePackContents> = [
         {
-            id: 1,
+            id: 0,
             contributor: contributor,
             title: title,
             desc: desc,
             titleStep1: titleStep1,
             descStep1: descStep1,
+            like:10,
         },
         {
-            id: 1,
+            id: 0,
             contributor: contributor,
             title: title,
             desc: desc,
             titleStep1: titleStep1,
             descStep1: descStep1,
+            like:10,
         },
     ];
     const faboriteList = postedList;

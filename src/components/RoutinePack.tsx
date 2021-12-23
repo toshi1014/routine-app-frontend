@@ -156,6 +156,7 @@ function RoutinePack(props: Props) {
                         </div>
                     }
                     title={props.title}
+                    subheader={props.like + " Like"}
                 />
 
                 <Link

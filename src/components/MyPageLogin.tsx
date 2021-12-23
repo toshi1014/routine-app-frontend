@@ -29,7 +29,7 @@ import {
 
 
 // TEMP:
-const defaultId = 1;
+const defaultId = 0;
 const defaultUsername = "John Doe";
 const defaultStatusMessage = "G'dai!";
 const defaultHashtagList = ["unhashable"];
@@ -43,6 +43,7 @@ const defaultContributor = defaultUsername;
 const defaultDesc = "Best Way to Create App, set aside off of the heat to let rest for 10 minutes, and then serve.";
 const defaultTitleStep1 = "Buy Computer";
 const defaultDescStep1 = "Choose best computer for you, set aside off of the heat to let rest for 10 minutes, and then serve.";
+const defaultLike = 10;
 
 
 enum EnumTextFieldLabel {
@@ -214,6 +215,7 @@ function MyPageLogin() {
                 desc: defaultDesc,
                 titleStep1: defaultTitleStep1,
                 descStep1: defaultDescStep1,
+                like: defaultLike,
             }
         ]);
     // const faboriteList = postedList;
@@ -228,6 +230,7 @@ function MyPageLogin() {
                 desc: defaultDesc,
                 titleStep1: defaultTitleStep1,
                 descStep1: defaultDescStep1,
+                like: defaultLike,
             }
         ]);
 

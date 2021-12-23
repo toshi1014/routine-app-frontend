@@ -24,6 +24,7 @@ const desc = "Best Way to Create App, set aside off of the heat to let rest for 
 const lastUpdated = "2021, Dec 31";
 const titleStep1 = "Buy Computer";
 const descStep1 = "Choose best computer for you, set aside off of the heat to let rest for 10 minutes, and then serve.";
+const like = 10;
 
 
 function SearchResults() {
@@ -64,6 +65,7 @@ function SearchResults() {
                 desc={desc}
                 titleStep1={titleStep1}
                 descStep1={descStep1}
+                like={like}
             />
         </Grid>
     );

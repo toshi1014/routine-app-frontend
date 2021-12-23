@@ -83,6 +83,7 @@ function MyPageBase(props: Props) {
                 desc={posted.desc}
                 titleStep1={posted.titleStep1}
                 descStep1={posted.descStep1}
+                like={posted.like}
                 editable={props.chipInputComp ? true : false}
                 handleClickEdit={
                     () => handleClickEdit("post", posted.id)
@@ -103,6 +104,7 @@ function MyPageBase(props: Props) {
                 desc={faborite.desc}
                 titleStep1={faborite.titleStep1}
                 descStep1={faborite.descStep1}
+                like={faborite.like}
             />
         </Grid>
     );
@@ -274,6 +276,7 @@ function MyPageBase(props: Props) {
                                             desc={draft.desc}
                                             titleStep1={draft.titleStep1}
                                             descStep1={draft.descStep1}
+                                            like={draft.like}
                                             editable={props.chipInputComp ? true : false}
                                             handleClickEdit={
                                                 () => handleClickEdit("draft", draft.id)

@@ -57,6 +57,7 @@ export type RoutinePackContents = {
     desc: string;
     titleStep1: string;
     descStep1: string;
+    like: number;
 }
 
 export type ValidationStatus = {
