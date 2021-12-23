@@ -1,5 +1,9 @@
 import axios from "axios";
-import { Response, Mypage } from "./protocols";
+import {
+    Response,
+    Mypage,
+    SearchResults,
+} from "./protocols";
 import {
     RoutineElement,
     RoutineContents,
@@ -147,6 +151,14 @@ export const deleteApi = async (strPostOrDraft: string, id: number) => {
     if (res.status) {
         localStorage.setItem("token", res.token);
     }
+    return res;
+}
+
+
+export const searchApi = async (keyword: string, target: string, page?: number) => {
+    if (!page) { page = 1; }
+    const promiseRes = await axios.get(baseUrl + "search_results/" + keyword + "/" + target + "/" + page + "/");
+    const res: Response<SearchResults> = promiseRes.data[0];
     return res;
 }
 

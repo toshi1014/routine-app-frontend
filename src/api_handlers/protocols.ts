@@ -26,3 +26,8 @@ export type Mypage = {
     postedList: Array<RoutinePackContents>,
     draftList: Array<RoutinePackContents>,
 }
+
+export type SearchResults = {
+    resultList: Array<RoutinePackContents>;
+    pageLength: number;
+}

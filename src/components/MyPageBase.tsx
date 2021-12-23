@@ -23,6 +23,14 @@ import { MenuChildProps, RoutinePackContents } from "../utils/Types";
 import { deleteApi } from "../api_handlers/handle";
 
 
+const menuContentList = [
+    "All",
+    "Fabs",
+    "Posted",
+    "Liked",
+];
+
+
 type Props = {
     usernameComp: React.ReactElement;
     statusMessageComp: React.ReactElement;
@@ -41,25 +49,6 @@ type Props = {
 function MyPageBase(props: Props) {
     const navigate = useNavigate();
     const avatarSize = 80;
-
-    // Menu
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const handleMenuClick = (
-        event: React.MouseEvent<HTMLButtonElement>
-    ) => {
-        setAnchorEl(event.currentTarget);
-    }
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    }
-    const handleMenuContentClick = (
-        event: React.MouseEvent<HTMLElement>,
-        idx: number
-    ) => {
-        props.menuChildProps.setSearchBoxValue(props.hashtagList[idx]);
-        handleMenuClose();
-    }
-    // end; Menu
 
     const handleClickEdit = (strPostOrDraft: string, id: number) => {
         navigate("edit/" + strPostOrDraft + "/" + id);
@@ -228,13 +217,9 @@ function MyPageBase(props: Props) {
                 <Grid item>
                     <CardContent>
                         <SearchBox
-                            anchorEl={anchorEl}
-                            searchBoxValue={props.menuChildProps.searchBoxValue}
-                            onChange={props.menuChildProps.handleSearchBox}
-                            menuContents={props.hashtagList}
-                            handleMenuClick={handleMenuClick}
-                            handleMenuClose={handleMenuClose}
-                            handleMenuContentClick={handleMenuContentClick}
+                            defaultValue=""
+                            defaultTarget=""
+                            menuContentList={menuContentList}
                         />
                     </CardContent>
                 </Grid>

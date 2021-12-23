@@ -26,7 +26,6 @@ const hashtagList = [
     "English",
     "workout",
 ];
-const menuContentList = hashtagList;
 const contributor = "John Smith";
 const title = "Happy Coding";
 const desc = "Best Way to Create App, set aside off of the heat to let rest for 10 minutes, and then serve.";
@@ -35,10 +34,15 @@ const titleStep1 = "Buy Computer";
 const descStep1 = "Choose best computer for you, set aside off of the heat to let rest for 10 minutes, and then serve.";
 const like = 10;
 
+const menuContentList = [
+    "All",
+    "Trend",
+    "Popular",
+];
+
 
 function Top() {
     const [innerWidth, innerHeight] = useWindowSize();
-    const [searchBoxValue, setSearchBoxValue] = React.useState("");
 
     const polularHashtagChipList = hashtagList.map((hashtag: string, idx: number) =>
         <ListItem key={idx}>
@@ -58,32 +62,6 @@ function Top() {
             key={idx}
         />
     );
-
-    const handleSearchBox = (
-        event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-    ) => {
-        const input = event.target.value;
-        setSearchBoxValue(input);
-    }
-
-    // Menu
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const handleMenuClick = (
-        event: React.MouseEvent<HTMLButtonElement>
-    ) => {
-        setAnchorEl(event.currentTarget);
-    }
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    }
-    const handleMenuContentClick = (
-        event: React.MouseEvent<HTMLElement>,
-        idx: number
-    ) => {
-        setSearchBoxValue(menuContentList[idx]);
-        handleMenuClose();
-    }
-    // end; Menu
 
 
     return (
@@ -105,13 +83,9 @@ function Top() {
                     <CardContent>
                         <h1>Find Routines</h1>
                         <SearchBox
-                            anchorEl={anchorEl}
-                            searchBoxValue={searchBoxValue}
-                            onChange={handleSearchBox}
-                            menuContents={menuContentList}
-                            handleMenuClick={handleMenuClick}
-                            handleMenuClose={handleMenuClose}
-                            handleMenuContentClick={handleMenuContentClick}
+                            defaultValue=""
+                            defaultTarget=""
+                            menuContentList={menuContentList}
                         />
                     </CardContent>
                 </Grid>
