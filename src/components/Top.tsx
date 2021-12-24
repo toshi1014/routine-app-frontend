@@ -16,24 +16,17 @@ import { range } from "../utils/utils";
 import useWindowSize from "../utils/useWindowSize";
 import { ListItem } from "../utils/ListItem";
 import HashtagLink from "./HashtagLink";
+import {
+    defaultTitle,
+    defaultContributor,
+    defaultContributorId,
+    defaultDesc,
+    defaultTitleStep1,
+    defaultDescStep1,
+    defaultLike,
+    defaultHashtagList,
+} from "../utils/defaultValues";
 
-
-// TEMP:
-const hashtagList = [
-    "fishing",
-    "hobby",
-    "cooking",
-    "DIY",
-    "English",
-    "workout",
-];
-const contributor = "John Smith";
-const title = "Happy Coding";
-const desc = "Best Way to Create App, set aside off of the heat to let rest for 10 minutes, and then serve.";
-const lastUpdated = "2021, Dec 31";
-const titleStep1 = "Buy Computer";
-const descStep1 = "Choose best computer for you, set aside off of the heat to let rest for 10 minutes, and then serve.";
-const like = 10;
 
 const menuContentList = [
     "All",
@@ -46,7 +39,7 @@ const menuContentList = [
 function Top() {
     const [innerWidth, innerHeight] = useWindowSize();
 
-    const polularHashtagChipList = hashtagList.map((hashtag: string, idx: number) =>
+    const polularHashtagChipList = defaultHashtagList.map((hashtag: string, idx: number) =>
         <ListItem key={idx}>
             <HashtagLink
                 hashtag={hashtag}
@@ -58,12 +51,13 @@ function Top() {
     const polularRoutineList = range(0, 5).map((idx: number) =>
         <RoutinePack
             id={0}
-            contributor={contributor}
-            title={title + idx}
-            desc={desc}
-            titleStep1={titleStep1}
-            descStep1={descStep1}
-            like={like}
+            contributor={defaultContributor}
+            contributorId={defaultContributorId}
+            title={defaultTitle + idx}
+            desc={defaultDesc}
+            titleStep1={defaultTitleStep1}
+            descStep1={defaultDescStep1}
+            like={defaultLike}
             key={idx}
         />
     );

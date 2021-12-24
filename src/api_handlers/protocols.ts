@@ -24,7 +24,11 @@ export type Mypage = {
         followingNum: number;
     },
     postedList: Array<RoutinePackContents>,
-    draftList: Array<RoutinePackContents>,
+}
+
+
+export type MypageLogin = Mypage & {
+    draftList: Array<RoutinePackContents>;
 }
 
 export type SearchResults = {

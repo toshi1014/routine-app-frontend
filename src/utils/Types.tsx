@@ -53,6 +53,7 @@ export type RoutineContents = {
 export type RoutinePackContents = {
     id: number;
     contributor: string;
+    contributorId: number;
     title: string;
     desc: string;
     titleStep1: string;

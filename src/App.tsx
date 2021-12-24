@@ -48,7 +48,7 @@ function App() {
                     <Route path="/post" element={<Post />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<Signup />} />
-                    <Route path="/mypage" element={<MyPage />} />
+                    <Route path="/mypage/:userId" element={<MyPage />} />
                     <Route path="/mypage_login" element={<MyPageLogin />} />
                     <Route path="/mypage_login/edit/:postOrDraft/:id" element={<Edit />} />
                     <Route path="/debug" element={<Debug />} />

@@ -34,12 +34,12 @@ import {
 import {
     postOrDraftApi,
 } from "../api_handlers/handle";
+import {
+    defaultUsername,
+    defaultHashtagAddedList,
+    defaultLastUpdated,
+} from "../utils/defaultValues";
 
-
-// TEMP:
-const defaultUsername = "John Doe";
-const defaultLastUpdated = "----, --:--";
-const defaultHashtagAddedList: Array<ChipData> = [{ key: 0, label: "ShareYourRoutine" }];
 
 const hashtagList = <h1>None</h1>;  // dummy
 

@@ -2,6 +2,7 @@ import axios from "axios";
 import {
     Response,
     Mypage,
+    MypageLogin,
     SearchResults,
 } from "./protocols";
 import {
@@ -60,11 +61,18 @@ export const getMypageLoginApi = async () => {
         token: localStorage.getItem("token")
     }
     const promiseRes = await axios.post(baseUrl + "mypage_login/", req);
-    const res: Response<Mypage> = promiseRes.data[0];
+    const res: Response<MypageLogin> = promiseRes.data[0];
 
     if (res.status) {
         localStorage.setItem("token", res.token);
     }
+    return res;
+}
+
+
+export const getMypageApi = async (user_id: number) => {
+    const promiseRes = await axios.get(baseUrl + "mypage/" + user_id + "/");
+    const res: Response<Mypage> = promiseRes.data[0];
     return res;
 }
 

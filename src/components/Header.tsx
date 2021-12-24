@@ -5,9 +5,6 @@ import {
 } from "react-router-dom";
 import ApplicationBar from "./ApplicationBar";
 
-// TEMP:
-const boolLoginStatus = true;
-
 function Header() {
     return (
         <div>

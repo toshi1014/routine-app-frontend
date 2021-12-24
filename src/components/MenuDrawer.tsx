@@ -33,15 +33,15 @@ import { decodeJwt } from "../utils/utils";
 
 
 // TEMP:
-const defaultUsername = "void";
-const defaultEmail = "void";
+const defaultUsername = "Guest";
+const defaultEmail = "";
 
 const token = localStorage.getItem("token")
 const boolLoginStatus = (token === null) ? false : true;
 
 const username = (token === null) ? defaultUsername : decodeJwt(token).username;
 const email = (token === null) ? defaultEmail : decodeJwt(token).email;
-const userinfo = "foo";
+const userinfo = "foo";     // TEMP: user info @ MenuDrawer
 
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -81,7 +81,7 @@ const upperIconNameList: Array<IconName> = [
     {
         icon: <HomeIcon />,
         name: "MyPage",
-        link: "mypage",
+        link: "mypage_login",
     },
     {
         icon: <PostAddIcon />,
@@ -132,11 +132,14 @@ function MenuDrawer(props: Props) {
         <Card sx={{ maxWidth: 345 }}>
             <CardHeader
                 avatar={
-                    <Avatar
-                        alt="Smiley"
-                        src={process.env.PUBLIC_URL + "/static/demo/face.png"}
-                        sx={{ width: avatarSize, height: avatarSize }}
-                    />
+                    (username === defaultUsername ?
+                        <Avatar src="/broken-image" />
+                        : <Avatar
+                            alt="Smiley"
+                            src={process.env.PUBLIC_URL + "/static/demo/face.png"}
+                            sx={{ width: avatarSize, height: avatarSize }}
+                        />
+                    )
                 }
                 title={username}
                 subheader={email}

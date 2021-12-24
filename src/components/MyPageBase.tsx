@@ -42,7 +42,6 @@ type Props = {
     postedList: Array<RoutinePackContents>;
     favoriteList: Array<RoutinePackContents>;
     draftList?: Array<RoutinePackContents>;
-    menuChildProps: MenuChildProps;
 }
 
 
@@ -68,6 +67,7 @@ function MyPageBase(props: Props) {
             <RoutinePack
                 id={posted.id}
                 contributor={posted.contributor}
+                contributorId={posted.contributorId}
                 title={posted.title}
                 desc={posted.desc}
                 titleStep1={posted.titleStep1}
@@ -89,6 +89,7 @@ function MyPageBase(props: Props) {
             <RoutinePack
                 id={favorite.id}
                 contributor={favorite.contributor}
+                contributorId={favorite.contributorId}
                 title={favorite.title}
                 desc={favorite.desc}
                 titleStep1={favorite.titleStep1}
@@ -257,6 +258,7 @@ function MyPageBase(props: Props) {
                                         <RoutinePack
                                             id={draft.id}
                                             contributor={draft.contributor}
+                                            contributorId={draft.contributorId}
                                             title={draft.title}
                                             desc={draft.desc}
                                             titleStep1={draft.titleStep1}

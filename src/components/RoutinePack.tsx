@@ -1,6 +1,7 @@
 import React from 'react';
 import {
     Card,
+    Grid,
     Dialog,
     DialogActions,
     DialogTitle,
@@ -9,7 +10,6 @@ import {
     CardHeader,
     CardMedia,
     Button,
-    ButtonBase,
     CardContent,
     MenuItem,
     Menu,
@@ -83,10 +83,6 @@ function RoutinePack(props: Props) {
         setOpenDialog(false);
     }
 
-    const handleClickCard = () => {
-        console.log("Card clicked");
-    }
-
 
     const dialogComp = (
         <Dialog
@@ -124,11 +120,19 @@ function RoutinePack(props: Props) {
 
                 <CardHeader
                     avatar={
-                        <Avatar
-                            alt="Smiley"
-                            src={process.env.PUBLIC_URL + "/static/demo/face.png"}
-                            sx={{ width: avatarSize, height: avatarSize }}
-                        />
+                        <Link
+                            to={`/mypage/${props.contributorId}`}
+                            style={{
+                                textDecoration: "none",
+                                color: "white",
+                            }}
+                        >
+                            <Avatar
+                                alt="Smiley"
+                                src={process.env.PUBLIC_URL + "/static/demo/face.png"}
+                                sx={{ width: avatarSize, height: avatarSize }}
+                            />
+                        </Link>
                     }
                     action={
                         <div>
@@ -156,7 +160,16 @@ function RoutinePack(props: Props) {
                         </div>
                     }
                     title={props.title}
-                    subheader={props.like + " Like"}
+                    subheader={
+                        <Grid container direction="row" spacing={2}>
+                            <Grid item>
+                                {props.contributor}
+                            </Grid>
+                            <Grid item>
+                                {props.like} Like
+                            </Grid>
+                        </Grid>
+                    }
                 />
 
                 <Link

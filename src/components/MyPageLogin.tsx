@@ -27,24 +27,23 @@ import {
     updateUserInfoApi,
 } from "../api_handlers/handle";
 import HashtagLink from "./HashtagLink";
+import {
+    defaultId,
+    defaultUsername,
+    defaultStatusMessage,
+    defaultHashtagList,
+    defaultHashtagAddedList,
+    defaultFollowingNum,
+    defaultFollowersNum,
+    defaultTitle,
+    defaultContributor,
+    defaultContributorId,
+    defaultDesc,
+    defaultTitleStep1,
+    defaultDescStep1,
+    defaultLike,
+} from "../utils/defaultValues";
 
-
-// TEMP:
-const defaultId = 0;
-const defaultUsername = "John Doe";
-const defaultStatusMessage = "G'dai!";
-const defaultHashtagList = ["unhashable"];
-const defaultHashtagAddedList = [{ key: 0, label: defaultHashtagList[0] }];
-const defaultFollowingNum = 9999;
-const defaultFollowersNum = 9999;
-
-
-const defaultTitle = "Happy Coding";
-const defaultContributor = defaultUsername;
-const defaultDesc = "Best Way to Create App, set aside off of the heat to let rest for 10 minutes, and then serve.";
-const defaultTitleStep1 = "Buy Computer";
-const defaultDescStep1 = "Choose best computer for you, set aside off of the heat to let rest for 10 minutes, and then serve.";
-const defaultLike = 10;
 
 
 enum EnumTextFieldLabel {
@@ -211,6 +210,7 @@ function MyPageLogin() {
             {
                 id: defaultId,
                 contributor: defaultContributor,
+                contributorId: defaultContributorId,
                 title: defaultTitle,
                 desc: defaultDesc,
                 titleStep1: defaultTitleStep1,
@@ -226,6 +226,7 @@ function MyPageLogin() {
             {
                 id: defaultId,
                 contributor: defaultContributor,
+                contributorId: defaultContributorId,
                 title: defaultTitle,
                 desc: defaultDesc,
                 titleStep1: defaultTitleStep1,
@@ -233,21 +234,6 @@ function MyPageLogin() {
                 like: defaultLike,
             }
         ]);
-
-    // Menu
-    const [searchBoxValue, setSearchBoxValue] = React.useState("");
-    const handleSearchBox = (
-        event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-    ) => {
-        const input = event.target.value;
-        setSearchBoxValue(input);
-    }
-    const menuChildProps: MenuChildProps = {
-        searchBoxValue: searchBoxValue,
-        setSearchBoxValue: setSearchBoxValue,
-        handleSearchBox: handleSearchBox,
-    }
-    // end; Menu
 
     const [openBackdrop, setOpenBackdrop] = React.useState(false);
     const [focusTextInput, setFocusTextInput] = React.useState(false);
@@ -347,7 +333,6 @@ function MyPageLogin() {
                 postedList={postedList}
                 favoriteList={favoriteList}
                 draftList={draftList}
-                menuChildProps={menuChildProps}
             />
         </div>
     );

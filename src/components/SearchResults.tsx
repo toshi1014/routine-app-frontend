@@ -11,25 +11,17 @@ import RoutinePack from './RoutinePack';
 import { range } from "../utils/utils";
 import { RoutinePackContents } from "../utils/Types";
 import { searchApi } from "../api_handlers/handle";
+import {
+    defaultId,
+    defaultTitle,
+    defaultContributor,
+    defaultContributorId,
+    defaultDesc,
+    defaultTitleStep1,
+    defaultDescStep1,
+    defaultLike,
+} from "../utils/defaultValues";
 
-
-// TEMP:
-const hashtagList = [
-    "fishing",
-    "hobby",
-    "cooking",
-    "DIY",
-    "English",
-    "workout",
-];
-const defaultId = 0;
-const defaultContributor = "John Smith";
-const defaultTitle = "Happy Coding";
-const defaultDesc = "Best Way to Create App, set aside off of the heat to let rest for 10 minutes, and then serve.";
-const defaultLastUpdated = "2021, Dec 31";
-const defaultTitleStep1 = "Buy Computer";
-const defaultDescStep1 = "Choose best computer for you, set aside off of the heat to let rest for 10 minutes, and then serve.";
-const defaultLike = 10;
 
 const menuContentList = [
     "All",
@@ -53,6 +45,7 @@ function SearchResults() {
         {
             id: defaultId,
             contributor: defaultContributor,
+            contributorId: defaultContributorId,
             title: defaultTitle,
             desc: defaultDesc,
             titleStep1: defaultTitleStep1,
@@ -66,6 +59,7 @@ function SearchResults() {
             <RoutinePack
                 id={result.id}
                 contributor={result.contributor}
+                contributorId={result.contributorId}
                 title={result.title}
                 desc={result.desc}
                 titleStep1={result.titleStep1}
@@ -88,9 +82,9 @@ function SearchResults() {
             } else {
                 console.log("Err at RoutineContents");
             }
+            console.log(res);
         }
 
-        console.log(page);
         if (!isNaN(page)) {
             console.log("init");
             init();
@@ -150,7 +144,7 @@ function SearchResults() {
                 >
                     <Pagination
                         count={pageLength}
-                        page={page}
+                        page={isNaN(page) ? 1 : page}
                         shape="rounded"
                         onChange={handleChangePagination}
                     />
