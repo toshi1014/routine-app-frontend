@@ -1,7 +1,6 @@
 import React from 'react';
 import {
     Typography,
-    Chip,
 } from "@mui/material";
 import MyPageBase from "./MyPageBase";
 import { ListItem } from "../utils/ListItem";
@@ -11,7 +10,6 @@ import {
 } from "../api_handlers/handle";
 import {
     RoutinePackContents,
-    ChipData,
 } from "../utils/Types";
 import {
     defaultId,

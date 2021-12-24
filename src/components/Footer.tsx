@@ -52,7 +52,7 @@ const footerLinkList: Array<LinkName> = [
     },
     {
         name: "MyPage",
-        link: "mypage"
+        link: "mypage/0"
     },
     {
         name: "MyPageLogin",

@@ -172,6 +172,36 @@ export const searchApi = async (keyword: string, target: string, page?: number) 
 }
 
 
+export const followApi = async (targetUserId: number) => {
+    const req = {
+        token: localStorage.getItem("token"),
+        targetUserId: targetUserId,
+    }
+    const promiseRes = await axios.post(baseUrl + "mypage_login/follow/", req);
+    const res: Response<null> = promiseRes.data[0];
+
+    if (res.status) {
+        localStorage.setItem("token", res.token);
+    }
+    return res;
+}
+
+
+export const unfollowApi = async (targetUserId: number) => {
+    const req = {
+        token: localStorage.getItem("token"),
+        targetUserId: targetUserId,
+    }
+    const promiseRes = await axios.post(baseUrl + "mypage_login/unfollow/", req);
+    const res: Response<null> = promiseRes.data[0];
+
+    if (res.status) {
+        localStorage.setItem("token", res.token);
+    }
+    return res;
+}
+
+
 export const getApi = async () => {
     try {
         const res = await axios.get(baseUrl + "post/");

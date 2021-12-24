@@ -36,8 +36,9 @@ function SearchResults() {
     const splitHrefLength = splitHref.length;
 
     const page = Number(splitHref[splitHrefLength - 1]);
-    const keyword = (isNaN(page) ? "" : splitHref[splitHrefLength - 3]);
-    const target = (isNaN(page) ? "" : splitHref[splitHrefLength - 2]);
+    const boolInitial = ((page === 0 || isNaN(page)) ? true : false);
+    const keyword = (boolInitial ? "" : splitHref[splitHrefLength - 3]);
+    const target = (boolInitial ? "" : splitHref[splitHrefLength - 2]);
 
     const [pageLength, setPageLength] = React.useState(1);
 
@@ -85,7 +86,7 @@ function SearchResults() {
             console.log(res);
         }
 
-        if (!isNaN(page)) {
+        if (!boolInitial) {
             console.log("init");
             init();
         } else {
@@ -144,7 +145,7 @@ function SearchResults() {
                 >
                     <Pagination
                         count={pageLength}
-                        page={isNaN(page) ? 1 : page}
+                        page={boolInitial ? 1 : page}
                         shape="rounded"
                         onChange={handleChangePagination}
                     />
