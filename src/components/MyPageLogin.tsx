@@ -218,8 +218,8 @@ function MyPageLogin() {
                 like: defaultLike,
             }
         ]);
-    // const faboriteList = postedList;
-    const faboriteList: Array<RoutinePackContents> = [];    // TEMP: fab list
+    // const favoriteList = postedList;
+    const favoriteList: Array<RoutinePackContents> = [];    // TEMP: fab list
 
     const [draftList, setDraftList] =
         React.useState<Array<RoutinePackContents>>([
@@ -345,7 +345,7 @@ function MyPageLogin() {
                 hashtagChipList={hashtagChipList}
                 chipInputComp={hashtagInput}
                 postedList={postedList}
-                faboriteList={faboriteList}
+                favoriteList={favoriteList}
                 draftList={draftList}
                 menuChildProps={menuChildProps}
             />

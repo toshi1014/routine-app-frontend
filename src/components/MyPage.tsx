@@ -57,7 +57,7 @@ function MyPage() {
             like:10,
         },
     ];
-    const faboriteList = postedList;
+    const favoriteList = postedList;
 
     // Menu
     const [searchBoxValue, setSearchBoxValue] = React.useState("");
@@ -92,7 +92,7 @@ function MyPage() {
             hashtagList={hashtagList}
             hashtagChipList={hashtagChipList}
             postedList={postedList}
-            faboriteList={faboriteList}
+            favoriteList={favoriteList}
             menuChildProps={menuChildProps}
         />
     );

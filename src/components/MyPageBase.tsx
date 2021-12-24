@@ -40,7 +40,7 @@ type Props = {
     hashtagChipList: Array<React.ReactElement>;
     chipInputComp?: React.ReactElement;
     postedList: Array<RoutinePackContents>;
-    faboriteList: Array<RoutinePackContents>;
+    favoriteList: Array<RoutinePackContents>;
     draftList?: Array<RoutinePackContents>;
     menuChildProps: MenuChildProps;
 }
@@ -84,16 +84,16 @@ function MyPageBase(props: Props) {
         </Grid>
     );
 
-    const faboriteListComp = props.faboriteList.map((faborite, idx: number) =>
+    const favoriteListComp = props.favoriteList.map((favorite, idx: number) =>
         <Grid item key={idx}>
             <RoutinePack
-                id={faborite.id}
-                contributor={faborite.contributor}
-                title={faborite.title}
-                desc={faborite.desc}
-                titleStep1={faborite.titleStep1}
-                descStep1={faborite.descStep1}
-                like={faborite.like}
+                id={favorite.id}
+                contributor={favorite.contributor}
+                title={favorite.title}
+                desc={favorite.desc}
+                titleStep1={favorite.titleStep1}
+                descStep1={favorite.descStep1}
+                like={favorite.like}
             />
         </Grid>
     );
@@ -236,12 +236,12 @@ function MyPageBase(props: Props) {
                 </CardContent>
 
                 <CardContent>
-                    <h2>Faborites</h2>
-                    {props.faboriteList.length == 0 ?
-                        <h4>no fabs yet</h4>
+                    <h2>Favorites</h2>
+                    {props.favoriteList.length == 0 ?
+                        <h4>no favorites yet</h4>
                         :
                         <Grid container direction="row" spacing={1}>
-                            {faboriteListComp}
+                            {favoriteListComp}
                         </Grid>
                     }
                 </CardContent>
