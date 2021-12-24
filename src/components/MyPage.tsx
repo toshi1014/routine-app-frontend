@@ -6,6 +6,7 @@ import {
 import { RoutinePackContents, MenuChildProps } from "../utils/Types";
 import MyPageBase from "./MyPageBase";
 import { ListItem } from "../utils/ListItem";
+import HashtagLink from "./HashtagLink";
 
 
 // TEMP:
@@ -75,7 +76,9 @@ function MyPage() {
 
     const hashtagChipList = hashtagList.map((hashtag: string, idx: number) =>
         <ListItem key={idx}>
-            <Chip clickable label={"# " + hashtag} key={idx} />
+            <HashtagLink
+                hashtag={hashtag}
+            />
         </ListItem>
     );
 

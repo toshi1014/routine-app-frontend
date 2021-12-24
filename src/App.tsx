@@ -43,6 +43,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Top />} />
                     <Route path="/routine_contents/:id" element={<RoutineContents />} />
+                    <Route path="/search_results/" element={<SearchResults />} />
                     <Route path="/search_results/:keyword/:tagret/:page" element={<SearchResults />} />
                     <Route path="/post" element={<Post />} />
                     <Route path="/login" element={<Login />} />

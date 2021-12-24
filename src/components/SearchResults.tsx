@@ -35,15 +35,17 @@ const menuContentList = [
     "All",
     "Trend",
     "Popular",
+    "Hashtag",
 ];
 
 function SearchResults() {
     const href = window.location.href;
     const splitHref = href.split('/');
     const splitHrefLength = splitHref.length;
-    const keyword = splitHref[splitHrefLength - 3];
-    const target = splitHref[splitHrefLength - 2];
+
     const page = Number(splitHref[splitHrefLength - 1]);
+    const keyword = (isNaN(page) ? "" : splitHref[splitHrefLength - 3]);
+    const target = (isNaN(page) ? "" : splitHref[splitHrefLength - 2]);
 
     const [pageLength, setPageLength] = React.useState(1);
 
@@ -73,6 +75,11 @@ function SearchResults() {
         </Grid>
     );
 
+    // COMBAK: change page
+    const handleChangePagination = (event: React.ChangeEvent<unknown>, val: number) => {
+        console.log(val);
+    }
+
     React.useEffect(() => {
         const init = async () => {
             const res = await searchApi(keyword, target, page);
@@ -83,8 +90,17 @@ function SearchResults() {
             }
         }
 
-        init();
+        console.log(page);
+        if (!isNaN(page)) {
+            console.log("init");
+            init();
+        } else {
+            setResultList([]);
+            console.log("init not called");
+        }
+
     }, [])
+
 
     return (
         <Grid container direction="column">
@@ -132,7 +148,12 @@ function SearchResults() {
                     alignItems="flex-end"
                     justifyContent="center"
                 >
-                    <Pagination count={pageLength} page={page} shape="rounded" />
+                    <Pagination
+                        count={pageLength}
+                        page={page}
+                        shape="rounded"
+                        onChange={handleChangePagination}
+                    />
                 </Stack>
             </Grid>
         </Grid>

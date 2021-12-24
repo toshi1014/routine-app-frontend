@@ -15,6 +15,7 @@ import SearchBox from './SearchBox';
 import { range } from "../utils/utils";
 import useWindowSize from "../utils/useWindowSize";
 import { ListItem } from "../utils/ListItem";
+import HashtagLink from "./HashtagLink";
 
 
 // TEMP:
@@ -38,6 +39,7 @@ const menuContentList = [
     "All",
     "Trend",
     "Popular",
+    "Hashtag",
 ];
 
 
@@ -46,7 +48,10 @@ function Top() {
 
     const polularHashtagChipList = hashtagList.map((hashtag: string, idx: number) =>
         <ListItem key={idx}>
-            <Chip clickable label={"# " + hashtag} key={idx} />
+            <HashtagLink
+                hashtag={hashtag}
+                key={idx}
+            />
         </ListItem>
     );
 

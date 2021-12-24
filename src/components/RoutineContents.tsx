@@ -8,6 +8,7 @@ import { ListItem } from "../utils/ListItem";
 import {
     getContentsApi,
 } from "../api_handlers/handle";
+import HashtagLink from "./HashtagLink";
 
 
 const defaultHeader: RoutineHeader = {
@@ -57,7 +58,10 @@ function RoutineContents() {
 
     const defaultHashtagChipList = defaultHeader.hashtagList.map((hashtag: string, idx: number) =>
         <ListItem key={idx}>
-            <Chip clickable label={"# " + hashtag} key={idx} />
+            <HashtagLink
+                hashtag={hashtag}
+                key={idx}
+            />
         </ListItem>
     );
     const [hashtagChipList, setHashtagChipList] = React.useState<Array<React.ReactElement>>(defaultHashtagChipList);

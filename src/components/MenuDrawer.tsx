@@ -91,7 +91,7 @@ const upperIconNameList: Array<IconName> = [
     {
         icon: <SearchIcon />,
         name: "Search",
-        link: "search_results",
+        link: "search_results/",
     },
 ];
 

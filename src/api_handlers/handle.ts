@@ -157,7 +157,8 @@ export const deleteApi = async (strPostOrDraft: string, id: number) => {
 
 export const searchApi = async (keyword: string, target: string, page?: number) => {
     if (!page) { page = 1; }
-    const promiseRes = await axios.get(baseUrl + "search_results/" + keyword + "/" + target + "/" + page + "/");
+    console.log(`${baseUrl}search_results/${keyword}/${target}/${page}/`);
+    const promiseRes = await axios.get(`${baseUrl}search_results/${keyword}/${target}/${page}/`);
     const res: Response<SearchResults> = promiseRes.data[0];
     return res;
 }

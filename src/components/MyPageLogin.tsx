@@ -26,6 +26,7 @@ import {
     getMypageLoginApi,
     updateUserInfoApi,
 } from "../api_handlers/handle";
+import HashtagLink from "./HashtagLink";
 
 
 // TEMP:
@@ -165,10 +166,9 @@ function MyPageLogin() {
 
     const hashtagChipList = hashtagAddedList.map((hashtagAdded: ChipData) =>
         <ListItem key={hashtagAdded.key}>
-            <Chip
-                label={"# " + hashtagAdded.label}
+            <HashtagLink
+                hashtag={hashtagAdded.label}
                 onDelete={handleDeleteHashtag(hashtagAdded)}
-                key={hashtagAdded.key}
             />
         </ListItem>
     );

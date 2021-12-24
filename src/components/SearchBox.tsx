@@ -22,7 +22,11 @@ type Props = {
 
 function SearchBox(props: Props) {
     const navigate = useNavigate();
-    const [searchBoxValue, setSearchBoxValue] = React.useState(props.defaultValue);
+    const [searchBoxValue, setSearchBoxValue] = React.useState(
+        props.defaultTarget === "hashtag"
+            ? "#" + props.defaultValue
+            : props.defaultValue
+    );
     const handleChangeSearchBoxValue = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchBoxValue(event.target.value);
     };
@@ -73,7 +77,14 @@ function SearchBox(props: Props) {
 
     const handleSearch = async () => {
         if (searchBoxValue !== "") {
-            navigate(`/search_results/${searchBoxValue}/${props.menuContentList[selectedMenuIdx].toLowerCase()}/1`);
+            // TODO: add url validation
+            let searchBoxValueTmp = searchBoxValue;
+            let targetTmp = props.menuContentList[selectedMenuIdx].toLowerCase();
+            if (searchBoxValue[0] === "#") {
+                targetTmp = "hashtag";
+                searchBoxValueTmp = searchBoxValueTmp.substring(1);
+            }
+            navigate(`/search_results/${searchBoxValueTmp}/${targetTmp}/1`);
             window.location.reload();
         }
     }
@@ -108,7 +119,7 @@ function SearchBox(props: Props) {
             <InputBase
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="Search..."
-                defaultValue={props.defaultValue}
+                defaultValue={searchBoxValue}
                 onChange={handleChangeSearchBoxValue}
                 onKeyPress={(event: React.KeyboardEvent) => {
                     if (event.key === "Enter") {
