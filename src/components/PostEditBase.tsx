@@ -36,6 +36,7 @@ import {
 } from "../api_handlers/handle";
 import {
     defaultUsername,
+    defaultId as defaultUserId,
     defaultHashtagAddedList,
     defaultLastUpdated,
 } from "../utils/defaultValues";
@@ -55,6 +56,7 @@ function PostEditBase(props: Props) {
     const navigate = useNavigate();
 
     const [username, setUsername] = React.useState(defaultUsername);
+    const [userId, setUserId] = React.useState(defaultUserId);
 
     const title = (
         <TextField
@@ -83,6 +85,7 @@ function PostEditBase(props: Props) {
         hashtagList: hashtagList,
         like: (props.header ? props.header.like : 0),
         contributor: username,
+        contributorId: userId,
         lastUpdated: (props.header ? props.header.lastUpdated : defaultLastUpdated),
     };
 
@@ -355,6 +358,7 @@ function PostEditBase(props: Props) {
             }
 
             setUsername(decodeJwt(token).username);
+            setUserId(decodeJwt(token).id);
 
             if (props.elementList) {
                 props.elementList.map((element: RoutineElement, idx: number) => {

@@ -20,16 +20,10 @@ import Instagram from "@mui/icons-material/Instagram";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { useNavigate } from "react-router-dom";
 import { RoutinePackContents } from "../utils/Types";
+import FollowButton from "./FollowButton";
 import {
     deleteApi,
-    followApi,
-    unfollowApi,
 } from "../api_handlers/handle";
-import { decodeJwt } from "../utils/utils";
-
-
-const token = localStorage.getItem("token")
-const boolLoginStatus = (token === null) ? false : true;
 
 
 const menuContentList = [
@@ -57,24 +51,16 @@ type Props = {
 function MyPageBase(props: Props) {
     const navigate = useNavigate();
     const avatarSize = 80;
+
     const href = window.location.href;
     const splitHref = href.split('/');
     const splitHrefLength = splitHref.length;
     const targetUserId = Number(splitHref[splitHrefLength - 1]);
 
-    const [followingList, setFollowingList] = React.useState<Array<number>>(
-        boolLoginStatus && token
-            ? decodeJwt(token).followingList
-            : []
-    );
-
-    const updateFollowingList = (token: string) => {
-        setFollowingList(decodeJwt(token).followingList);
-    }
-
     const handleClickEdit = (strPostOrDraft: string, id: number) => {
         navigate("edit/" + strPostOrDraft + "/" + id);
     }
+
     const handleClickDelete = async (strPostOrDraft: string, id: number) => {
         const res = await deleteApi(strPostOrDraft, id);
         if (!res.status) {
@@ -86,26 +72,6 @@ function MyPageBase(props: Props) {
     }
 
     const [myFollowCnt, setMyFollowCnt] = React.useState(0);
-    const handleClickFollow = async () => {
-        let res;
-        if (followingList.includes(targetUserId)) {
-            res = await unfollowApi(targetUserId)
-            setMyFollowCnt(-1);
-        } else {
-            res = await followApi(targetUserId)
-            setMyFollowCnt(1);
-        }
-
-        if (res.status) {
-            updateFollowingList(res.token);
-        } else {
-            // force logout & redirect to login
-            localStorage.removeItem("token");
-            navigate("/login");
-            window.location.reload();
-            return null
-        }
-    }
 
     const postedListComp = props.postedList.map((posted, idx: number) =>
         <Grid item key={idx}>
@@ -226,16 +192,11 @@ function MyPageBase(props: Props) {
                         <Grid item>
                             <Grid container direction="row" spacing={2}>
                                 <Grid item sx={{ my: 2 }}>
-                                    <Chip
-                                        clickable
+                                    <FollowButton
+                                        targetUserId={targetUserId}
                                         disabled={Boolean(props.draftList)}
-                                        onClick={handleClickFollow}
-                                        variant={
-                                            followingList.includes(targetUserId)
-                                                ? "filled"
-                                                : "outlined"
-                                        }
-                                        label="follow"
+                                        myFollowCnt={myFollowCnt}
+                                        setMyFollowCnt={setMyFollowCnt}
                                     />
                                 </Grid>
                                 <Grid item>

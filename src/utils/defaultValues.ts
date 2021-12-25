@@ -28,6 +28,7 @@ export const defaultHeader: RoutineHeader = {
     desc: "Firstly, Heat oil in a (14- to 16-inch) paella pan or a large",
     like: 30,
     contributor: "John Smith",
+    contributorId: 0,
     lastUpdated: "2021, Jul 4",
     hashtagList: [
         "fishing",

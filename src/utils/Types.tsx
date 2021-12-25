@@ -4,6 +4,7 @@ export type RoutineHeader = {
     hashtagList: Array<string>;
     like: number;
     contributor: string;
+    contributorId: number;
     lastUpdated: string;
 }
 
@@ -13,6 +14,7 @@ export type RoutineHeaderInput = {
     hashtagList: React.ReactElement;
     like: number;
     contributor: string;
+    contributorId: number;
     lastUpdated: string;
 }
 

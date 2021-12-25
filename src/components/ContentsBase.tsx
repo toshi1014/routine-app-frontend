@@ -23,6 +23,7 @@ import {
     RoutineElement,
     RoutineElementInput,
 } from "../utils/Types";
+import FollowButton from "./FollowButton";
 
 
 type Props = {
@@ -34,7 +35,6 @@ type Props = {
     uniqueCompHeader?: React.ReactElement;
     uniqueComp?: React.ReactElement;
 }
-
 
 function ContentsBase(props: Props) {
     const avatarSize = 35;
@@ -111,7 +111,11 @@ function ContentsBase(props: Props) {
                                                 <h3>{props.routineHeader.contributor}</h3>
                                             </Grid>
                                         </Grid>
-                                        <Chip clickable variant="outlined" label="follow" />
+
+                                        <FollowButton
+                                            targetUserId={props.routineHeader.contributorId}
+                                        />
+
                                     </Grid>
 
                                     <Grid item>
