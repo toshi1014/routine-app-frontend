@@ -1,7 +1,9 @@
 import {
     RoutineHeader,
     RoutineElement,
+    UserNameId,
 } from "./Types";
+
 
 // header
 export const defaultId = 0;
@@ -58,3 +60,18 @@ export const defaultElementList: Array<RoutineElement> = [
 ]
 
 export const defaultPostId = 0;
+
+export const defaultUserList: Array<UserNameId> = [
+    {
+        username: "Alice",
+        userId: 1,
+    },
+    {
+        username: "Bob",
+        userId: 2,
+    },
+    {
+        username: "Chris",
+        userId: 3,
+    },
+];

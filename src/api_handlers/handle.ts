@@ -8,6 +8,7 @@ import {
 import {
     RoutineElement,
     RoutineContents,
+    UserNameId,
 } from "../utils/Types";
 
 const baseUrl = "http://localhost:8000/";
@@ -202,6 +203,17 @@ export const unfollowApi = async (targetUserId: number) => {
 }
 
 
+export const getFollowingOrFollowersApi = async (userId: number, followingOrFollowers: string) => {
+    if (followingOrFollowers !== "following" && followingOrFollowers !== "followers") {
+        throw new Error("unknown followingOrFollowers " + followingOrFollowers);
+    }
+    const promiseRes = await axios.get(`${baseUrl}mypage/get_following_or_followers/${userId}/${followingOrFollowers}/`);
+    const res: Response<Array<UserNameId>> = promiseRes.data[0];
+    return res;
+}
+
+
+// DEBUG: below
 export const getApi = async () => {
     try {
         const res = await axios.get(baseUrl + "post/");

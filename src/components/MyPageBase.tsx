@@ -1,6 +1,7 @@
 import React from 'react';
 import {
     Grid,
+    Button,
     CardContent,
     Avatar,
     Box,
@@ -24,6 +25,7 @@ import FollowButton from "./FollowButton";
 import {
     deleteApi,
 } from "../api_handlers/handle";
+import FollowList from "./FollowList";
 
 
 const menuContentList = [
@@ -110,6 +112,22 @@ function MyPageBase(props: Props) {
         </Grid>
     );
 
+    const [followListTitle, setFollowListTitle] = React.useState("FollowList");
+    const [openFollowList, setOpenFollwList] = React.useState(false);
+    const handleCloseFollowList = () => {
+        setOpenFollwList(false);
+    }
+    const handleClickFollow = (followingOrFollowers: string) => {
+        if (followingOrFollowers === "following") {
+            setOpenFollwList(true);
+            setFollowListTitle("Following");
+        } else if (followingOrFollowers === "followers") {
+            setOpenFollwList(true);
+            setFollowListTitle("Followers");
+        } else {
+            throw new Error("unknown followingOrFollowers " + followingOrFollowers);
+        }
+    }
 
     const handleFacebook = () => {
         console.log("Facebook");
@@ -190,8 +208,8 @@ function MyPageBase(props: Props) {
                         </Grid>
 
                         <Grid item>
-                            <Grid container direction="row" spacing={2}>
-                                <Grid item sx={{ my: 2 }}>
+                            <Grid container alignItems="center" direction="row" spacing={2}>
+                                <Grid item>
                                     <FollowButton
                                         targetUserId={targetUserId}
                                         disabled={Boolean(props.draftList)}
@@ -200,11 +218,30 @@ function MyPageBase(props: Props) {
                                     />
                                 </Grid>
                                 <Grid item>
-                                    <h4>
-                                        Following
-                                        {props.followingNum} /
-                                        Followers {props.followersNum + myFollowCnt}
-                                    </h4>
+                                    <FollowList
+                                        open={openFollowList}
+                                        userId={targetUserId}
+                                        title={followListTitle}
+                                        onClose={handleCloseFollowList}
+                                    />
+                                    Following
+                                        <Button
+                                            variant="text"
+                                            size="small"
+                                            disabled={props.followingNum === 0 ? true : false}
+                                            onClick={() => handleClickFollow("following")}
+                                        >
+                                            {props.followingNum}
+                                    </Button>
+                                    Followers
+                                        <Button
+                                            variant="text"
+                                            size="small"
+                                            disabled={(props.followersNum + myFollowCnt) === 0 ? true : false}
+                                            onClick={() => handleClickFollow("followers")}
+                                        >
+                                            {props.followersNum + myFollowCnt}
+                                    </Button>
                                 </Grid>
                             </Grid>
                         </Grid>

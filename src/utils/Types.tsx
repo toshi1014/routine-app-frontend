@@ -78,3 +78,8 @@ export type ChipData = {
     key: number;
     label: string;
 }
+
+export type UserNameId = {
+    username: string;
+    userId: number;
+}
