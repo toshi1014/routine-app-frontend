@@ -26,14 +26,20 @@ import {
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ShareIcon from "@mui/icons-material/Share";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ReportIcon from "@mui/icons-material/Report";
-import { Link } from "react-router-dom";
+import {
+    Link,
+    useNavigate,
+} from "react-router-dom";
 import TextWithLimitation from "./TextWithLimitation";
 import { RoutinePackContents } from "../utils/Types";
+import { decodeJwt } from "../utils/utils";
+import { favoriteApi } from "../api_handlers/handle";
 
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -57,9 +63,13 @@ type Props = RoutinePackContents & {
     handleClickDelete?: () => void;
 }
 
+const token = localStorage.getItem("token")
+const boolLoginStatus = (token === null) ? false : true;
+
 function RoutinePack(props: Props) {
     const avatarSize = 35;
     const packWidth = 345;
+    const navigate = useNavigate();
 
     const [expanded, setExpanded] = React.useState(false);
     const handleExpandMoreClick = () => {
@@ -83,6 +93,47 @@ function RoutinePack(props: Props) {
         setOpenDialog(false);
     }
 
+    // favotite
+    const [myFavoriteCnt, setMyFavoriteCnt] = React.useState(0);
+
+    const [favoriteList, setFavoriteList] = React.useState<Array<number>>(
+        boolLoginStatus && token
+            ? decodeJwt(token).favoriteList
+            : []
+    );
+
+    const updateFavoriteList = (token: string) => {
+        setFavoriteList(decodeJwt(token).favoriteList);
+    }
+
+    const handleClickFavorite = async () => {
+        let res;
+        if (favoriteList.includes(props.id)){
+            res = await favoriteApi(props.id, true);
+            if (myFavoriteCnt === 0){
+                setMyFavoriteCnt(-1);
+            }else{
+                setMyFavoriteCnt(0);
+            }
+        }else{
+            res = await favoriteApi(props.id, false);
+            if (myFavoriteCnt === 0){
+                setMyFavoriteCnt(1);
+            }else{
+                setMyFavoriteCnt(0);
+            }
+        }
+
+        if (res.status) {
+            updateFavoriteList(res.token);
+        } else {
+            // force logout & redirect to login
+            localStorage.removeItem("token");
+            navigate("/login");
+            window.location.reload();
+            return null
+        }
+    }
 
     const dialogComp = (
         <Dialog
@@ -166,7 +217,7 @@ function RoutinePack(props: Props) {
                                 {props.contributor}
                             </Grid>
                             <Grid item>
-                                {props.like} Like
+                                {props.like + myFavoriteCnt} Like
                             </Grid>
                         </Grid>
                     }
@@ -198,8 +249,12 @@ function RoutinePack(props: Props) {
                     <IconButton
                         aria-label="add to favorites"
                         disabled={(props.editable ? true : false)}
+                        onClick={handleClickFavorite}
                     >
-                        <FavoriteIcon />
+                        {(favoriteList.includes(props.id)
+                            ? <FavoriteIcon />
+                            : <FavoriteBorderIcon />
+                        )}
                     </IconButton>
 
                     <IconButton aria-label="share">

@@ -173,27 +173,14 @@ export const searchApi = async (keyword: string, target: string, page?: number) 
 }
 
 
-export const followApi = async (targetUserId: number) => {
+export const followApi = async (targetUserId: number, boolUnfollow: boolean) => {
     const req = {
         token: localStorage.getItem("token"),
         targetUserId: targetUserId,
     }
-    const promiseRes = await axios.post(baseUrl + "mypage_login/follow/", req);
-    const res: Response<null> = promiseRes.data[0];
-
-    if (res.status) {
-        localStorage.setItem("token", res.token);
-    }
-    return res;
-}
-
-
-export const unfollowApi = async (targetUserId: number) => {
-    const req = {
-        token: localStorage.getItem("token"),
-        targetUserId: targetUserId,
-    }
-    const promiseRes = await axios.post(baseUrl + "mypage_login/unfollow/", req);
+    const followOrUnfollow = (boolUnfollow ? "unfollow" : "follow");
+    console.log(followOrUnfollow);
+    const promiseRes = await axios.post(baseUrl + "mypage_login/" + followOrUnfollow + "/", req);
     const res: Response<null> = promiseRes.data[0];
 
     if (res.status) {
@@ -212,6 +199,22 @@ export const getFollowingOrFollowersApi = async (userId: number, followingOrFoll
     return res;
 }
 
+
+export const favoriteApi = async (postId: number, boolUnfavorite: boolean) => {
+    const req = {
+        token: localStorage.getItem("token"),
+        postId: postId,
+    }
+
+    const favoriteOrUnfavorite = (boolUnfavorite ? "unfavorite" : "favorite");
+    const promiseRes = await axios.post(baseUrl + "mypage_login/" + favoriteOrUnfavorite + "/", req);
+    const res: Response<null> = promiseRes.data[0];
+
+    if (res.status) {
+        localStorage.setItem("token", res.token);
+    }
+    return res;
+}
 
 // DEBUG: below
 export const getApi = async () => {

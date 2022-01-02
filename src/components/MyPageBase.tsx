@@ -26,6 +26,7 @@ import {
     deleteApi,
 } from "../api_handlers/handle";
 import FollowList from "./FollowList";
+import { decodeJwt } from "../utils/utils";
 
 
 const menuContentList = [
@@ -50,14 +51,20 @@ type Props = {
 }
 
 
+const token = localStorage.getItem("token")
+const userIdFromToken = (token === null) ? null : decodeJwt(token).id;
+
+const href = window.location.href;
+const splitHref = href.split('/');
+const splitHrefLength = splitHref.length;
+const userIdFromUrl = Number(splitHref[splitHrefLength - 1]);
+
+const targetUserId = (isNaN(userIdFromUrl) ? userIdFromToken : userIdFromUrl);
+
+
 function MyPageBase(props: Props) {
     const navigate = useNavigate();
     const avatarSize = 80;
-
-    const href = window.location.href;
-    const splitHref = href.split('/');
-    const splitHrefLength = splitHref.length;
-    const targetUserId = Number(splitHref[splitHrefLength - 1]);
 
     const handleClickEdit = (strPostOrDraft: string, id: number) => {
         navigate("edit/" + strPostOrDraft + "/" + id);
@@ -226,21 +233,21 @@ function MyPageBase(props: Props) {
                                     />
                                     Following
                                         <Button
-                                            variant="text"
-                                            size="small"
-                                            disabled={props.followingNum === 0 ? true : false}
-                                            onClick={() => handleClickFollow("following")}
-                                        >
-                                            {props.followingNum}
+                                        variant="text"
+                                        size="small"
+                                        disabled={props.followingNum === 0 ? true : false}
+                                        onClick={() => handleClickFollow("following")}
+                                    >
+                                        {props.followingNum}
                                     </Button>
                                     Followers
                                         <Button
-                                            variant="text"
-                                            size="small"
-                                            disabled={(props.followersNum + myFollowCnt) === 0 ? true : false}
-                                            onClick={() => handleClickFollow("followers")}
-                                        >
-                                            {props.followersNum + myFollowCnt}
+                                        variant="text"
+                                        size="small"
+                                        disabled={(props.followersNum + myFollowCnt) === 0 ? true : false}
+                                        onClick={() => handleClickFollow("followers")}
+                                    >
+                                        {props.followersNum + myFollowCnt}
                                     </Button>
                                 </Grid>
                             </Grid>
