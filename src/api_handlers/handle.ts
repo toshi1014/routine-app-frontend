@@ -216,44 +216,10 @@ export const favoriteApi = async (postId: number, boolUnfavorite: boolean) => {
     return res;
 }
 
+
 // DEBUG: below
-export const getApi = async () => {
-    try {
-        const res = await axios.get(baseUrl + "post/");
-        const data = res.data[0];
-        console.log(data);
-        if (data.status) {
-            console.log(data.val);
-        } else {
-            console.log(data.reason);
-        }
-    } catch (err) {
-        console.log(err);
-    }
-}
-
-
-export const postApiDebug = async (username: string) => {
-    const res = await axios.post(
-        baseUrl + "post_debug/",
-        {
-            "username": username,
-            "password": "8979",
-            "token": localStorage.getItem("token")
-        });
-
-    const data = res.data[0];
-    console.log(data);
-
-    if (data.status) {
-        console.log(data.val);
-    } else {
-        console.log(data.reason);
-    }
-}
-
-export const putApi = async (name: string) => {
-    const req = { name: "FOO" };
-    const res = await axios.put(baseUrl + "mypage_login/1/", req);
-    return res.data[0];
+export const deleteUsersApi = async () => {
+    const promiseRes = await axios.get(baseUrl + "delete_users/");
+    const res = promiseRes.data[0];
+    return res.status;
 }
