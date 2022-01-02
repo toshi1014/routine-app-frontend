@@ -64,8 +64,9 @@ function MyPage() {
                 like: defaultLike,
             }
         ]);
-    // const favoriteList = postedList;
-    const favoriteList: Array<RoutinePackContents> = [];    // TEMP: fav list
+
+    const [favoriteList, setFavoriteList] =
+        React.useState<Array<RoutinePackContents>>(postedList);
 
 
     React.useEffect(() => {
@@ -78,6 +79,7 @@ function MyPage() {
                 setFollowingNum(res.contents.header.followingNum);
                 setFollowersNum(res.contents.header.followersNum);
                 setPostedList(res.contents.postedList);
+                setFavoriteList(res.contents.favoriteList);
                 console.log("contents:", res.contents);
             } else {
                 console.log("Err");

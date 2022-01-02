@@ -24,6 +24,7 @@ export type Mypage = {
         followingNum: number;
     },
     postedList: Array<RoutinePackContents>,
+    favoriteList: Array<RoutinePackContents>,
 }
 
 

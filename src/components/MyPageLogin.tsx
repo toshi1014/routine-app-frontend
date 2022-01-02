@@ -218,8 +218,9 @@ function MyPageLogin() {
                 like: defaultLike,
             }
         ]);
-    // const favoriteList = postedList;
-    const favoriteList: Array<RoutinePackContents> = [];    // TEMP: fab list
+
+    const [favoriteList, setFavoriteList] =
+        React.useState<Array<RoutinePackContents>>(postedList);
 
     const [draftList, setDraftList] =
         React.useState<Array<RoutinePackContents>>([
@@ -284,6 +285,7 @@ function MyPageLogin() {
                 setFollowingNum(res.contents.header.followingNum);
                 setFollowersNum(res.contents.header.followersNum);
                 setPostedList(res.contents.postedList);
+                setFavoriteList(res.contents.favoriteList);
                 setDraftList(res.contents.draftList);
                 console.log("contents:", res.contents);
             } else {

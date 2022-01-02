@@ -32,6 +32,8 @@ import ShareIcon from "@mui/icons-material/Share";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ReportIcon from "@mui/icons-material/Report";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import {
     Link,
     useNavigate,
@@ -39,7 +41,10 @@ import {
 import TextWithLimitation from "./TextWithLimitation";
 import { RoutinePackContents } from "../utils/Types";
 import { decodeJwt } from "../utils/utils";
-import { likeApi } from "../api_handlers/handle";
+import {
+    likeApi,
+    favoriteApi,
+} from "../api_handlers/handle";
 
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -57,14 +62,17 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
     }),
 }));
 
+
+const token = localStorage.getItem("token")
+const boolLoginStatus = (token === null) ? false : true;
+const userId = (token === null) ? null : decodeJwt(token).id;
+
+
 type Props = RoutinePackContents & {
     editable?: boolean;
     handleClickEdit?: () => void;
     handleClickDelete?: () => void;
 }
-
-const token = localStorage.getItem("token")
-const boolLoginStatus = (token === null) ? false : true;
 
 function RoutinePack(props: Props) {
     const avatarSize = 35;
@@ -102,11 +110,11 @@ function RoutinePack(props: Props) {
             : []
     );
 
-    const updateFavoriteList = (token: string) => {
+    const updateLikeList = (token: string) => {
         setLikeList(decodeJwt(token).likeList);
     }
 
-    const handleClickFavorite = async () => {
+    const handleClickLike = async () => {
         let res;
         if (likeList.includes(props.id)){
             res = await likeApi(props.id, true);
@@ -125,6 +133,32 @@ function RoutinePack(props: Props) {
         }
 
         if (res.status) {
+            updateLikeList(res.token);
+        } else {
+            // force logout & redirect to login
+            localStorage.removeItem("token");
+            navigate("/login");
+            window.location.reload();
+            return null
+        }
+    }
+    // end; like
+
+    // favorite
+    const [favoriteList, setFavoriteList] = React.useState<Array<number>>(
+        boolLoginStatus && token
+            ? decodeJwt(token).favoriteList
+            : []
+    );
+
+    const updateFavoriteList = (token: string) => {
+        setFavoriteList(decodeJwt(token).favoriteList);
+    }
+
+    const handleClickFavorite = async () => {
+        const res = await favoriteApi(props.id, favoriteList.includes(props.id));
+
+        if (res.status) {
             updateFavoriteList(res.token);
         } else {
             // force logout & redirect to login
@@ -134,6 +168,7 @@ function RoutinePack(props: Props) {
             return null
         }
     }
+    // end; favorite
 
     const dialogComp = (
         <Dialog
@@ -248,8 +283,12 @@ function RoutinePack(props: Props) {
                 <CardActions disableSpacing>
                     <IconButton
                         aria-label="add to favorites"
-                        disabled={(props.editable ? true : false)}
-                        onClick={handleClickFavorite}
+                        disabled={(
+                            props.editable || props.contributorId === userId
+                            ? true
+                            : false
+                        )}
+                        onClick={handleClickLike}
                     >
                         {(likeList.includes(props.id)
                             ? <FavoriteIcon />
@@ -260,6 +299,22 @@ function RoutinePack(props: Props) {
                     <IconButton aria-label="share">
                         <ShareIcon />
                     </IconButton>
+
+                    <IconButton
+                        aria-label="add to favorites"
+                        disabled={(
+                            props.editable || props.contributorId === userId
+                            ? true
+                            : false
+                        )}
+                        onClick={handleClickFavorite}
+                    >
+                        {(favoriteList.includes(props.id)
+                            ? <BookmarkIcon />
+                            : <BookmarkBorderIcon />
+                        )}
+                    </IconButton>
+
                     {
                         (props.editable)
                             ?

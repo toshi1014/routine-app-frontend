@@ -217,6 +217,23 @@ export const likeApi = async (postId: number, boolUnlike: boolean) => {
 }
 
 
+export const favoriteApi = async (postId: number, boolUnlike: boolean) => {
+    const req = {
+        token: localStorage.getItem("token"),
+        postId: postId,
+    }
+
+    const favoriteOrUnfavorite = (boolUnlike ? "unfavorite" : "favorite");
+    const promiseRes = await axios.post(baseUrl + "mypage_login/" + favoriteOrUnfavorite + "/", req);
+    const res: Response<null> = promiseRes.data[0];
+
+    if (res.status) {
+        localStorage.setItem("token", res.token);
+    }
+    return res;
+}
+
+
 // DEBUG: below
 export const deleteUsersApi = async () => {
     const promiseRes = await axios.get(baseUrl + "delete_users/");
