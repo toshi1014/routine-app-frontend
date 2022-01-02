@@ -1,14 +1,16 @@
 import axios from "axios";
 import {
     Response,
+    IsUnique,
+    NewToken,
     Mypage,
     MypageLogin,
     SearchResults,
+    UserList,
 } from "./protocols";
 import {
     RoutineElement,
     RoutineContents,
-    UserNameId,
 } from "../utils/Types";
 
 const baseUrl = "http://localhost:8000/";
@@ -35,9 +37,13 @@ export const isUniqueApi = async (column: string, val: string) => {
         "val": val,
     }
     const promiseRes = await axios.post(baseUrl + "is_unique/", req);
-    const boolUnique: boolean = promiseRes.data[0].status;
+    const res: Response<IsUnique> = promiseRes.data[0];
 
-    return boolUnique;
+    if (res.status){
+        return res.contents.boolUnique;
+    }else{
+        console.log(res.errorMessage);
+    }
 }
 
 
@@ -48,10 +54,10 @@ export const signupApi = async (email: string, password: string, username: strin
         username: username,
     }
     const promiseRes = await axios.post(baseUrl + "signup/", req);
-    const res: Response<null> = promiseRes.data[0];
+    const res: Response<NewToken> = promiseRes.data[0];
 
     if (res.status) {
-        localStorage.setItem("token", res.token);
+        localStorage.setItem("token", res.contents.newToken);
     }
     return res.status;
 }
@@ -181,10 +187,10 @@ export const followApi = async (targetUserId: number, boolUnfollow: boolean) => 
     const followOrUnfollow = (boolUnfollow ? "unfollow" : "follow");
     console.log(followOrUnfollow);
     const promiseRes = await axios.post(baseUrl + "mypage_login/" + followOrUnfollow + "/", req);
-    const res: Response<null> = promiseRes.data[0];
+    const res: Response<NewToken> = promiseRes.data[0];
 
     if (res.status) {
-        localStorage.setItem("token", res.token);
+        localStorage.setItem("token", res.contents.newToken);
     }
     return res;
 }
@@ -195,7 +201,7 @@ export const getFollowingOrFollowersApi = async (userId: number, followingOrFoll
         throw new Error("unknown followingOrFollowers " + followingOrFollowers);
     }
     const promiseRes = await axios.get(`${baseUrl}mypage/get_following_or_followers/${userId}/${followingOrFollowers}/`);
-    const res: Response<Array<UserNameId>> = promiseRes.data[0];
+    const res: Response<UserList> = promiseRes.data[0];
     return res;
 }
 
@@ -208,10 +214,10 @@ export const likeApi = async (postId: number, boolUnlike: boolean) => {
 
     const likeOrUnlike = (boolUnlike ? "unlike" : "like");
     const promiseRes = await axios.post(baseUrl + "mypage_login/" + likeOrUnlike + "/", req);
-    const res: Response<null> = promiseRes.data[0];
+    const res: Response<NewToken> = promiseRes.data[0];
 
     if (res.status) {
-        localStorage.setItem("token", res.token);
+        localStorage.setItem("token", res.contents.newToken);
     }
     return res;
 }
@@ -225,10 +231,10 @@ export const favoriteApi = async (postId: number, boolUnlike: boolean) => {
 
     const favoriteOrUnfavorite = (boolUnlike ? "unfavorite" : "favorite");
     const promiseRes = await axios.post(baseUrl + "mypage_login/" + favoriteOrUnfavorite + "/", req);
-    const res: Response<null> = promiseRes.data[0];
+    const res: Response<NewToken> = promiseRes.data[0];
 
     if (res.status) {
-        localStorage.setItem("token", res.token);
+        localStorage.setItem("token", res.contents.newToken);
     }
     return res;
 }
@@ -239,4 +245,10 @@ export const deleteUsersApi = async () => {
     const promiseRes = await axios.get(baseUrl + "delete_users/");
     const res = promiseRes.data[0];
     return res.status;
+}
+
+export const getTestApi = async () => {
+    const promiseRes = await axios.get(baseUrl + "debug/");
+    const res = promiseRes.data[0];
+    return res;
 }

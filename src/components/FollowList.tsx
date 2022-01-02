@@ -44,7 +44,7 @@ function FollowList(props: Props) {
 
             const res = await getFollowingOrFollowersApi(props.userId, following_or_followers);
             if (res.status) {
-                setUserList(res.contents);
+                setUserList(res.contents.userList);
             } else { throw new Error; }
         }
         if (props.open) {

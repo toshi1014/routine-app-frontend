@@ -133,7 +133,7 @@ function RoutinePack(props: Props) {
         }
 
         if (res.status) {
-            updateLikeList(res.token);
+            updateLikeList(res.contents.newToken);
         } else {
             // force logout & redirect to login
             localStorage.removeItem("token");
@@ -159,7 +159,7 @@ function RoutinePack(props: Props) {
         const res = await favoriteApi(props.id, favoriteList.includes(props.id));
 
         if (res.status) {
-            updateFavoriteList(res.token);
+            updateFavoriteList(res.contents.newToken);
         } else {
             // force logout & redirect to login
             localStorage.removeItem("token");

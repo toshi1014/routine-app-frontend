@@ -55,7 +55,7 @@ function FollowButton(props: Props) {
         }
 
         if (res.status) {
-            updateFollowingList(res.token);
+            updateFollowingList(res.contents.newToken);
         } else {
             // force logout & redirect to login
             localStorage.removeItem("token");

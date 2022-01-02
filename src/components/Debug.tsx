@@ -3,6 +3,7 @@ import {
     signupApi,
     deleteUsersApi,
     postOrDraftApi,
+    getTestApi,
 } from "../api_handlers/handle";
 import { decodeJwt } from "../utils/utils";
 
@@ -107,12 +108,18 @@ function Debug() {
         );
     }
 
+    const getTest = async () => {
+        const res = await getTestApi();
+        console.log(res);
+    }
+
     return (
         <div>
             <h1>Debug</h1>
             <div><button onClick={showToken}>SHOW_TOKEN</button></div>
             <div><button onClick={addUsers}>ADD_USERS</button></div>
             <div><button onClick={deleteUsers}>DELETE_USERS</button></div>
+            <div><button onClick={getTest}>GET_TEST</button></div>
             {(
                 boolLoginStatus
                     ? <div>

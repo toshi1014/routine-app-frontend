@@ -1,5 +1,6 @@
 import {
     RoutinePackContents,
+    UserNameId,
 } from "../utils/Types";
 
 
@@ -14,6 +15,14 @@ export type Response<T> =
         token: null;
         errorMessage: string;
     }
+
+export type IsUnique = {
+    boolUnique: boolean;
+}
+
+export type NewToken = {
+    newToken: string;
+}
 
 export type Mypage = {
     header: {
@@ -35,4 +44,8 @@ export type MypageLogin = Mypage & {
 export type SearchResults = {
     resultList: Array<RoutinePackContents>;
     pageLength: number;
+}
+
+export type UserList = {
+    userList: Array<UserNameId>;
 }
