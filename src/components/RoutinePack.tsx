@@ -39,7 +39,7 @@ import {
 import TextWithLimitation from "./TextWithLimitation";
 import { RoutinePackContents } from "../utils/Types";
 import { decodeJwt } from "../utils/utils";
-import { favoriteApi } from "../api_handlers/handle";
+import { likeApi } from "../api_handlers/handle";
 
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -93,34 +93,34 @@ function RoutinePack(props: Props) {
         setOpenDialog(false);
     }
 
-    // favotite
-    const [myFavoriteCnt, setMyFavoriteCnt] = React.useState(0);
+    // like
+    const [myLikeCnt, setMyLikeCnt] = React.useState(0);
 
-    const [favoriteList, setFavoriteList] = React.useState<Array<number>>(
+    const [likeList, setLikeList] = React.useState<Array<number>>(
         boolLoginStatus && token
-            ? decodeJwt(token).favoriteList
+            ? decodeJwt(token).likeList
             : []
     );
 
     const updateFavoriteList = (token: string) => {
-        setFavoriteList(decodeJwt(token).favoriteList);
+        setLikeList(decodeJwt(token).likeList);
     }
 
     const handleClickFavorite = async () => {
         let res;
-        if (favoriteList.includes(props.id)){
-            res = await favoriteApi(props.id, true);
-            if (myFavoriteCnt === 0){
-                setMyFavoriteCnt(-1);
+        if (likeList.includes(props.id)){
+            res = await likeApi(props.id, true);
+            if (myLikeCnt === 0){
+                setMyLikeCnt(-1);
             }else{
-                setMyFavoriteCnt(0);
+                setMyLikeCnt(0);
             }
         }else{
-            res = await favoriteApi(props.id, false);
-            if (myFavoriteCnt === 0){
-                setMyFavoriteCnt(1);
+            res = await likeApi(props.id, false);
+            if (myLikeCnt === 0){
+                setMyLikeCnt(1);
             }else{
-                setMyFavoriteCnt(0);
+                setMyLikeCnt(0);
             }
         }
 
@@ -217,7 +217,7 @@ function RoutinePack(props: Props) {
                                 {props.contributor}
                             </Grid>
                             <Grid item>
-                                {props.like + myFavoriteCnt} Like
+                                {props.like + myLikeCnt} Like
                             </Grid>
                         </Grid>
                     }
@@ -251,7 +251,7 @@ function RoutinePack(props: Props) {
                         disabled={(props.editable ? true : false)}
                         onClick={handleClickFavorite}
                     >
-                        {(favoriteList.includes(props.id)
+                        {(likeList.includes(props.id)
                             ? <FavoriteIcon />
                             : <FavoriteBorderIcon />
                         )}
