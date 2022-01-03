@@ -83,3 +83,15 @@ export type UserNameId = {
     username: string;
     userId: number;
 }
+
+export type EmailAddress = {
+    emailAddress: string;
+}
+
+export type AuthEmail = EmailAddress & {
+    purpose: "auth";
+    context: {
+        username: string;
+        authCode: string;
+    }
+}

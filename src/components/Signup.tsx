@@ -21,11 +21,15 @@ import {
 } from "../utils/validations";
 import {
     ValidationStatus,
+    AuthEmail,
 } from "../utils/Types";
 import {
     generateAuthCode,
 } from "../utils/utils";
-import { signupApi } from "../api_handlers/handle";
+import {
+    signupApi,
+    sendEmailApi,
+} from "../api_handlers/handle";
 
 
 function Signup() {
@@ -92,6 +96,16 @@ function Signup() {
         if (valid) {
             setAuthCodeComp(authCodeCompBase);
             // TODO: send email
+
+            const req: AuthEmail = {
+                emailAddress: email,
+                purpose:"auth",
+                context: {
+                    username: username,
+                    authCode: authCode,
+                }
+            }
+            const res = await sendEmailApi(req);
             console.log("authCode:", authCode)
         }
 

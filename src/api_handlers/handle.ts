@@ -11,6 +11,7 @@ import {
 import {
     RoutineElement,
     RoutineContents,
+    AuthEmail,
 } from "../utils/Types";
 
 const baseUrl = "http://localhost:8000/";
@@ -39,9 +40,9 @@ export const isUniqueApi = async (column: string, val: string) => {
     const promiseRes = await axios.post(baseUrl + "is_unique/", req);
     const res: Response<IsUnique> = promiseRes.data[0];
 
-    if (res.status){
+    if (res.status) {
         return res.contents.boolUnique;
-    }else{
+    } else {
         console.log(res.errorMessage);
     }
 }
@@ -236,6 +237,18 @@ export const favoriteApi = async (postId: number, boolUnlike: boolean) => {
     if (res.status) {
         localStorage.setItem("token", res.contents.newToken);
     }
+    return res;
+}
+
+
+export const sendEmailApi = async (arg: AuthEmail) => {
+    const req = {
+        recipient: arg.emailAddress,
+        purpose: arg.purpose,
+        context: arg.context,
+    }
+    const promiseRes = await axios.post(baseUrl + "send_email/", req);
+    const res = promiseRes.data[0];
     return res;
 }
 
