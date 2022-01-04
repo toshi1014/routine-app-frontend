@@ -213,11 +213,7 @@ function RoutinePack(props: Props) {
                                 color: "white",
                             }}
                         >
-                            <Avatar
-                                alt="Smiley"
-                                src={process.env.PUBLIC_URL + "/static/demo/face.png"}
-                                sx={{ width: avatarSize, height: avatarSize }}
-                            />
+                            <Avatar>X</Avatar>
                         </Link>
                     }
                     action={

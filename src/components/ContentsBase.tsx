@@ -97,15 +97,7 @@ function ContentsBase(props: Props) {
                                     <Grid item>
                                         <Grid container direction="row" spacing={1}>
                                             <Grid item>
-                                                <Avatar
-                                                    alt="Smiley"
-                                                    src={process.env.PUBLIC_URL + "/static/demo/face.png"}
-                                                    sx={{
-                                                        width: avatarSize,
-                                                        height: avatarSize,
-                                                        my: 1.2,
-                                                    }}
-                                                />
+                                                <Avatar>X</Avatar>
                                             </Grid>
                                             <Grid item>
                                                 <h3>{props.routineHeader.contributor}</h3>

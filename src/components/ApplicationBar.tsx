@@ -130,15 +130,7 @@ function ApplicationBar() {
 
                         {boolLoginStatus ?
                             <Stack direction="row" spacing={2}>
-                                <Avatar
-                                    alt="Smiley"
-                                    src={process.env.PUBLIC_URL + "/static/demo/face.png"}
-                                    sx={{
-                                        width: avatarSize,
-                                        height: avatarSize,
-                                        my: 0.2,
-                                    }}
-                                />
+                                <Avatar>X</Avatar>
                                 <Paper elevation={20} sx={{ height: 40 }} >
                                     <IconButton onClick={handleLogout}>
                                         <LogoutIcon />

@@ -134,11 +134,7 @@ function MenuDrawer(props: Props) {
                 avatar={
                     (username === defaultUsername ?
                         <Avatar src="/broken-image" />
-                        : <Avatar
-                            alt="Smiley"
-                            src={process.env.PUBLIC_URL + "/static/demo/face.png"}
-                            sx={{ width: avatarSize, height: avatarSize }}
-                        />
+                        : <Avatar>X</Avatar>
                     )
                 }
                 title={username}
