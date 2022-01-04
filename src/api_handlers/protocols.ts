@@ -36,7 +36,6 @@ export type Mypage = {
     favoriteList: Array<RoutinePackContents>,
 }
 
-
 export type MypageLogin = Mypage & {
     draftList: Array<RoutinePackContents>;
 }

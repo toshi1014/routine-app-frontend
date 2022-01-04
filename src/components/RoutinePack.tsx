@@ -2,11 +2,11 @@ import React from 'react';
 import {
     Card,
     Grid,
-    Dialog,
     DialogActions,
     DialogTitle,
     DialogContent,
     DialogContentText,
+    TextField,
     CardHeader,
     CardMedia,
     Button,
@@ -18,7 +18,11 @@ import {
     CardActions,
     Typography,
     Collapse,
+    InputLabel,
+    FormControl,
 } from "@mui/material";
+import Dialog, { DialogProps } from '@mui/material/Dialog';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import {
     styled,
 } from "@mui/material/styles";
@@ -44,6 +48,7 @@ import { decodeJwt } from "../utils/utils";
 import {
     likeApi,
     favoriteApi,
+    reportApi,
 } from "../api_handlers/handle";
 
 
@@ -63,10 +68,13 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }));
 
 
+// TEMP:
+const reasonList = ["A", "B", "C", "D", "E", "F", "Other"];
+const maxLenReportComment = 140;
+
 const token = localStorage.getItem("token")
 const boolLoginStatus = (token === null) ? false : true;
 const userId = (token === null) ? null : decodeJwt(token).id;
-
 
 type Props = RoutinePackContents & {
     editable?: boolean;
@@ -90,14 +98,6 @@ function RoutinePack(props: Props) {
     }
     const handleMenuClose = () => {
         setAnchorEl(null);
-    }
-
-    const [openDialog, setOpenDialog] = React.useState(false);
-    const handleOpenDialog = () => {
-        setOpenDialog(true);
-    }
-    const handleCloseDialog = () => {
-        setOpenDialog(false);
     }
 
     // like
@@ -169,10 +169,104 @@ function RoutinePack(props: Props) {
     }
     // end; favorite
 
-    const dialogComp = (
+    // report
+    const [openReportDialog, setOpenReportDialog] = React.useState(false);
+    const handleOpenReportDialog = () => {
+        setOpenReportDialog(true);
+    }
+    const handleCloseReportDialog = () => {
+        setOpenReportDialog(false);
+        setReportCommentError(false);
+        setReportCommentHelperText("");
+        handleMenuClose();
+    }
+
+    const [reason, setReason] = React.useState(reasonList[0]);
+    const handleChangeReason = (event: SelectChangeEvent<string>) => {
+        setReason(event.target.value);
+    };
+    const [reportComment, setReportComment] = React.useState("");
+    const [reportCommentError, setReportCommentError] = React.useState(false);
+    const [reportCommentHelperText, setReportCommentHelperText] = React.useState("");
+    const handleChangeReportComment = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setReportComment(event.target.value);
+    }
+
+    const handleClickReport = async () => {
+        if (reportComment.length > maxLenReportComment) {
+            setReportCommentError(true);
+            setReportCommentHelperText("Max 140 letters. Now, " + reportComment.length);
+        } else if (reportComment === "") {
+            // if empty string, do nothing
+        } else {
+            handleCloseReportDialog();
+            const res = await reportApi(props.id, reason, reportComment);
+            console.log(res);
+        }
+    }
+
+    const reportDialogComp = (
         <Dialog
-            open={openDialog}
-            onClose={handleCloseDialog}
+            open={openReportDialog}
+            onClose={handleCloseReportDialog}
+        >
+            <DialogTitle>
+                {"Feeling unconfortable?"}
+            </DialogTitle>
+
+            <DialogContent>
+                <DialogContentText>
+                    After this confirmation, this contents would be reported anonymously.
+                </DialogContentText>
+
+                <FormControl sx={{ mt: 2, minWidth: 120 }}>
+                    <InputLabel htmlFor="Reason">Reason</InputLabel>
+                    <Select
+                        autoFocus
+                        value={reason}
+                        onChange={handleChangeReason}
+                        label="Reason"
+                    >
+                        {reasonList.map((reason: string, idx: number) => (
+                            <MenuItem value={reason} key={idx}>{reason}</MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    label="Component"
+                    fullWidth
+                    variant="standard"
+                    onChange={handleChangeReportComment}
+                    error={reportCommentError}
+                    helperText={reportCommentHelperText}
+                />
+            </DialogContent>
+
+            <DialogActions>
+                <Button onClick={handleCloseReportDialog}>Cancel</Button>
+                <Button onClick={handleClickReport} autoFocus>Report</Button>
+            </DialogActions>
+
+        </Dialog>
+    );
+    // end; report
+
+    // delete
+    const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
+    const handleOpenDeleteDialog = () => {
+        setOpenDeleteDialog(true);
+    }
+    const handleCloseDeleteDialog = () => {
+        setOpenDeleteDialog(false);
+    }
+
+    const deleteDialogComp = (
+        <Dialog
+            open={openDeleteDialog}
+            onClose={handleCloseDeleteDialog}
         >
             <DialogTitle>
                 {"Delete for sure?"}
@@ -185,17 +279,18 @@ function RoutinePack(props: Props) {
             </DialogContent>
 
             <DialogActions>
-                <Button onClick={handleCloseDialog}>Cancel</Button>
+                <Button onClick={handleCloseDeleteDialog}>Cancel</Button>
                 <Button onClick={props.handleClickDelete} autoFocus>Delete</Button>
             </DialogActions>
 
         </Dialog>
     );
+    // end; delete
 
     return (
         <div>
-
-            {dialogComp}
+            {reportDialogComp}
+            {deleteDialogComp}
 
             <Card sx={{
                 minWidth: packWidth,
@@ -230,7 +325,7 @@ function RoutinePack(props: Props) {
                                 open={openMenu}
                                 onClose={handleMenuClose}
                             >
-                                <MenuItem>
+                                <MenuItem onClick={handleOpenReportDialog}>
                                     <ListItemIcon>
                                         <ReportIcon />
                                     </ListItemIcon>
@@ -308,7 +403,7 @@ function RoutinePack(props: Props) {
                                 <IconButton onClick={props.handleClickEdit}>
                                     <EditIcon />
                                 </IconButton>
-                                <IconButton onClick={handleOpenDialog}>
+                                <IconButton onClick={handleOpenDeleteDialog}>
                                     <DeleteIcon />
                                 </IconButton>
                             </div>

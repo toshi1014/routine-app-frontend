@@ -42,6 +42,8 @@ function RoutineContents() {
         console.log("Share");
     }
 
+    const [apiErrorMessage, setApiErrorMessage] = React.useState("");
+
 
     React.useEffect(() => {
         const init = async () => {
@@ -57,9 +59,8 @@ function RoutineContents() {
                     </ListItem>
                 );
                 setHashtagChipList(hashtagChipListTmp);
-
-            } else {
-                console.log("Err at RoutineContents");
+            }else{
+                setApiErrorMessage(res.errorMessage);
             }
         }
 
@@ -70,13 +71,15 @@ function RoutineContents() {
 
 
     return (
-        <ContentsBase
+        apiErrorMessage === ""
+        ? <ContentsBase
             routineHeader={header}
             routineElementList={elementList}
             hashtagChipList={hashtagChipList}
             handleFavorite={handleFavorite}
             handleShare={handleShare}
         />
+        : <h1>{apiErrorMessage}</h1>
     );
 }
 

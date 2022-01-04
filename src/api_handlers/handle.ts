@@ -253,6 +253,18 @@ export const sendEmailApi = async (arg: AuthEmail) => {
 }
 
 
+export const reportApi = async (postId: number, reason: string, reportComment: string) => {
+    const req = {
+        postId: postId,
+        reason: reason,
+        reportComment: reportComment,
+    }
+    const promiseRes = await axios.post(baseUrl + "report/", req);
+    const res = promiseRes.data[0];
+    return res;
+}
+
+
 // DEBUG: below
 export const deleteUsersApi = async () => {
     const promiseRes = await axios.get(baseUrl + "delete_users/");
