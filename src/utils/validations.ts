@@ -4,15 +4,19 @@ import {
 import { isUniqueApi } from "../api_handlers/handle";
 
 
-export const isValidEmail = async (email: string): Promise<ValidationStatus> => {
+export const isValidEmail = async (email: string, uniqueReguired: boolean)
+    : Promise<ValidationStatus> => {
+
     let boolValid = true;
     let helperText = "";
 
     // TODO: add email validation
 
-    const boolUnique = await isUniqueApi("email", email);
-    if (boolUnique) {
-        helperText = "already taken";
+    if (uniqueReguired) {
+        const boolUnique = await isUniqueApi("email", email);
+        if (!boolUnique) {
+            helperText = "already taken";
+        }
     }
 
     if (!email.includes("@")) {

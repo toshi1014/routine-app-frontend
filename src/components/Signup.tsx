@@ -63,7 +63,7 @@ function Signup() {
         const password = inputRef.password.value;
         const username = inputRef.username.value;
 
-        const emailStatus: ValidationStatus = await isValidEmail(email);
+        const emailStatus: ValidationStatus = await isValidEmail(email, true);
         const passwordStatus: ValidationStatus = isValidPassword(password);
         const usernameStatus: ValidationStatus = isValidUsername(username);
 

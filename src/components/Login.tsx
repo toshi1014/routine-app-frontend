@@ -43,7 +43,7 @@ function Login() {
         const email = inputRef.email.value;
         const password = inputRef.password.value;
 
-        const emailStatus: ValidationStatus = await isValidEmail(email);
+        const emailStatus: ValidationStatus = await isValidEmail(email, false);
         const passwordStatus: ValidationStatus = isValidPassword(password);
 
         setErrorEmail(!emailStatus.boolValid);
