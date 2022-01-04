@@ -20,13 +20,20 @@ import {
     defaultTitle,
     defaultContributor,
     defaultContributorId,
+    defaultBadge,
     defaultDesc,
     defaultTitleStep1,
     defaultDescStep1,
     defaultLike,
     defaultHashtagList,
 } from "../utils/defaultValues";
+import {
+    Badge,
+} from "../utils/Types";
 
+
+// TEMP:
+const badgeList: Array<Badge> = ["noBadge", "l1", "l2", "l3"];
 
 const menuContentList = [
     "All",
@@ -48,11 +55,12 @@ function Top() {
         </ListItem>
     );
 
-    const polularRoutineList = range(0, 5).map((idx: number) =>
+    const polularRoutineList = range(0, 10).map((idx: number) =>
         <RoutinePack
             id={0}
             contributor={defaultContributor}
             contributorId={defaultContributorId}
+            badge={badgeList[idx%badgeList.length]}
             title={defaultTitle + idx}
             desc={defaultDesc}
             titleStep1={defaultTitleStep1}

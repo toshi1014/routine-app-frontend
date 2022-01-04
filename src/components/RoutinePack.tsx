@@ -17,7 +17,6 @@ import {
     ListItemIcon,
     CardActions,
     Typography,
-    Avatar,
     Collapse,
 } from "@mui/material";
 import {
@@ -39,6 +38,7 @@ import {
     useNavigate,
 } from "react-router-dom";
 import TextWithLimitation from "./TextWithLimitation";
+import UserAvatar from "./UserAvatar";
 import { RoutinePackContents } from "../utils/Types";
 import { decodeJwt } from "../utils/utils";
 import {
@@ -75,7 +75,6 @@ type Props = RoutinePackContents & {
 }
 
 function RoutinePack(props: Props) {
-    const avatarSize = 35;
     const packWidth = 345;
     const navigate = useNavigate();
 
@@ -116,18 +115,18 @@ function RoutinePack(props: Props) {
 
     const handleClickLike = async () => {
         let res;
-        if (likeList.includes(props.id)){
+        if (likeList.includes(props.id)) {
             res = await likeApi(props.id, true);
-            if (myLikeCnt === 0){
+            if (myLikeCnt === 0) {
                 setMyLikeCnt(-1);
-            }else{
+            } else {
                 setMyLikeCnt(0);
             }
-        }else{
+        } else {
             res = await likeApi(props.id, false);
-            if (myLikeCnt === 0){
+            if (myLikeCnt === 0) {
                 setMyLikeCnt(1);
-            }else{
+            } else {
                 setMyLikeCnt(0);
             }
         }
@@ -193,7 +192,6 @@ function RoutinePack(props: Props) {
         </Dialog>
     );
 
-
     return (
         <div>
 
@@ -213,7 +211,7 @@ function RoutinePack(props: Props) {
                                 color: "white",
                             }}
                         >
-                            <Avatar>X</Avatar>
+                            <UserAvatar badge={props.badge} />
                         </Link>
                     }
                     action={

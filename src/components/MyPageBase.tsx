@@ -88,6 +88,7 @@ function MyPageBase(props: Props) {
                 id={posted.id}
                 contributor={posted.contributor}
                 contributorId={posted.contributorId}
+                badge={posted.badge}
                 title={posted.title}
                 desc={posted.desc}
                 titleStep1={posted.titleStep1}
@@ -110,6 +111,7 @@ function MyPageBase(props: Props) {
                 id={favorite.id}
                 contributor={favorite.contributor}
                 contributorId={favorite.contributorId}
+                badge={favorite.badge}
                 title={favorite.title}
                 desc={favorite.desc}
                 titleStep1={favorite.titleStep1}
@@ -321,6 +323,7 @@ function MyPageBase(props: Props) {
                                             id={draft.id}
                                             contributor={draft.contributor}
                                             contributorId={draft.contributorId}
+                                            badge={draft.badge}
                                             title={draft.title}
                                             desc={draft.desc}
                                             titleStep1={draft.titleStep1}

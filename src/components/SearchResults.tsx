@@ -16,6 +16,7 @@ import {
     defaultTitle,
     defaultContributor,
     defaultContributorId,
+    defaultBadge,
     defaultDesc,
     defaultTitleStep1,
     defaultDescStep1,
@@ -47,6 +48,7 @@ function SearchResults() {
             id: defaultId,
             contributor: defaultContributor,
             contributorId: defaultContributorId,
+            badge: defaultBadge,
             title: defaultTitle,
             desc: defaultDesc,
             titleStep1: defaultTitleStep1,
@@ -61,6 +63,7 @@ function SearchResults() {
                 id={result.id}
                 contributor={result.contributor}
                 contributorId={result.contributorId}
+                badge={result.badge}
                 title={result.title}
                 desc={result.desc}
                 titleStep1={result.titleStep1}

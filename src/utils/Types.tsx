@@ -56,12 +56,15 @@ export type RoutinePackContents = {
     id: number;
     contributor: string;
     contributorId: number;
+    badge: Badge;
     title: string;
     desc: string;
     titleStep1: string;
     descStep1: string;
     like: number;
 }
+
+export type Badge = "noBadge" | "l1" | "l2" | "l3";
 
 export type ValidationStatus = {
     boolValid: boolean;

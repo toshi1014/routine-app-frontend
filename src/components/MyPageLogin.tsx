@@ -38,12 +38,12 @@ import {
     defaultTitle,
     defaultContributor,
     defaultContributorId,
+    defaultBadge,
     defaultDesc,
     defaultTitleStep1,
     defaultDescStep1,
     defaultLike,
 } from "../utils/defaultValues";
-
 
 
 enum EnumTextFieldLabel {
@@ -211,6 +211,7 @@ function MyPageLogin() {
                 id: defaultId,
                 contributor: defaultContributor,
                 contributorId: defaultContributorId,
+                badge: defaultBadge,
                 title: defaultTitle,
                 desc: defaultDesc,
                 titleStep1: defaultTitleStep1,
@@ -223,18 +224,7 @@ function MyPageLogin() {
         React.useState<Array<RoutinePackContents>>(postedList);
 
     const [draftList, setDraftList] =
-        React.useState<Array<RoutinePackContents>>([
-            {
-                id: defaultId,
-                contributor: defaultContributor,
-                contributorId: defaultContributorId,
-                title: defaultTitle,
-                desc: defaultDesc,
-                titleStep1: defaultTitleStep1,
-                descStep1: defaultDescStep1,
-                like: defaultLike,
-            }
-        ]);
+        React.useState<Array<RoutinePackContents>>(postedList);
 
     const [openBackdrop, setOpenBackdrop] = React.useState(false);
     const [focusTextInput, setFocusTextInput] = React.useState(false);

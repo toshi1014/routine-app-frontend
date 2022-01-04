@@ -19,6 +19,7 @@ export const defaultLastUpdated = "----, --:--";
 export const defaultTitle = "Happy Coding";
 export const defaultContributor = defaultUsername;
 export const defaultContributorId = 0;
+export const defaultBadge = "l1";
 export const defaultDesc = "Best Way to Create App, set aside off of the heat to let rest for 10 minutes, and then serve.";
 export const defaultTitleStep1 = "Buy Computer";
 export const defaultDescStep1 = "Choose best computer for you, set aside off of the heat to let rest for 10 minutes, and then serve.";
