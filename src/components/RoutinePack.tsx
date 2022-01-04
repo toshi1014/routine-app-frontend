@@ -2,6 +2,8 @@ import React from 'react';
 import {
     Card,
     Grid,
+    Snackbar,
+    Alert,
     DialogActions,
     DialogTitle,
     DialogContent,
@@ -189,19 +191,24 @@ function RoutinePack(props: Props) {
     const [reportCommentError, setReportCommentError] = React.useState(false);
     const [reportCommentHelperText, setReportCommentHelperText] = React.useState("");
     const handleChangeReportComment = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setReportComment(event.target.value);
+        const ipt = event.target.value;
+        if (ipt.length > maxLenReportComment) {
+            setReportCommentError(true);
+            setReportCommentHelperText("Max 140 letters. Now, " + ipt.length);
+        }else{
+            setReportCommentError(false);
+            setReportCommentHelperText("");
+        }
+        setReportComment(ipt);
     }
 
     const handleClickReport = async () => {
-        if (reportComment.length > maxLenReportComment) {
-            setReportCommentError(true);
-            setReportCommentHelperText("Max 140 letters. Now, " + reportComment.length);
-        } else if (reportComment === "") {
-            // if empty string, do nothing
-        } else {
+        if (reportComment !== "" && reportComment.length <= maxLenReportComment) {
             handleCloseReportDialog();
             const res = await reportApi(props.id, reason, reportComment);
             console.log(res);
+            setOpenSnackbar(true);
+            setAlertMessage("Reported successfully");
         }
     }
 
@@ -287,8 +294,37 @@ function RoutinePack(props: Props) {
     );
     // end; delete
 
+    // alert
+    const [openSnackbar, setOpenSnackbar] = React.useState(false);
+    const [alertMessage, setAlertMessage] = React.useState("");
+    const handleCloseSnackbar = (
+        event?: React.SyntheticEvent | Event,
+        reason?: string
+    ) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setOpenSnackbar(false);
+    };
+    // end; alert
+
     return (
         <div>
+            <Snackbar
+                open={openSnackbar}
+                onClose={handleCloseSnackbar}
+                sx={{ minWidth: 300}}
+                anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                }}
+                autoHideDuration={3000}
+            >
+                <Alert onClose={handleCloseSnackbar} severity="success">
+                    {alertMessage}
+                </Alert>
+            </Snackbar>
+
             {reportDialogComp}
             {deleteDialogComp}
 

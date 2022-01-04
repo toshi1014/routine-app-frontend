@@ -40,7 +40,7 @@ function ContentsBase(props: Props) {
     const avatarSize = 35;
 
     const header = (
-        <Paper>
+        <Paper sx={{ my: 1 }}>
             <Box ml={3}>
                 <Grid container spacing={2} columns={10}>
                     <Grid item xs={8}>

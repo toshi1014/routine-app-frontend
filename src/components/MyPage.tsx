@@ -5,6 +5,7 @@ import {
 import MyPageBase from "./MyPageBase";
 import { ListItem } from "../utils/ListItem";
 import HashtagLink from "./HashtagLink";
+import ErrorPage from "./ErrorPage";
 import {
     getMypageApi,
 } from "../api_handlers/handle";
@@ -70,6 +71,7 @@ function MyPage() {
     const [favoriteList, setFavoriteList] =
         React.useState<Array<RoutinePackContents>>(postedList);
 
+    const [apiErrorMessage, setApiErrorMessage] = React.useState("");
 
     React.useEffect(() => {
         const init = async () => {
@@ -84,7 +86,7 @@ function MyPage() {
                 setFavoriteList(res.contents.favoriteList);
                 console.log("contents:", res.contents);
             } else {
-                console.log("Err");
+                setApiErrorMessage(res.errorMessage);
             }
         }
         if (userId !== 0) {
@@ -94,16 +96,19 @@ function MyPage() {
 
 
     return (
-        <MyPageBase
-            usernameComp={<h1>{username}</h1>}
-            statusMessageComp={<Typography paragraph>{statusMessage}</Typography>}
-            followingNum={followingNum}
-            followersNum={followersNum}
-            hashtagList={hashtagList}
-            hashtagChipList={hashtagChipList}
-            postedList={postedList}
-            favoriteList={favoriteList}
-        />
+        apiErrorMessage === ""
+            ?
+            <MyPageBase
+                usernameComp={<h1>{username}</h1>}
+                statusMessageComp={<Typography paragraph>{statusMessage}</Typography>}
+                followingNum={followingNum}
+                followersNum={followersNum}
+                hashtagList={hashtagList}
+                hashtagChipList={hashtagChipList}
+                postedList={postedList}
+                favoriteList={favoriteList}
+            />
+            : <ErrorPage errorMessage={apiErrorMessage} />
     );
 }
 

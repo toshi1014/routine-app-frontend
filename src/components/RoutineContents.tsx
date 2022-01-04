@@ -9,6 +9,7 @@ import {
     getContentsApi,
 } from "../api_handlers/handle";
 import HashtagLink from "./HashtagLink";
+import ErrorPage from "./ErrorPage";
 import {
     defaultHeader,
     defaultElementList,
@@ -59,12 +60,12 @@ function RoutineContents() {
                     </ListItem>
                 );
                 setHashtagChipList(hashtagChipListTmp);
-            }else{
+            } else {
                 setApiErrorMessage(res.errorMessage);
             }
         }
 
-        if (id !== 0){
+        if (id !== 0) {
             init();
         }
     }, [])
@@ -72,14 +73,14 @@ function RoutineContents() {
 
     return (
         apiErrorMessage === ""
-        ? <ContentsBase
-            routineHeader={header}
-            routineElementList={elementList}
-            hashtagChipList={hashtagChipList}
-            handleFavorite={handleFavorite}
-            handleShare={handleShare}
-        />
-        : <h1>{apiErrorMessage}</h1>
+            ? <ContentsBase
+                routineHeader={header}
+                routineElementList={elementList}
+                hashtagChipList={hashtagChipList}
+                handleFavorite={handleFavorite}
+                handleShare={handleShare}
+            />
+            : <ErrorPage errorMessage={apiErrorMessage} />
     );
 }
 
