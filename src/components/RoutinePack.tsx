@@ -283,11 +283,7 @@ function RoutinePack(props: Props) {
                 <CardActions disableSpacing>
                     <IconButton
                         aria-label="add to favorites"
-                        disabled={(
-                            props.editable || props.contributorId === userId
-                            ? true
-                            : false
-                        )}
+                        disabled={props.editable || props.contributorId === userId}
                         onClick={handleClickLike}
                     >
                         {(likeList.includes(props.id)
@@ -302,11 +298,7 @@ function RoutinePack(props: Props) {
 
                     <IconButton
                         aria-label="add to favorites"
-                        disabled={(
-                            props.editable || props.contributorId === userId
-                            ? true
-                            : false
-                        )}
+                        disabled={props.editable || props.contributorId === userId}
                         onClick={handleClickFavorite}
                     >
                         {(favoriteList.includes(props.id)
