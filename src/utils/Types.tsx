@@ -5,6 +5,7 @@ export type RoutineHeader = {
     like: number;
     contributor: string;
     contributorId: number;
+    badge: Badge;
     lastUpdated: string;
 }
 
@@ -15,6 +16,7 @@ export type RoutineHeaderInput = {
     like: number;
     contributor: string;
     contributorId: number;
+    badge: Badge;
     lastUpdated: string;
 }
 

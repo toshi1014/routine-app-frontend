@@ -32,6 +32,9 @@ import {
     decodeJwt,
 } from "../utils/utils";
 import {
+    Badge,
+} from "../utils/Types";
+import {
     postOrDraftApi,
 } from "../api_handlers/handle";
 import {
@@ -39,6 +42,7 @@ import {
     defaultId as defaultUserId,
     defaultHashtagAddedList,
     defaultLastUpdated,
+    defaultBadge,
 } from "../utils/defaultValues";
 
 
@@ -57,6 +61,7 @@ function PostEditBase(props: Props) {
 
     const [username, setUsername] = React.useState(defaultUsername);
     const [userId, setUserId] = React.useState(defaultUserId);
+    const [badge, setBadge] = React.useState<Badge>(defaultBadge);
 
     const title = (
         <TextField
@@ -86,6 +91,7 @@ function PostEditBase(props: Props) {
         like: (props.header ? props.header.like : 0),
         contributor: username,
         contributorId: userId,
+        badge: badge,
         lastUpdated: (props.header ? props.header.lastUpdated : defaultLastUpdated),
     };
 
@@ -359,6 +365,7 @@ function PostEditBase(props: Props) {
 
             setUsername(decodeJwt(token).username);
             setUserId(decodeJwt(token).id);
+            setBadge(decodeJwt(token).badge);
 
             if (props.elementList) {
                 props.elementList.map((element: RoutineElement, idx: number) => {

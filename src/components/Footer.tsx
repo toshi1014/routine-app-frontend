@@ -128,7 +128,7 @@ function Footer() {
                 </Grid>
 
                 <Grid item>
-                    <Stack direction="row" spacing={4}>
+                    <Stack spacing={4}>
                         {footerLinks}
                     </Stack>
                 </Grid>

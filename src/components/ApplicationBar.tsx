@@ -4,6 +4,7 @@ import {
     IconButton,
     Toolbar,
     Box,
+    Grid,
     AppBar,
     Avatar,
     Typography,
@@ -18,11 +19,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
-import {
-    Link,
-    useNavigate,
-} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import MenuDrawer from "./MenuDrawer";
+import useWindowSize from "../utils/useWindowSize";
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -74,7 +73,7 @@ const boolLoginStatus = (token === null) ? false : true;
 
 function ApplicationBar() {
     const navigate = useNavigate();
-    const avatarSize = 35;
+    const [innerWidth, innerHeight] = useWindowSize();
     const [openMenuDrawer, setOpenMenuDrawer] = React.useState(false);
 
     const toggleMenuDrawer =
@@ -92,12 +91,45 @@ function ApplicationBar() {
                 setOpenMenuDrawer(!openMenuDrawer);
             };
 
-    const handleLogout = () => {
+    const handleClickLogout = () => {
         localStorage.removeItem("token");
         navigate("");
         window.location.reload();
     }
 
+    const guestAvatarWithLogin = (
+        <Stack direction="row" spacing={1}>
+            <Avatar src="/broken-image" />
+            <Paper elevation={20} sx={{ height: 40 }} >
+                <IconButton onClick={() => navigate("login")}>
+                    <LoginIcon />
+                </IconButton>
+            </Paper>
+        </Stack>
+    );
+
+    const userAvatarWithLogout = (
+        <Stack direction="row" alignItems="center">
+            <IconButton><Avatar>X</Avatar></IconButton>
+            <Paper elevation={20} sx={{ height: 40 }} >
+                <IconButton onClick={handleClickLogout}>
+                    <LogoutIcon />
+                </IconButton>
+            </Paper>
+        </Stack>
+    );
+
+    const searchBarComp = (
+        <Search>
+            <SearchIconWrapper>
+                <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ 'aria-label': 'search' }}
+            />
+        </Search>
+    );
 
     return (
         <div>
@@ -106,62 +138,52 @@ function ApplicationBar() {
                 toggleMenuDrawer={toggleMenuDrawer}
             />
 
-            <Box sx={{ flexGrow: 1 }}>
+            <Box>
                 <AppBar position="static">
                     <Toolbar>
-                        <IconButton
-                            size="large"
-                            edge="start"
-                            color="inherit"
-                            aria-label="open drawer"
-                            sx={{ mr: 2 }}
-                            onClick={toggleMenuDrawer()}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography
-                            variant="h6"
-                            noWrap
-                            component="div"
-                            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-                        >
-                            Foo
-                        </Typography>
+                        <Grid container alignItems="center" direction="row">
+                            <Grid item>
+                                <IconButton
+                                    size="large"
+                                    edge="start"
+                                    color="inherit"
+                                    aria-label="open drawer"
+                                    sx={{ mr: 1 }}
+                                    onClick={toggleMenuDrawer()}
+                                >
+                                    <MenuIcon />
+                                </IconButton>
+                            </Grid>
 
-                        {boolLoginStatus ?
-                            <Stack direction="row" spacing={2}>
-                                <Avatar>X</Avatar>
-                                <Paper elevation={20} sx={{ height: 40 }} >
-                                    <IconButton onClick={handleLogout}>
-                                        <LogoutIcon />
-                                    </IconButton>
-                                </Paper>
-                            </Stack>
-                            :
-                            <Paper elevation={20} sx={{ height: 40 }} >
-                                <Link
-                                    to="/login"
-                                    style={{
-                                        textDecoration: "none",
-                                        color: "white",
+                            <Grid item sx={{ flexGrow: 1 }}>
+                                <Typography
+                                    variant="h6"
+                                    noWrap
+                                    component="div"
+                                    sx={{
+                                        mt: 0.5,
                                     }}
                                 >
-                                    <IconButton>
-                                        <LoginIcon />
-                                    </IconButton>
-                                </Link>
-                            </Paper>
-                        }
+                                    Foo
+                                </Typography>
+                            </Grid>
 
-                        <Search>
-                            <SearchIconWrapper>
-                                <SearchIcon />
-                            </SearchIconWrapper>
-                            <StyledInputBase
-                                placeholder="Search…"
-                                inputProps={{ 'aria-label': 'search' }}
-                            />
-                        </Search>
+                            <Grid item>
+                                <Stack direction="row" spacing={2}>
+                                    {boolLoginStatus
+                                        ? userAvatarWithLogout
+                                        : guestAvatarWithLogin
+                                    }
+                                </Stack>
+                            </Grid>
+
+                            <Grid item>
+                                {(innerWidth > 600
+                                    ? searchBarComp
+                                    : <div />
+                                )}
+                            </Grid>
+                        </Grid>
                     </Toolbar>
                 </AppBar>
             </Box>

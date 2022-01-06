@@ -3,7 +3,6 @@ import {
     Paper,
     Avatar,
     Grid,
-    Chip,
     Stack,
     CardContent,
     CardActions,
@@ -24,6 +23,7 @@ import {
     RoutineElementInput,
 } from "../utils/Types";
 import FollowButton from "./FollowButton";
+import UserAvatar from "./UserAvatar";
 
 
 type Props = {
@@ -37,8 +37,6 @@ type Props = {
 }
 
 function ContentsBase(props: Props) {
-    const avatarSize = 35;
-
     const header = (
         <Paper sx={{ my: 1 }}>
             <Box ml={3}>
@@ -46,10 +44,23 @@ function ContentsBase(props: Props) {
                     <Grid item xs={8}>
                         <Grid container spacing={3} direction="column">
                             <Grid item>
-                                <h1>{props.routineHeader.title}</h1>
-                                <h3>{props.routineHeader.desc}</h3>
-
                                 <Grid container direction="column" spacing={2}>
+                                    <Typography
+                                        variant="h4"
+                                        mt={5}
+                                        ml={2}
+                                    >
+                                        {props.routineHeader.title}
+                                    </Typography>
+
+                                    <Typography
+                                        variant="h6"
+                                        mt={3}
+                                        ml={4}
+                                    >
+                                        {props.routineHeader.desc}
+                                    </Typography>
+
                                     <Grid item>
                                         <Box
                                             sx={{
@@ -74,15 +85,13 @@ function ContentsBase(props: Props) {
                                 <Stack
                                     direction="row"
                                     spacing={1}
-                                    sx={{
-                                        my: 1,
-                                    }}
+                                    alignItems="flex-start"
                                 >
-                                    <FavoriteIcon
-                                        sx={{ my: -0.4 }}
-                                    />
-                                    <Typography>
-                                        {props.routineHeader.like}
+                                    <FavoriteIcon />
+                                    <Typography
+                                        variant="body1"
+                                    >
+                                        {props.routineHeader.like} Like
                                     </Typography>
 
                                 </Stack>
@@ -97,7 +106,7 @@ function ContentsBase(props: Props) {
                                     <Grid item>
                                         <Grid container direction="row" spacing={1}>
                                             <Grid item>
-                                                <Avatar>X</Avatar>
+                                                <UserAvatar badge={props.routineHeader.badge} />
                                             </Grid>
                                             <Grid item>
                                                 <h3>{props.routineHeader.contributor}</h3>

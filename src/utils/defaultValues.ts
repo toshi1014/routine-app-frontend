@@ -32,6 +32,7 @@ export const defaultHeader: RoutineHeader = {
     like: 30,
     contributor: "John Smith",
     contributorId: 0,
+    badge: defaultBadge,
     lastUpdated: "2021, Jul 4",
     hashtagList: [
         "fishing",
