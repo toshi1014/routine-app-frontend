@@ -11,6 +11,7 @@ import {
 } from "../api_handlers/handle";
 import {
     RoutinePackContents,
+    Badge,
 } from "../utils/Types";
 import {
     defaultId,
@@ -37,6 +38,7 @@ function MyPage() {
     const userId = Number(splitHref[splitHrefLength - 1]);
 
     const [username, setUsername] = React.useState(defaultUsername);
+    const [badge, setBadge] = React.useState<Badge>(defaultBadge);
     const [statusMessage, setStatusMessage] = React.useState(defaultStatusMessage);
     const [hashtagList, setHashtagList] = React.useState<Array<string>>(defaultHashtagList);
     const [followingNum, setFollowingNum] = React.useState(defaultFollowingNum);
@@ -78,6 +80,7 @@ function MyPage() {
             const res = await getMypageApi(userId);
             if (res.status) {
                 setUsername(res.contents.header.username);
+                setBadge(res.contents.header.badge);
                 setStatusMessage(res.contents.header.statusMessage);
                 setHashtagList(res.contents.header.hashtagList);
                 setFollowingNum(res.contents.header.followingNum);
@@ -99,8 +102,9 @@ function MyPage() {
         apiErrorMessage === ""
             ?
             <MyPageBase
-                usernameComp={<h1>{username}</h1>}
-                statusMessageComp={<Typography paragraph>{statusMessage}</Typography>}
+                usernameComp={<Typography variant="h4">{username}</Typography>}
+                badge={badge}
+                statusMessageComp={<Typography variant="body1">{statusMessage}</Typography>}
                 followingNum={followingNum}
                 followersNum={followersNum}
                 hashtagList={hashtagList}

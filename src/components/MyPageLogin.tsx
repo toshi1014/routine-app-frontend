@@ -44,6 +44,7 @@ import {
     defaultDescStep1,
     defaultLike,
 } from "../utils/defaultValues";
+import { Badge } from "../utils/Types";
 
 
 enum EnumTextFieldLabel {
@@ -58,6 +59,7 @@ function MyPageLogin() {
     const [username, setUsername] = React.useState(defaultUsername);
     const [usernameOrgn, setUsernameOrgn] = React.useState(defaultUsername);
     const contributor = usernameOrgn;
+    const [badge, setBadge] = React.useState<Badge>(defaultBadge);
     const [statusMessage, setStatusMessage] = React.useState(defaultStatusMessage);
     const [hashtagList, setHashtagList] = React.useState<Array<string>>(defaultHashtagList);
     const [followingNum, setFollowingNum] = React.useState(defaultFollowingNum);
@@ -106,16 +108,17 @@ function MyPageLogin() {
     };
 
     const usernameEdit = (
-        <h1>
+        <Typography variant="h4">
             {username}
             <IconButton onClick={handleEditUsername}>
                 <EditIcon />
             </IconButton>
-        </h1>
+        </Typography>
     );
 
     const statusMessageEdit = (
-        <Typography paragraph>{statusMessage}
+        <Typography variant="body1">
+            {statusMessage}
             <IconButton onClick={handleEditStatusMessage}>
                 <EditIcon fontSize="small" />
             </IconButton>
@@ -261,6 +264,7 @@ function MyPageLogin() {
             if (res.status) {
                 setUsername(res.contents.header.username);
                 setUsernameOrgn(res.contents.header.username);
+                setBadge(res.contents.header.badge);
                 setStatusMessage(res.contents.header.statusMessage);
                 setHashtagList(res.contents.header.hashtagList);
 
@@ -316,6 +320,7 @@ function MyPageLogin() {
 
             <MyPageBase
                 usernameComp={usernameEdit}
+                badge={badge}
                 statusMessageComp={statusMessageEdit}
                 followingNum={followingNum}
                 followersNum={followersNum}

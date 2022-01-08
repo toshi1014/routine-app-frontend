@@ -9,6 +9,7 @@ import {
     Button,
     IconButton,
     CardContent,
+    Typography,
     InputBase,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -172,14 +173,6 @@ function PostEditBase(props: Props) {
     const [routineElementList, setRoutineElementList] =
         React.useState<Array<RoutineElementInput>>([getIndexedRoutineElement(0)]);
 
-    const handleFavorite = () => {
-        console.log("Favorite");
-    }
-
-    const handleShare = () => {
-        console.log("Share");
-    }
-
     // hashtag
     const [hashtagAddedList, setHashtagAddedList] =
         React.useState<Array<ChipData>>(
@@ -231,32 +224,22 @@ function PostEditBase(props: Props) {
     const hashtagInput = (
         <Chip
             label={
-                <Stack direction="row">
-                    <Box sx={{ my: -10 }}>
-                        <></>
-                    </Box>
-
-                    <Box sx={{ my: 5 }}>
-                        <p>#</p>
-                    </Box>
-
-                    <Box sx={{ my: 5.9, mx: 1 }}>
-                        <InputBase
-                            sx={{
-                                width: 150,
-                                maxWidth: "200%"
-                            }}
-                            fullWidth
-                            inputRef={ref => { hashtagRef = ref; }}
-                        />
-                    </Box>
-                    <Box sx={{ my: 5.9 }}>
-                        <IconButton size="small" onClick={handleAddHashtag}>
-                            <AddIcon />
-                        </IconButton>
-                    </Box>
-                </Stack>
+                <Stack direction="row" spacing={1}>
+                    <p>#</p>
+                    <InputBase
+                        sx={{
+                            width: 150,
+                            maxWidth: "200%"
+                        }}
+                        fullWidth
+                        inputRef={ref => { hashtagRef = ref; }}
+                    />
+                    <IconButton size="small" onClick={handleAddHashtag}>
+                        <AddIcon />
+                    </IconButton>
+                </Stack >
             }
+            sx={{ mb: 3 }}
         />
     );
     // end; hashtag
@@ -441,30 +424,16 @@ function PostEditBase(props: Props) {
 
     const submitButtonsComp = (
         <CardContent>
-            <Grid container columns={10}>
-                <Grid item xs={8}>
-                </Grid>
-                <Grid item xs={0.8}>
-                    <Fab color="secondary" onClick={removeElement} disabled={disabledRemoveIcon}>
-                        <RemoveIcon />
-                    </Fab>
-                </Grid>
-                <Grid item xs={1}>
-                    <Fab color="primary" onClick={addElement}>
-                        <AddIcon />
-                    </Fab>
-                </Grid>
-            </Grid>
+            <Stack spacing={3} direction="row" justifyContent="flex-end">
+                <Fab color="secondary" onClick={removeElement} disabled={disabledRemoveIcon}>
+                    <RemoveIcon />
+                </Fab>
+                <Fab color="primary" onClick={addElement}>
+                    <AddIcon />
+                </Fab>
+            </Stack>
 
-            <Box
-                component="div"
-                sx={{
-                    my: 10,
-                }}
-            >
-            </Box>
-
-            <Stack direction="column" spacing={1}>
+            <Stack direction="column" spacing={1} sx={{ mt: 10 }}>
                 <Button
                     fullWidth
                     variant="contained"
@@ -489,11 +458,10 @@ function PostEditBase(props: Props) {
 
     return (
         <ContentsBase
+            id={0}
             routineHeader={routineHeaderInput}
             routineElementList={routineElementList}
             hashtagChipList={hashtagChipList}
-            handleFavorite={handleFavorite}
-            handleShare={handleShare}
             uniqueCompHeader={hashtagInput}
             uniqueComp={submitButtonsComp}
         />

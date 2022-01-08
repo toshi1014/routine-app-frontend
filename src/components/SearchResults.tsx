@@ -5,6 +5,7 @@ import {
     Box,
     Stack,
     Pagination,
+    Typography,
 } from "@mui/material";
 import SearchBox from './SearchBox';
 import RoutinePack from './RoutinePack';
@@ -104,7 +105,7 @@ function SearchResults() {
         <Grid container direction="column">
             <Grid item>
                 <CardContent>
-                    <h1>SearchResults</h1>
+                    <Typography variant="h4" sx={{mt: 3, mb: 2}}>SearchResults</Typography>
                     <Grid container direction="row" spacing={2}>
                         <Grid item>
                             <SearchBox
@@ -115,9 +116,9 @@ function SearchResults() {
                         </Grid>
 
                         <Grid item>
-                            <h4 style={{ color: "gray" }}>
+                            <Typography variant="body1" style={{ color: "gray" }}>
                                 {resultList.length} results
-                            </h4>
+                            </Typography>
                         </Grid>
                     </Grid>
                 </CardContent>
@@ -131,15 +132,7 @@ function SearchResults() {
                 </CardContent>
             </Grid>
 
-            <Grid item>
-                <Box
-                    component="div"
-                    sx={{
-                        whiteSpace: 'nowrap',
-                        my: 5,
-                    }}
-                >
-                </Box>
+            <Grid item sx={{ mt: 5, mb: -5 }}>
                 <Stack
                     direction="row"
                     spacing={2}

@@ -5,6 +5,7 @@ import {
 import {
     Stack,
     Box,
+    Typography,
     Grid,
     IconButton,
     Divider,
@@ -88,16 +89,7 @@ function Footer() {
     }
 
     return (
-        <div>
-            <Box
-                component="div"
-                sx={{
-                    whiteSpace: 'nowrap',
-                    my: 10,
-                }}
-            >
-            </Box>
-
+        <Box sx={{ mt: 5 }}>
             <Divider
                 sx={{
                     m: 3
@@ -113,22 +105,22 @@ function Footer() {
                 direction="column"
                 justifyContent="center"
                 alignItems="center"
-                spacing="20px"
+                spacing={3}
             >
                 <Grid item>
-                    <Stack direction="row" spacing={3}>
+                    <Stack direction="row" spacing={3} alignItems="center">
                         <img
                             src={process.env.PUBLIC_URL + "/" + logoFilename}
                             width={logoSize}
                             height={logoSize}
                             alt="logo"
                         />
-                        <h2>Foo</h2>
+                        <Typography variant="h5">Foo</Typography>
                     </Stack>
                 </Grid>
 
                 <Grid item>
-                    <Stack spacing={4}>
+                    <Stack spacing={3}>
                         {footerLinks}
                     </Stack>
                 </Grid>
@@ -138,24 +130,26 @@ function Footer() {
                         <IconButton onClick={handleFacebook}>
                             <Facebookicon />
                         </IconButton>
+
                         <IconButton onClick={handleTwitter}>
                             <Twitter />
                         </IconButton>
+
                         <IconButton onClick={handleInstagram}>
                             <Instagram />
                         </IconButton>
                     </Stack>
                 </Grid>
 
-                <Box
-                    sx={{
-                        textAlign: "center",
-                    }}
-                >
-                    <h5 style={{ color: "gray" }}>{copyright}</h5>
-                </Box>
+                <Grid item sx={{ mb: 3 }}>
+                    <Box sx={{ textAlign: "center" }}>
+                        <Typography variant="body2" style={{ color: "gray" }}>
+                            {copyright}
+                        </Typography>
+                    </Box>
+                </Grid>
             </Grid>
-        </div >
+        </Box>
     );
 }
 

@@ -8,13 +8,14 @@ import { likeApi } from "../api_handlers/handle";
 
 type Props = {
     postId: number;
-    disabled: boolean;
+    contributorId: number;
     myLikeCnt: number;
     setMyLikeCnt: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const token = localStorage.getItem("token");
 const boolLoginStatus = (token === null) ? false : true;
+const userId = (token === null) ? null : Number(decodeJwt(token).id);
 
 function LikeButton(props: Props) {
     const navigate = useNavigate();
@@ -61,7 +62,7 @@ function LikeButton(props: Props) {
     return (
         <IconButton
             aria-label="add to favorites"
-            disabled={props.disabled}
+            disabled={props.contributorId === userId}
             onClick={handleClickLike}
         >
             {(likeList.includes(props.postId)

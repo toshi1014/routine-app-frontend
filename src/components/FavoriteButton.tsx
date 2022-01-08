@@ -8,10 +8,11 @@ import { favoriteApi } from "../api_handlers/handle";
 
 const token = localStorage.getItem("token");
 const boolLoginStatus = (token === null) ? false : true;
+const userId = (token === null) ? null : decodeJwt(token).id;
 
 type Props = {
     postId: number;
-    disabled: boolean;
+    contributorId: number;
 }
 
 function FavoriteButton(props: Props) {
@@ -44,7 +45,7 @@ function FavoriteButton(props: Props) {
     return (
         <IconButton
             aria-label="add to favorites"
-            disabled={props.disabled}
+            disabled={props.contributorId === userId}
             onClick={handleClickFavorite}
         >
             {(favoriteList.includes(props.postId)

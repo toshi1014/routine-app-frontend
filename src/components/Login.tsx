@@ -2,8 +2,7 @@ import React from 'react';
 import {
     Stack,
     Button,
-    Alert,
-    Snackbar,
+    Typography,
 } from "@mui/material";
 import {
     Link,
@@ -14,9 +13,7 @@ import {
     isValidEmail,
     isValidPassword,
 } from "../utils/validations";
-import {
-    ValidationStatus,
-} from "../utils/Types";
+import { ValidationStatus } from "../utils/Types";
 import { loginApi } from "../api_handlers/handle";
 
 
@@ -93,23 +90,22 @@ function Login() {
                 onClick={handleLogin}
             >
                 Login
-                </Button>
+            </Button>
         ),
     ];
 
     const uniqueComp = (
-        <Stack direction="row" spacing={1}>
-            <p>New to Foo?</p>
-            <div>
-                <Link
-                    to="/signup"
-                    style={{
-                        textDecoration: "none"
-                    }}
-                >
-                    <Button sx={{ my: 1 }}>Singup!</Button>
-                </Link>
-            </div>
+        <Stack direction="row" spacing={1} alignItems="center">
+            <Typography variant="body1">New to Foo?</Typography>
+
+            <Link
+                to="/signup"
+                style={{
+                    textDecoration: "none"
+                }}
+            >
+                <Button sx={{ my: 1 }}>Singup!</Button>
+            </Link>
         </Stack>
     );
 

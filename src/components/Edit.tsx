@@ -14,6 +14,7 @@ import {
     defaultElementList,
     defaultPostId,
 } from "../utils/defaultValues";
+import CircularProgressWithText from "./CircularProgressWithText";
 
 
 function Edit() {
@@ -59,18 +60,19 @@ function Edit() {
 
 
     return (
-        (
-            // XXX: useState don't got updated
-            (header !== defaultHeader) && (elementList !== defaultElementList) && (postId !== defaultPostId)
-                ?
-                <PostEditBase
-                    header={header}
-                    elementList={elementList}
-                    postId={postId}
-                    boolEditedDraft={postOrDraft == "draft" ? true : false}
-                />
-                : <div><h3>Thanks for your patience!</h3></div>
-        )
+        // XXX: useState don't got updated
+        (header !== defaultHeader) && (elementList !== defaultElementList) && (postId !== defaultPostId)
+            ?
+            <PostEditBase
+                header={header}
+                elementList={elementList}
+                postId={postId}
+                boolEditedDraft={postOrDraft == "draft" ? true : false}
+            />
+            : <CircularProgressWithText
+                open={true}
+                whatURwating4="Fetching"
+            />
     );
 }
 

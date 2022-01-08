@@ -63,7 +63,7 @@ function Debug() {
             false,
             "POST_TITLE_" + String(d.getTime()).substring(8),
             "POST_DESC_" + String(d.getTime()).substring(8),
-            ["HASH1, HASH2"],
+            ["HASH1,HASH2"],
             [
                 {
                     title: "Go to fishing shops",

@@ -6,6 +6,7 @@ import {
     Typography,
     Container,
     Alert,
+    Stack,
     Snackbar,
     CardContent,
 } from "@mui/material";
@@ -42,42 +43,34 @@ type Props = {
 function LoginSignupBase(props: Props) {
     const emailComp = (
         <Grid item>
-            <AccountCircleIcon
-                sx={{
-                    fontSize: 40,
-                    mx: 2,
-                    my: 0.5,
-                }}
-            />
-            <TextField
-                variant="outlined"
-                label="Email Address"
-                disabled={props.disableTextField}
-                error={props.errorEmail}
-                helperText={props.helperTextEmail}
-                inputRef={ref => { props.inputRef.email = ref; }}
-            />
+            <Stack direction="row" spacing={2} alignItems="center">
+                <AccountCircleIcon sx={{ fontSize: 40 }}/>
+                <TextField
+                    variant="outlined"
+                    label="Email Address"
+                    disabled={props.disableTextField}
+                    error={props.errorEmail}
+                    helperText={props.helperTextEmail}
+                    inputRef={ref => { props.inputRef.email = ref; }}
+                />
+            </Stack>
         </Grid>
     );
 
     const passwordComp = (
         <Grid item>
-            <KeyIcon
-                sx={{
-                    fontSize: 40,
-                    mx: 2,
-                    my: 0.5,
-                }}
-            />
-            <TextField
-                variant="outlined"
-                label="Password"
-                type="password"
-                disabled={props.disableTextField}
-                error={props.errorPassword}
-                helperText={props.helperTextPassword}
-                inputRef={ref => { props.inputRef.password = ref; }}
-            />
+            <Stack direction="row" spacing={2} alignItems="center">
+                <KeyIcon sx={{ fontSize: 40 }}/>
+                <TextField
+                    variant="outlined"
+                    label="Password"
+                    type="password"
+                    disabled={props.disableTextField}
+                    error={props.errorPassword}
+                    helperText={props.helperTextPassword}
+                    inputRef={ref => { props.inputRef.password = ref; }}
+                />
+            </Stack>
         </Grid>
     );
 
@@ -98,8 +91,8 @@ function LoginSignupBase(props: Props) {
             </Snackbar>
 
             <Container maxWidth="sm">
-                <h1>{props.header}</h1>
-                <Paper variant="outlined" sx={{ width: 450 }}>
+                <Typography variant="h4" sx={{ mt: 5, mb: 3 }}>{props.header}</Typography>
+                <Paper variant="outlined" sx={{ maxWidth: 450 }}>
                     <CardContent sx={{ my: 3 }}>
                         <Grid
                             container

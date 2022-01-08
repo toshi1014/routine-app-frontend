@@ -35,16 +35,7 @@ function RoutineContents() {
     );
     const [hashtagChipList, setHashtagChipList] = React.useState<Array<React.ReactElement>>(defaultHashtagChipList);
 
-    const handleFavorite = () => {
-        console.log("Favorite");
-    }
-
-    const handleShare = () => {
-        console.log("Share");
-    }
-
     const [apiErrorMessage, setApiErrorMessage] = React.useState("");
-
 
     React.useEffect(() => {
         const init = async () => {
@@ -56,7 +47,10 @@ function RoutineContents() {
                 setElementList(res.contents.elementList);
                 const hashtagChipListTmp = res.contents.header.hashtagList.map((hashtag: string, idx: number) =>
                     <ListItem key={idx}>
-                        <Chip clickable label={"# " + hashtag} key={idx} />
+                        <HashtagLink
+                            hashtag={hashtag}
+                            key={idx}
+                        />
                     </ListItem>
                 );
                 setHashtagChipList(hashtagChipListTmp);
@@ -74,11 +68,10 @@ function RoutineContents() {
     return (
         apiErrorMessage === ""
             ? <ContentsBase
+                id={id}
                 routineHeader={header}
                 routineElementList={elementList}
                 hashtagChipList={hashtagChipList}
-                handleFavorite={handleFavorite}
-                handleShare={handleShare}
             />
             : <ErrorPage errorMessage={apiErrorMessage} />
     );

@@ -3,9 +3,7 @@ import {
     Paper,
     Grid,
     CardContent,
-    Container,
     Box,
-    Chip,
 } from "@mui/material";
 import AliceCarousel from 'react-alice-carousel';
 import "react-alice-carousel/lib/alice-carousel.css";
@@ -46,6 +44,8 @@ const menuContentList = [
 function Top() {
     const [innerWidth, innerHeight] = useWindowSize();
 
+    const xxxWidth = 450;
+
     const polularHashtagChipList = defaultHashtagList.map((hashtag: string, idx: number) =>
         <ListItem key={idx}>
             <HashtagLink
@@ -60,7 +60,7 @@ function Top() {
             id={0}
             contributor={defaultContributor}
             contributorId={defaultContributorId}
-            badge={badgeList[idx%badgeList.length]}
+            badge={badgeList[idx % badgeList.length]}
             title={defaultTitle + idx}
             desc={defaultDesc}
             titleStep1={defaultTitleStep1}
@@ -78,13 +78,12 @@ function Top() {
             <Grid container direction="column" spacing={3}>
                 <Grid item>
                     <Paper>
-                        <Container>
+                        <CardContent>
                             <h1>Expand Your Routine</h1>
                             <h3>aaaaaaaaaaaaaaaaaaaaaaaaaaaaa</h3>
-                        </Container>
+                        </CardContent>
                     </Paper>
                 </Grid>
-
 
                 <Grid item>
                     <CardContent>
@@ -130,8 +129,8 @@ function Top() {
                     animationDuration={400}
                     disableButtonsControls={true}
                     disableDotsControls={true}
-                    paddingLeft={50}
-                    paddingRight={innerWidth - 450}
+                    paddingLeft={(innerWidth > xxxWidth ? 50 : 10)}
+                    paddingRight={Math.max(innerWidth - xxxWidth, 15)}
                 />
             </div>
         </div>

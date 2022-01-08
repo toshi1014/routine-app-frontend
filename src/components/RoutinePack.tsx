@@ -25,7 +25,6 @@ import { Link } from "react-router-dom";
 import TextWithLimitation from "./TextWithLimitation";
 import UserAvatar from "./UserAvatar";
 import { RoutinePackContents } from "../utils/Types";
-import { decodeJwt } from "../utils/utils";
 import LikeButton from "./LikeButton";
 import FavoriteButton from "./FavoriteButton";
 import MenuButton from "./MenuButton";
@@ -45,10 +44,6 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
         duration: theme.transitions.duration.shortest,
     }),
 }));
-
-
-const token = localStorage.getItem("token")
-const userId = (token === null) ? null : decodeJwt(token).id;
 
 type Props = RoutinePackContents & {
     editable?: boolean;
@@ -110,15 +105,7 @@ function RoutinePack(props: Props) {
 
                 <CardHeader
                     avatar={
-                        <Link
-                            to={`/mypage/${props.contributorId}`}
-                            style={{
-                                textDecoration: "none",
-                                color: "white",
-                            }}
-                        >
-                            <UserAvatar badge={props.badge} />
-                        </Link>
+                        <UserAvatar userId={props.contributorId} badge={props.badge} />
                     }
                     action={
                         <MenuButton postId={props.id} />
@@ -161,7 +148,7 @@ function RoutinePack(props: Props) {
                 <CardActions disableSpacing>
                     <LikeButton
                         postId={props.id}
-                        disabled={props.editable || props.contributorId === userId}
+                        contributorId={props.contributorId}
                         myLikeCnt={myLikeCnt}
                         setMyLikeCnt={setMyLikeCnt}
                     />
@@ -172,7 +159,7 @@ function RoutinePack(props: Props) {
 
                     <FavoriteButton
                         postId={props.id}
-                        disabled={props.editable || props.contributorId === userId}
+                        contributorId={props.contributorId}
                     />
 
                     {

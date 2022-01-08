@@ -20,8 +20,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from "react-router-dom";
+import UserAvatar from "./UserAvatar";
 import MenuDrawer from "./MenuDrawer";
 import useWindowSize from "../utils/useWindowSize";
+import { decodeJwt } from "../utils/utils";
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -69,7 +71,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const token = localStorage.getItem("token")
 const boolLoginStatus = (token === null) ? false : true;
-
+const userId = (token === null) ? null : decodeJwt(token).id;
+const myBadge = (token === null) ? null : decodeJwt(token).badge;
 
 function ApplicationBar() {
     const navigate = useNavigate();
@@ -109,8 +112,8 @@ function ApplicationBar() {
     );
 
     const userAvatarWithLogout = (
-        <Stack direction="row" alignItems="center">
-            <IconButton><Avatar>X</Avatar></IconButton>
+        <Stack direction="row" alignItems="center" spacing={1}>
+            <UserAvatar userId={userId} badge={myBadge} />
             <Paper elevation={20} sx={{ height: 40 }} >
                 <IconButton onClick={handleClickLogout}>
                     <LogoutIcon />

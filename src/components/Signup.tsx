@@ -2,6 +2,7 @@ import React from 'react';
 import {
     TextField,
     Paper,
+    Stack,
     Button,
     Grid,
     CardContent,
@@ -99,7 +100,7 @@ function Signup() {
 
             const req: AuthEmail = {
                 emailAddress: email,
-                purpose:"auth",
+                purpose: "auth",
                 context: {
                     username: username,
                     authCode: authCode,
@@ -128,14 +129,8 @@ function Signup() {
 
     const elementList = [
         (
-            <div>
-                <BorderColorIcon
-                    sx={{
-                        fontSize: 40,
-                        mx: 2,
-                        my: 0.5,
-                    }}
-                />
+            <Stack direction="row" spacing={2} alignItems="center">
+                <BorderColorIcon sx={{ fontSize: 40 }} />
                 <TextField
                     variant="outlined"
                     label="Username"
@@ -144,7 +139,7 @@ function Signup() {
                     helperText={helperTextUsername}
                     inputRef={ref => { inputRef.username = ref; }}
                 />
-            </div>
+            </Stack>
         ),
         (
             <Button
@@ -185,31 +180,22 @@ function Signup() {
 
     const [authCodeComp, setAuthCodeComp] = React.useState<React.ReactElement>();
     const authCodeCompBase = (
-        <Paper variant="outlined" sx={{ width: 450 }}>
+        <Paper variant="outlined" sx={{ maxWidth: 450 }}>
             <CardContent sx={{ my: 1 }}>
-                <Grid
-                    container
-                    direction="column"
+                <Stack
+                    direction="row"
                     spacing={2}
-                    justifyContent="center"
                     alignItems="center"
+                    justifyContent="center"
                 >
-                    <Grid item>
-                        <PasswordIcon
-                            sx={{
-                                fontSize: 40,
-                                mx: 2,
-                                my: 0.5,
-                            }}
-                        />
-                        <TextField
-                            variant="outlined"
-                            label="Code"
-                            error={errorAuthCode}
-                            onChange={handleChangeAuthCode}
-                        />
-                    </Grid>
-                </Grid>
+                    <PasswordIcon sx={{ fontSize: 40 }} />
+                    <TextField
+                        variant="outlined"
+                        label="Code"
+                        error={errorAuthCode}
+                        onChange={handleChangeAuthCode}
+                    />
+                </Stack>
             </CardContent>
         </Paper>
     )

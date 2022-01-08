@@ -30,6 +30,7 @@ import {
     useNavigate,
 } from "react-router-dom";
 import { decodeJwt } from "../utils/utils";
+import UserAvatar from "./UserAvatar";
 
 
 // TEMP:
@@ -40,7 +41,9 @@ const token = localStorage.getItem("token")
 const boolLoginStatus = (token === null) ? false : true;
 
 const username = (token === null) ? defaultUsername : decodeJwt(token).username;
+const userId = (token === null) ? defaultUsername : decodeJwt(token).id;
 const email = (token === null) ? defaultEmail : decodeJwt(token).email;
+const badge = (token === null) ? defaultEmail : decodeJwt(token).badge;
 const userinfo = "foo";     // TEMP: user info @ MenuDrawer
 
 
@@ -134,7 +137,7 @@ function MenuDrawer(props: Props) {
                 avatar={
                     (username === defaultUsername ?
                         <Avatar src="/broken-image" />
-                        : <Avatar>X</Avatar>
+                        : <UserAvatar userId={userId} badge={badge} />
                     )
                 }
                 title={username}

@@ -1,6 +1,7 @@
 import {
     RoutinePackContents,
     UserNameId,
+    Badge,
 } from "../utils/Types";
 
 
@@ -27,6 +28,7 @@ export type NewToken = {
 export type Mypage = {
     header: {
         username: string;
+        badge: Badge;
         statusMessage: string;
         hashtagList: Array<string>;
         followersNum: number;

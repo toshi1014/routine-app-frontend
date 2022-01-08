@@ -19,14 +19,19 @@ import Facebookicon from "@mui/icons-material/Facebook";
 import Twitter from "@mui/icons-material/Twitter";
 import Instagram from "@mui/icons-material/Instagram";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 import { useNavigate } from "react-router-dom";
-import { RoutinePackContents } from "../utils/Types";
+import {
+    RoutinePackContents,
+    Badge,
+} from "../utils/Types";
 import FollowButton from "./FollowButton";
 import {
     deleteApi,
 } from "../api_handlers/handle";
 import FollowList from "./FollowList";
 import { decodeJwt } from "../utils/utils";
+import UserAvatar from "./UserAvatar";
 
 
 const menuContentList = [
@@ -39,6 +44,7 @@ const menuContentList = [
 
 type Props = {
     usernameComp: React.ReactElement;
+    badge: Badge;
     statusMessageComp: React.ReactElement;
     followingNum: number;
     followersNum: number;
@@ -64,7 +70,7 @@ const targetUserId = (isNaN(userIdFromUrl) ? userIdFromToken : userIdFromUrl);
 
 function MyPageBase(props: Props) {
     const navigate = useNavigate();
-    const avatarSize = 80;
+    const avatarSize = 70;
 
     const handleClickEdit = (strPostOrDraft: string, id: number) => {
         navigate("edit/" + strPostOrDraft + "/" + id);
@@ -155,44 +161,21 @@ function MyPageBase(props: Props) {
                     <Grid container direction="column" spacing={2}>
 
                         <Grid item>
-                            <Grid container direction="row" spacing={3}>
-                                <Grid item>
-                                    <Avatar
-                                        sx={{
-                                            width: avatarSize,
-                                            height: avatarSize,
-                                            my: 1.2,
-                                        }}
-                                    >X</Avatar>
-                                </Grid>
-
-                                <Grid item>
-                                    <Box
-                                        component="div"
-                                        sx={{
-                                            whiteSpace: 'nowrap',
-                                            my: 6,
-                                        }}
-                                    >
-                                    </Box>
-                                    {props.usernameComp}
-                                </Grid>
-                            </Grid>
+                            <Stack direction="row" spacing={3} alignItems="flex-end">
+                                <UserAvatar
+                                    userId={targetUserId}
+                                    badge={props.badge}
+                                    size={avatarSize}
+                                />
+                                <div>{props.usernameComp}</div>
+                            </Stack>
                         </Grid>
 
-                        <Grid item sx={{ mx: 2, my: -3 }}>
-                            <Stack direction="row" spacing={1}>
+                        <Grid item sx={{ mt: 1 }}>
+                            <Stack direction="row" spacing={1} alignItems="center">
                                 <ChatBubbleOutlineIcon />
                                 {props.statusMessageComp}
                             </Stack>
-                            <Box
-                                component="div"
-                                sx={{
-                                    whiteSpace: 'nowrap',
-                                    my: 4,
-                                }}
-                            >
-                            </Box>
                         </Grid>
 
                         <Grid item>
@@ -215,7 +198,7 @@ function MyPageBase(props: Props) {
                         </Grid>
 
                         <Grid item>
-                            <Grid container alignItems="center" direction="row" spacing={2}>
+                            <Grid container alignItems="center" direction="row" spacing={3}>
                                 <Grid item>
                                     <FollowButton
                                         targetUserId={targetUserId}
@@ -231,6 +214,7 @@ function MyPageBase(props: Props) {
                                         title={followListTitle}
                                         onClose={handleCloseFollowList}
                                     />
+
                                     Following
                                         <Button
                                         variant="text"
@@ -240,6 +224,7 @@ function MyPageBase(props: Props) {
                                     >
                                         {props.followingNum}
                                     </Button>
+
                                     Followers
                                         <Button
                                         variant="text"
@@ -258,9 +243,11 @@ function MyPageBase(props: Props) {
                                 <IconButton onClick={handleFacebook}>
                                     <Facebookicon />
                                 </IconButton>
+
                                 <IconButton onClick={handleTwitter}>
                                     <Twitter />
                                 </IconButton>
+
                                 <IconButton onClick={handleInstagram}>
                                     <Instagram />
                                 </IconButton>
@@ -290,22 +277,28 @@ function MyPageBase(props: Props) {
                 </Grid>
 
                 <CardContent>
-                    <h2>Posted</h2>
-                    {props.postedList.length == 0 ?
-                        <h4>no posts yet</h4>
-                        :
-                        <Grid container direction="row" spacing={1}>
+                    <Typography variant="h5" sx={{ mb: 1 }}>Posted</Typography>
+                    {props.postedList.length == 0
+                        ? <Typography variant="body1">no posts yet</Typography>
+                        : <Grid container direction="row" spacing={1}>
                             {postedListComp}
                         </Grid>
                     }
                 </CardContent>
 
+
                 <CardContent>
-                    <h2>Favorites</h2>
-                    {props.favoriteList.length == 0 ?
-                        <h4>no favorites yet</h4>
-                        :
-                        <Grid container direction="row" spacing={1}>
+                    <Stack direction="row" alignItems="flex-start">
+                        <Typography variant="h5" sx={{ mb: 1 }}>
+                            Favorites
+                        </Typography>
+
+                        <BookmarkIcon />
+                    </Stack>
+
+                    {props.favoriteList.length == 0
+                        ? <Typography variant="body1">no favorites yet</Typography>
+                        : <Grid container direction="row" spacing={1}>
                             {favoriteListComp}
                         </Grid>
                     }
@@ -313,9 +306,8 @@ function MyPageBase(props: Props) {
 
                 {
                     (props.draftList && props.draftList.length !== 0)
-                        ?
-                        <CardContent>
-                            <h2>Drafts</h2>
+                        ? <CardContent>
+                            <Typography variant="h5" sx={{ mb: 1 }}>Drafts</Typography>
                             <Grid container direction="row" spacing={1}>
                                 {props.draftList.map((draft, idx: number) =>
                                     <Grid item key={idx}>

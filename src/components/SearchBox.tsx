@@ -96,7 +96,8 @@ function SearchBox(props: Props) {
                 p: '2px 4px',
                 display: 'flex',
                 alignItems: 'center',
-                width: 400
+                width: "auto",
+                maxWidth: 400,
             }}
         >
             <IconButton
