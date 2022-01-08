@@ -2,14 +2,13 @@ import React from 'react';
 import {
     Grid,
     CardContent,
-    Box,
     Stack,
     Pagination,
     Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import SearchBox from './SearchBox';
 import RoutinePack from './RoutinePack';
-import { range } from "../utils/utils";
 import { RoutinePackContents } from "../utils/Types";
 import { searchApi } from "../api_handlers/handle";
 import {
@@ -33,6 +32,8 @@ const menuContentList = [
 ];
 
 function SearchResults() {
+    const navigate = useNavigate();
+
     const href = window.location.href;
     const splitHref = href.split('/');
     const splitHrefLength = splitHref.length;
@@ -74,9 +75,9 @@ function SearchResults() {
         </Grid>
     );
 
-    // COMBAK: change page
     const handleChangePagination = (event: React.ChangeEvent<unknown>, val: number) => {
-        console.log(val);
+        navigate(`/search_results/${keyword}/${target}/${val}`);
+        window.location.reload();
     }
 
     React.useEffect(() => {
@@ -84,6 +85,7 @@ function SearchResults() {
             const res = await searchApi(keyword, target, page);
             if (res.status) {
                 setResultList(res.contents.resultList);
+                setPageLength(res.contents.pageLength);
             } else {
                 console.log("Err at RoutineContents");
             }
@@ -105,7 +107,7 @@ function SearchResults() {
         <Grid container direction="column">
             <Grid item>
                 <CardContent>
-                    <Typography variant="h4" sx={{mt: 3, mb: 2}}>SearchResults</Typography>
+                    <Typography variant="h4" sx={{ mt: 3, mb: 2 }}>SearchResults</Typography>
                     <Grid container direction="row" spacing={2}>
                         <Grid item>
                             <SearchBox
@@ -132,7 +134,7 @@ function SearchResults() {
                 </CardContent>
             </Grid>
 
-            <Grid item sx={{ mt: 5, mb: -5 }}>
+            <Grid item sx={{ mt: 5 }}>
                 <Stack
                     direction="row"
                     spacing={2}
