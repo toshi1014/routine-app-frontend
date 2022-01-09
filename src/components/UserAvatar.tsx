@@ -19,8 +19,11 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     },
 }));
 
+const defaultAvatarSize = 40;
+
 function UserAvatar(props: Props) {
-    const badgeSize = 30;
+    const badgeSizeOrgn = 30;
+    const badgeSize = (props.size ? badgeSizeOrgn * (props.size / defaultAvatarSize) : badgeSizeOrgn);
 
     const [badgeIcon, setBadgeIcon] = React.useState("");
 
