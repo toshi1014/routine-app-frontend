@@ -55,3 +55,7 @@ export type DbTable = {
     columns: Array<string>;
     records: Array<Array<string | number>>;
 }
+
+export type AdminUser = {
+    boolAdminUser: boolean;
+}

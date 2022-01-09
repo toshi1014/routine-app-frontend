@@ -8,6 +8,7 @@ import {
     SearchResults,
     UserList,
     DbTable,
+    AdminUser,
 } from "./protocols";
 import {
     RoutineElement,
@@ -273,6 +274,16 @@ export const downloadDbApi = async (tableNameList: Array<string>) => {
     }
     const promiseRes = await axios.post(baseUrl + "download_db/", req);
     const res: Response<{ [table_name: string]: DbTable }> = promiseRes.data[0];
+    return res;
+}
+
+
+export const isAdminUser = async () => {
+    const req = {
+        token: localStorage.getItem("token"),
+    }
+    const promiseRes = await axios.post(baseUrl + "is_admin_user/", req);
+    const res: Response<AdminUser> = promiseRes.data[0];
     return res;
 }
 

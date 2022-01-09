@@ -14,9 +14,13 @@ import {
 } from "@mui/material";
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import { downloadDbApi } from "../api_handlers/handle";
+import {
+    downloadDbApi,
+    isAdminUser,
+} from "../api_handlers/handle";
 import { json2csv } from "../utils/utils";
 import { TableName } from "../utils/Types";
+import ErrorPage from "./ErrorPage";
 
 const tableNameList: Array<TableName> = [
     "users",
@@ -46,32 +50,43 @@ function Admin() {
     };
 
     const handleClickDownload = async () => {
-        if (checkedList.length !== 0) {
-            const checkedDbList = checkedList.map((idx: number) => { return tableNameList[idx]; });
-            const res = await downloadDbApi(checkedDbList);
-            if (res.status) {
-                for (let tableName in res.contents) {
-                    const jsonOut = json2csv(
-                        res.contents[tableName].columns,
-                        res.contents[tableName].records,
-                    );
-                    const blob = new Blob([jsonOut]);
-                    const fileDownloadUrl = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.href = fileDownloadUrl;
-                    link.download = tableName + ".csv";
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    URL.revokeObjectURL(fileDownloadUrl);
-                }
-            } else {
-                console.log("failed");
+        const checkedDbList = checkedList.map((idx: number) => { return tableNameList[idx]; });
+        const res = await downloadDbApi(checkedDbList);
+        if (res.status) {
+            for (let tableName in res.contents) {
+                const jsonOut = json2csv(
+                    res.contents[tableName].columns,
+                    res.contents[tableName].records,
+                );
+                const blob = new Blob([jsonOut]);
+                const fileDownloadUrl = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = fileDownloadUrl;
+                link.download = tableName + ".csv";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(fileDownloadUrl);
             }
+        } else {
+            console.log("failed");
         }
     }
 
-    return (
+    const [boolAdminUser, setBoolAdminUser] = React.useState(false);
+
+    React.useEffect(() => {
+        const init = async () => {
+            const res = await isAdminUser();
+            if (res.status) {
+                setBoolAdminUser(res.contents.boolAdminUser);
+            }
+        }
+        init();
+    }, [])
+
+
+    const adminPage: React.ReactElement = (
         <CardContent>
             <Grid container direction="column" spacing={3}>
                 <Grid item>
@@ -121,6 +136,7 @@ function Admin() {
                                     <Button
                                         variant="contained"
                                         onClick={handleClickDownload}
+                                        disabled={checkedList.length === 0}
                                     >
                                         DOWNLOAD
                                     </Button>
@@ -135,6 +151,12 @@ function Admin() {
                 </Grid>
             </Grid>
         </CardContent>
+    );
+
+    return (
+        boolAdminUser
+            ? <div>{adminPage}</div>
+            : <ErrorPage errorMessage="Page not found" />
     );
 }
 
