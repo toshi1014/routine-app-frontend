@@ -20,6 +20,7 @@ import MyPage from "./components/MyPage";
 import MyPageLogin from "./components/MyPageLogin";
 import Edit from "./components/Edit";
 import ErrorPage from "./components/ErrorPage";
+import Admin from "./components/Admin";
 import Debug from "./components/Debug";
 
 
@@ -52,6 +53,7 @@ function App() {
                     <Route path="/mypage/:userId" element={<MyPage />} />
                     <Route path="/mypage_login" element={<MyPageLogin />} />
                     <Route path="/mypage_login/edit/:postOrDraft/:id" element={<Edit />} />
+                    <Route path="/admin" element={<Admin />} />
                     <Route path="/debug" element={<Debug />} />
                     <Route path="*" element={<ErrorPage errorMessage="Page not found"/>} />
                 </Routes>

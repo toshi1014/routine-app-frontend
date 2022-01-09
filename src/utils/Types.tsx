@@ -100,3 +100,15 @@ export type AuthEmail = EmailAddress & {
         authCode: string;
     }
 }
+
+
+export type TableName =
+    | "users"
+    | "posts"
+    | "post_contents"
+    | "drafts"
+    | "draft_contents"
+    | "favorites"
+    | "follows"
+    | "likes"
+    ;

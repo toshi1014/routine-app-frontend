@@ -60,6 +60,10 @@ const footerLinkList: Array<LinkName> = [
         link: "mypage_login"
     },
     {
+        name: "Admin",
+        link: "admin"
+    },
+    {
         name: "Debug",
         link: "debug"
     },

@@ -50,3 +50,8 @@ export type SearchResults = {
 export type UserList = {
     userList: Array<UserNameId>;
 }
+
+export type DbTable = {
+    columns: Array<string>;
+    records: Array<Array<string | number>>;
+}

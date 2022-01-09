@@ -47,3 +47,28 @@ export const isAuthenticated = () => {
         return false;
     }
 }
+
+
+export const json2csv = (columns: Array<string>, records: Array<Array<string | number>>) => {
+    let strOut = "";
+
+    // write columns
+    for (let column of columns) {
+        if (column !== "") {
+            strOut += "," + column
+        }
+    }
+    strOut += "\r\n";
+
+    // write records
+    for (let record_i = 0; record_i < records.length; record_i++) {
+        let line = "";
+        for (let val of records[record_i]) {
+            if (line !== "") { line += "," }
+            line += val
+        }
+        strOut += line + "\r\n";
+    }
+
+    return strOut;
+}

@@ -7,6 +7,7 @@ import {
     MypageLogin,
     SearchResults,
     UserList,
+    DbTable,
 } from "./protocols";
 import {
     RoutineElement,
@@ -248,7 +249,7 @@ export const sendEmailApi = async (arg: AuthEmail) => {
         context: arg.context,
     }
     const promiseRes = await axios.post(baseUrl + "send_email/", req);
-    const res = promiseRes.data[0];
+    const res: Response<null> = promiseRes.data[0];
     return res;
 }
 
@@ -260,7 +261,18 @@ export const reportApi = async (postId: number, reason: string, reportComment: s
         reportComment: reportComment,
     }
     const promiseRes = await axios.post(baseUrl + "report/", req);
-    const res = promiseRes.data[0];
+    const res: Response<null> = promiseRes.data[0];
+    return res;
+}
+
+
+export const downloadDbApi = async (tableNameList: Array<string>) => {
+    const req = {
+        token: localStorage.getItem("token"),
+        tableNameList: tableNameList,
+    }
+    const promiseRes = await axios.post(baseUrl + "download_db/", req);
+    const res: Response<{ [table_name: string]: DbTable }> = promiseRes.data[0];
     return res;
 }
 
