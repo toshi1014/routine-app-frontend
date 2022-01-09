@@ -12,14 +12,18 @@ import {
     Paper,
     Stack,
     Chip,
+    AccordionSummary,
 } from "@mui/material";
+import { styled } from '@mui/material/styles';
 import SearchBox from './SearchBox';
 import RoutinePack from './RoutinePack';
 import Facebookicon from "@mui/icons-material/Facebook";
 import Twitter from "@mui/icons-material/Twitter";
 import Instagram from "@mui/icons-material/Instagram";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
+import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import { useNavigate } from "react-router-dom";
 import {
     RoutinePackContents,
@@ -33,6 +37,16 @@ import FollowList from "./FollowList";
 import { decodeJwt } from "../utils/utils";
 import UserAvatar from "./UserAvatar";
 
+const Accordion = styled((props: AccordionProps) => (
+    <MuiAccordion disableGutters elevation={0} square {...props} />
+))(({ theme }) => ({
+    '&:not(:last-child)': {
+        borderBottom: 3,
+    },
+    '&:before': {
+        display: 'none',
+    },
+}));
 
 const menuContentList = [
     "All",
@@ -66,7 +80,6 @@ const splitHrefLength = splitHref.length;
 const userIdFromUrl = Number(splitHref[splitHrefLength - 1]);
 
 const targetUserId = (isNaN(userIdFromUrl) ? userIdFromToken : userIdFromUrl);
-
 
 function MyPageBase(props: Props) {
     const navigate = useNavigate();
@@ -277,37 +290,51 @@ function MyPageBase(props: Props) {
                 </Grid>
 
                 <CardContent>
-                    <Typography variant="h5" sx={{ mb: 1 }}>Posted</Typography>
-                    {props.postedList.length == 0
-                        ? <Typography variant="body1">no posts yet</Typography>
-                        : <Grid container direction="row" spacing={1}>
-                            {postedListComp}
-                        </Grid>
-                    }
+                    <Accordion>
+                        <Paper variant="outlined" sx={{ mb: 2 }}>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                <Typography variant="h5">Posted</Typography>
+                            </AccordionSummary>
+                        </Paper>
+
+                        {props.postedList.length == 0
+                            ? <Typography variant="body1">no posts yet</Typography>
+                            : <Grid container direction="row" spacing={1}>
+                                {postedListComp}
+                            </Grid>
+                        }
+                    </Accordion>
                 </CardContent>
 
-
                 <CardContent>
-                    <Stack direction="row" alignItems="flex-start">
-                        <Typography variant="h5" sx={{ mb: 1 }}>
-                            Favorites
-                        </Typography>
+                    <Accordion>
+                        <Paper variant="outlined" sx={{ mb: 2 }}>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                <Stack direction="row" alignItems="flex-start">
+                                    <Typography variant="h5">
+                                        Favorites
+                                </Typography>
 
-                        <BookmarkIcon />
-                    </Stack>
+                                    <BookmarkIcon />
+                                </Stack>
+                            </AccordionSummary>
+                        </Paper>
 
-                    {props.favoriteList.length == 0
-                        ? <Typography variant="body1">no favorites yet</Typography>
-                        : <Grid container direction="row" spacing={1}>
-                            {favoriteListComp}
-                        </Grid>
-                    }
+                        <CardContent sx={{ mt: -2 }}>
+                            {props.favoriteList.length == 0
+                                ? <Typography variant="body1">no favorites yet</Typography>
+                                : <Grid container direction="row" spacing={1}>
+                                    {favoriteListComp}
+                                </Grid>
+                            }
+                        </CardContent>
+                    </Accordion>
                 </CardContent>
 
                 {
                     (props.draftList && props.draftList.length !== 0)
                         ? <CardContent>
-                            <Typography variant="h5" sx={{ mb: 1 }}>Drafts</Typography>
+                            <Typography variant="h5">Drafts</Typography>
                             <Grid container direction="row" spacing={1}>
                                 {props.draftList.map((draft, idx: number) =>
                                     <Grid item key={idx}>
