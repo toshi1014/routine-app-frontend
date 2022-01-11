@@ -43,7 +43,9 @@ function MyPage() {
     const [hashtagList, setHashtagList] = React.useState<Array<string>>(defaultHashtagList);
     const [followingNum, setFollowingNum] = React.useState(defaultFollowingNum);
     const [followersNum, setFollowersNum] = React.useState(defaultFollowersNum);
-
+    const [Facebook, setFacebook] = React.useState("");
+    const [Twitter, setTwitter] = React.useState("");
+    const [Instagram, setInstagram] = React.useState("");
 
     // hashtag
     const hashtagChipList = hashtagList.map((hashtag: string, idx: number) =>
@@ -85,9 +87,11 @@ function MyPage() {
                 setHashtagList(res.contents.header.hashtagList);
                 setFollowingNum(res.contents.header.followingNum);
                 setFollowersNum(res.contents.header.followersNum);
+                setFacebook(res.contents.header.Facebook);
+                setTwitter(res.contents.header.Twitter);
+                setInstagram(res.contents.header.Instagram);
                 setPostedList(res.contents.postedList);
                 setFavoriteList(res.contents.favoriteList);
-                console.log("contents:", res.contents);
             } else {
                 setApiErrorMessage(res.errorMessage);
             }
@@ -107,6 +111,9 @@ function MyPage() {
                 statusMessageComp={<Typography variant="body1">{statusMessage}</Typography>}
                 followingNum={followingNum}
                 followersNum={followersNum}
+                Facebook={Facebook}
+                Twitter={Twitter}
+                Instagram={Instagram}
                 hashtagList={hashtagList}
                 hashtagChipList={hashtagChipList}
                 postedList={postedList}

@@ -20,6 +20,8 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
 }));
 
 const defaultAvatarSize = 40;
+const token = localStorage.getItem("token")
+const boolLoginStatus = (token === null) ? false : true;
 
 function UserAvatar(props: Props) {
     const badgeSizeOrgn = 30;
@@ -47,7 +49,7 @@ function UserAvatar(props: Props) {
 
     return (
         <Link
-            to={`/mypage/${props.userId}`}
+            to={(boolLoginStatus ? "/mypage_login" : `/mypage/${props.userId}`)}
             style={{
                 textDecoration: "none",
                 color: "white",

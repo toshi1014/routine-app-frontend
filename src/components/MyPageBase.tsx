@@ -17,9 +17,6 @@ import {
 import { styled } from '@mui/material/styles';
 import SearchBox from './SearchBox';
 import RoutinePack from './RoutinePack';
-import Facebookicon from "@mui/icons-material/Facebook";
-import Twitter from "@mui/icons-material/Twitter";
-import Instagram from "@mui/icons-material/Instagram";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
@@ -36,6 +33,7 @@ import {
 import FollowList from "./FollowList";
 import { decodeJwt } from "../utils/utils";
 import UserAvatar from "./UserAvatar";
+import SNSLink from "./SNSLink";
 
 const Accordion = styled((props: AccordionProps) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -62,6 +60,9 @@ type Props = {
     statusMessageComp: React.ReactElement;
     followingNum: number;
     followersNum: number;
+    Facebook: string;
+    Twitter: string;
+    Instagram: string;
     hashtagList: Array<string>;
     hashtagChipList: Array<React.ReactElement>;
     chipInputComp?: React.ReactElement;
@@ -113,7 +114,7 @@ function MyPageBase(props: Props) {
                 titleStep1={posted.titleStep1}
                 descStep1={posted.descStep1}
                 like={posted.like}
-                editable={props.chipInputComp ? true : false}
+                editable={Boolean(props.chipInputComp)}
                 handleClickEdit={
                     () => handleClickEdit("post", posted.id)
                 }
@@ -155,16 +156,6 @@ function MyPageBase(props: Props) {
         } else {
             throw new Error("unknown followingOrFollowers " + followingOrFollowers);
         }
-    }
-
-    const handleFacebook = () => {
-        console.log("Facebook");
-    }
-    const handleTwitter = () => {
-        console.log("Twitter");
-    }
-    const handleInstagram = () => {
-        console.log("Instaragram");
     }
 
     const header = (
@@ -229,7 +220,7 @@ function MyPageBase(props: Props) {
                                     />
 
                                     Following
-                                        <Button
+                                    <Button
                                         variant="text"
                                         size="small"
                                         disabled={props.followingNum === 0 ? true : false}
@@ -253,17 +244,21 @@ function MyPageBase(props: Props) {
 
                         <Grid item>
                             <Stack direction="row" spacing={2}>
-                                <IconButton onClick={handleFacebook}>
-                                    <Facebookicon />
-                                </IconButton>
-
-                                <IconButton onClick={handleTwitter}>
-                                    <Twitter />
-                                </IconButton>
-
-                                <IconButton onClick={handleInstagram}>
-                                    <Instagram />
-                                </IconButton>
+                                <SNSLink
+                                    medium="Facebook"
+                                    editable={Boolean(props.chipInputComp)}
+                                    link={props.Facebook}
+                                />
+                                <SNSLink
+                                    medium="Twitter"
+                                    editable={Boolean(props.chipInputComp)}
+                                    link={props.Twitter}
+                                />
+                                <SNSLink
+                                    medium="Instagram"
+                                    editable={Boolean(props.chipInputComp)}
+                                    link={props.Instagram}
+                                />
                             </Stack>
                         </Grid>
 
@@ -348,7 +343,7 @@ function MyPageBase(props: Props) {
                                             titleStep1={draft.titleStep1}
                                             descStep1={draft.descStep1}
                                             like={draft.like}
-                                            editable={props.chipInputComp ? true : false}
+                                            editable={Boolean(props.chipInputComp)}
                                             handleClickEdit={
                                                 () => handleClickEdit("draft", draft.id)
                                             }

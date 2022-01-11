@@ -112,3 +112,5 @@ export type TableName =
     | "follows"
     | "likes"
     ;
+
+export type SupportedSNSMedium = "Facebook" | "Twitter" | "Instagram";

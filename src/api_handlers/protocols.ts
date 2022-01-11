@@ -33,6 +33,9 @@ export type Mypage = {
         hashtagList: Array<string>;
         followersNum: number;
         followingNum: number;
+        Facebook: string;
+        Twitter: string;
+        Instagram: string;
     },
     postedList: Array<RoutinePackContents>,
     favoriteList: Array<RoutinePackContents>,

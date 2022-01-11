@@ -64,6 +64,9 @@ function MyPageLogin() {
     const [hashtagList, setHashtagList] = React.useState<Array<string>>(defaultHashtagList);
     const [followingNum, setFollowingNum] = React.useState(defaultFollowingNum);
     const [followersNum, setFollowersNum] = React.useState(defaultFollowersNum);
+    const [Facebook, setFacebook] = React.useState("");
+    const [Twitter, setTwitter] = React.useState("");
+    const [Instagram, setInstagram] = React.useState("");
 
     const [textInputValue, setTextInputValue] = React.useState("");
     const handleTextInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -278,6 +281,9 @@ function MyPageLogin() {
                 setHashtagAddedList(hashtagAddedListTmp);
                 setFollowingNum(res.contents.header.followingNum);
                 setFollowersNum(res.contents.header.followersNum);
+                setFacebook(res.contents.header.Facebook);
+                setTwitter(res.contents.header.Twitter);
+                setInstagram(res.contents.header.Instagram);
                 setPostedList(res.contents.postedList);
                 setFavoriteList(res.contents.favoriteList);
                 setDraftList(res.contents.draftList);
@@ -324,6 +330,9 @@ function MyPageLogin() {
                 statusMessageComp={statusMessageEdit}
                 followingNum={followingNum}
                 followersNum={followersNum}
+                Facebook={Facebook}
+                Twitter={Twitter}
+                Instagram={Instagram}
                 hashtagList={hashtagList}
                 hashtagChipList={hashtagChipList}
                 chipInputComp={hashtagInput}
