@@ -100,18 +100,15 @@ function ApplicationBar() {
         window.location.reload();
     }
 
-    const guestAvatarWithLogin = (
-        <Stack direction="row" spacing={1}>
-            <Avatar src="/broken-image" />
-            <Paper elevation={20} sx={{ height: 40 }} >
-                <IconButton onClick={() => navigate("login")}>
-                    <LoginIcon />
-                </IconButton>
-            </Paper>
-        </Stack>
+    const loginLink = (
+        <Paper elevation={20} sx={{ height: 40 }} >
+            <IconButton onClick={() => navigate("login")}>
+                <LoginIcon />
+            </IconButton>
+        </Paper>
     );
 
-    const userAvatarWithLogout = (
+    const userAvatarWithLogoutLink = (
         <Stack direction="row" alignItems="center" spacing={1}>
             <UserAvatar userId={userId} badge={myBadge} />
             <Paper elevation={20} sx={{ height: 40 }} >
@@ -174,8 +171,8 @@ function ApplicationBar() {
                             <Grid item>
                                 <Stack direction="row" spacing={2}>
                                     {boolLoginStatus
-                                        ? userAvatarWithLogout
-                                        : guestAvatarWithLogin
+                                        ? userAvatarWithLogoutLink
+                                        : loginLink
                                     }
                                 </Stack>
                             </Grid>

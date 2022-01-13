@@ -8,6 +8,7 @@ import Badge, { BadgeProps } from "@mui/material/Badge";
 import { Badge as TypeBadge } from "../utils/Types";
 import { Link } from "react-router-dom";
 import { decodeJwt } from "../utils/utils";
+import { downloadImageURL } from "../firebase/handler";
 
 type Props = {
     userId: number;
@@ -26,7 +27,6 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
 
 const defaultAvatarSize = 40;
 const token = localStorage.getItem("token")
-const boolLoginStatus = (token === null) ? false : true;
 const myId = (token === null) ? null : decodeJwt(token).id;
 
 function UserAvatar(props: Props) {
@@ -34,27 +34,41 @@ function UserAvatar(props: Props) {
     const badgeSize = (props.size ? badgeSizeOrgn * (props.size / defaultAvatarSize) : badgeSizeOrgn);
 
     const [badgeIcon, setBadgeIcon] = React.useState("");
+    const [avatarSrc, setAvatarSrc] = React.useState("");
 
     React.useEffect(() => {
-        let badgeIconTmp = "";
-        if (props.badge === "noBadge") {
-        } else if (props.badge === "l1") {
-            badgeIconTmp = "ninja";
-        } else if (props.badge === "l2") {
-            badgeIconTmp = "samurai";
-        } else if (props.badge === "l3") {
-            badgeIconTmp = "yokozuna";
-        } else { throw new Error; }
+        const init = async () => {
+            let badgeIconTmp = "";
+            if (props.badge === "noBadge") {
+            } else if (props.badge === "l1") {
+                badgeIconTmp = "ninja";
+            } else if (props.badge === "l2") {
+                badgeIconTmp = "samurai";
+            } else if (props.badge === "l3") {
+                badgeIconTmp = "yokozuna";
+            } else { throw new Error; }
 
-        setBadgeIcon(badgeIconTmp);
-    }, [])
+            setBadgeIcon(badgeIconTmp);
 
-    const core = (
-        <Avatar sx={{ width: props.size, height: props.size }}>X</Avatar>
+            const imageURL = await downloadImageURL("avatar-" + props.userId);
+            setAvatarSrc(imageURL);
+        }
+
+        init();
+    }, [props.userId])
+
+    const avatarImage = (
+        <Avatar
+            src={avatarSrc}
+            sx={{
+                width: props.size,
+                height: props.size
+            }}>
+        </Avatar>
     );
 
     const avatarComp = (props.badge === "noBadge"
-        ? <div>{core}</div>
+        ? <div>{avatarImage}</div>
         : <StyledBadge
             badgeContent={
                 <Avatar
@@ -66,7 +80,7 @@ function UserAvatar(props: Props) {
                 />
             }
         >
-            {core}
+            {avatarImage}
         </StyledBadge>
     );
 

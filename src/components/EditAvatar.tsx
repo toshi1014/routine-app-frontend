@@ -24,56 +24,52 @@ type Props = {
 function EditAvatar(props: Props) {
     const CROP_SIZE = 300;
 
-    const [croppedImage, setCroppedImage] = React.useState<string>();
-
     const [imageCrop, setImageCrop] = React.useState({ x: 0, y: 0 });
     const [imageZoom, setImageZoom] = React.useState(1);
 
-    const [croppedArea, setCroppedArea] = React.useState<CroppedArea>();
     const [croppedAreaPixels, setCroppedAreaPixels] = React.useState<CroppedArea>();
 
     const getCroppedImage = (
         imageBase64: string,
-        croppedArea: CroppedArea,
         croppedAreaPixels: CroppedArea,
     ) => {
+        const sizeOut = croppedAreaPixels.width;
+
         const canvas: HTMLCanvasElement = document.createElement("canvas");
+        canvas.width = sizeOut;
+        canvas.height = sizeOut;
+
         const ctx = canvas.getContext("2d");
         if (!ctx) throw new Error;
 
         const img = new Image();
 
-        console.log(croppedArea);
-        console.log(croppedAreaPixels);
-
         img.src = imageBase64;
         ctx.drawImage(
             img,
-            croppedAreaPixels.x,            // sx
-            croppedAreaPixels.y,            // sy
-            croppedAreaPixels.width,        // sWidth
-            croppedAreaPixels.height,       // sHeight
-            0,                              // dx
-            0,                              // dy
-            100,                            // dWidth
-            100,                            // dHeight
+            croppedAreaPixels.x,    // sx
+            croppedAreaPixels.y,    // sy
+            sizeOut,                // sWidth
+            sizeOut,                // sHeight
+            0,                      // dx
+            0,                      // dy
+            sizeOut,                // dWidth
+            sizeOut,                // dHeight
         );
 
         return canvas.toDataURL();
     }
 
     const onCropComplete = React.useCallback((
-        croppedArea: CroppedArea, croppedAreaPixels: CroppedArea
+        _: CroppedArea, croppedAreaPixels: CroppedArea
     ) => {
-        setCroppedArea(croppedArea);
         setCroppedAreaPixels(croppedAreaPixels);
     }, [])
 
     const handleClickUpload = async () => {
-        if (croppedArea && croppedAreaPixels) {
+        if (croppedAreaPixels) {
             const croppedImage = getCroppedImage(
                 props.filesContent[0].content,
-                croppedArea,
                 croppedAreaPixels,
             );
             await uploadDataURLImage(croppedImage, "avatar-" + props.userId);
