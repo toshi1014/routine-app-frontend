@@ -1,14 +1,19 @@
 import React from 'react';
 import { styled } from "@mui/material/styles";
-import { Avatar } from '@mui/material';
+import {
+    Avatar,
+    IconButton,
+} from '@mui/material';
 import Badge, { BadgeProps } from "@mui/material/Badge";
 import { Badge as TypeBadge } from "../utils/Types";
 import { Link } from "react-router-dom";
+import { decodeJwt } from "../utils/utils";
 
 type Props = {
     userId: number;
     badge: TypeBadge;
     size?: number;
+    openFileSelector?: () => void;
 }
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
@@ -22,6 +27,7 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
 const defaultAvatarSize = 40;
 const token = localStorage.getItem("token")
 const boolLoginStatus = (token === null) ? false : true;
+const myId = (token === null) ? null : decodeJwt(token).id;
 
 function UserAvatar(props: Props) {
     const badgeSizeOrgn = 30;
@@ -47,32 +53,40 @@ function UserAvatar(props: Props) {
         <Avatar sx={{ width: props.size, height: props.size }}>X</Avatar>
     );
 
-    return (
-        <Link
-            to={(boolLoginStatus ? "/mypage_login" : `/mypage/${props.userId}`)}
-            style={{
-                textDecoration: "none",
-                color: "white",
-            }}
-        >
-            {
-                props.badge === "noBadge"
-                    ? <div>{core}</div>
-                    : <StyledBadge
-                        badgeContent={
-                            <Avatar
-                                src={process.env.PUBLIC_URL + "/static/badges/" + badgeIcon + ".png"}
-                                sx={{
-                                    width: badgeSize,
-                                    height: badgeSize,
-                                }}
-                            />
-                        }
-                    >
-                        {core}
-                    </StyledBadge>
+    const avatarComp = (props.badge === "noBadge"
+        ? <div>{core}</div>
+        : <StyledBadge
+            badgeContent={
+                <Avatar
+                    src={process.env.PUBLIC_URL + "/static/badges/" + badgeIcon + ".png"}
+                    sx={{
+                        width: badgeSize,
+                        height: badgeSize,
+                    }}
+                />
             }
-        </Link>
+        >
+            {core}
+        </StyledBadge>
+    );
+
+    return (
+        props.openFileSelector
+            ? <IconButton
+                sx={{ mx: -1, my: -1 }}
+                onClick={props.openFileSelector}
+            >
+                {avatarComp}
+            </IconButton>
+            : <Link
+                to={(myId === props.userId ? "/mypage_login" : `/mypage/${props.userId}`)}
+                style={{
+                    textDecoration: "none",
+                    color: "white",
+                }}
+            >
+                {avatarComp}
+            </Link>
     );
 }
 

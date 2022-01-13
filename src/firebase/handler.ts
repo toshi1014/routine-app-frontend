@@ -2,6 +2,7 @@ import {
     getStorage,
     ref,
     uploadBytes,
+    uploadString,
     getDownloadURL,
 } from "firebase/storage";
 import { initializeApp } from "firebase/app";
@@ -12,10 +13,20 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const storage = getStorage();
 
-export const uploadImage = async (image: File, filename: string) => {
+export const uploadImage = async (image: File | Blob, filename: string) => {
     const storageRef = ref(storage, filename);
     try {
         await uploadBytes(storageRef, image);
+        return await downloadImageURL(filename);
+    } catch (err) {
+        return "failed";
+    }
+}
+
+export const uploadDataURLImage = async (image: string, filename: string) => {
+    const storageRef = ref(storage, filename);
+    try {
+        await uploadString(storageRef, image, "data_url");
         return await downloadImageURL(filename);
     } catch (err) {
         return "failed";

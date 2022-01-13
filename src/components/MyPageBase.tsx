@@ -3,15 +3,12 @@ import {
     Grid,
     Button,
     CardContent,
-    Avatar,
     Box,
     Container,
     Typography,
-    IconButton,
-    Card,
     Paper,
+    Backdrop,
     Stack,
-    Chip,
     AccordionSummary,
 } from "@mui/material";
 import { styled } from '@mui/material/styles';
@@ -22,6 +19,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import { useNavigate } from "react-router-dom";
+import { useFilePicker } from "use-file-picker";
 import {
     RoutinePackContents,
     Badge,
@@ -34,6 +32,7 @@ import FollowList from "./FollowList";
 import { decodeJwt } from "../utils/utils";
 import UserAvatar from "./UserAvatar";
 import SNSLink from "./SNSLink";
+import EditAvatar from "./EditAvatar";
 
 const Accordion = styled((props: AccordionProps) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -84,7 +83,7 @@ const targetUserId = (isNaN(userIdFromUrl) ? userIdFromToken : userIdFromUrl);
 
 function MyPageBase(props: Props) {
     const navigate = useNavigate();
-    const avatarSize = 70;
+    const AVATAR_SIZE = 70;
 
     const handleClickEdit = (strPostOrDraft: string, id: number) => {
         navigate("edit/" + strPostOrDraft + "/" + id);
@@ -158,6 +157,15 @@ function MyPageBase(props: Props) {
         }
     }
 
+    // edit Avatar
+    const [openFileSelector, { filesContent, loading, clear }] = useFilePicker({
+        readAs: 'DataURL',
+        accept: "image/*",
+        multiple: false,
+        limitFilesConfig: { max: 1 },
+        maxFileSize: 50,
+    });
+
     const header = (
         <Paper sx={{ my: 1 }}>
             <Container>
@@ -169,7 +177,12 @@ function MyPageBase(props: Props) {
                                 <UserAvatar
                                     userId={targetUserId}
                                     badge={props.badge}
-                                    size={avatarSize}
+                                    size={AVATAR_SIZE}
+                                    openFileSelector={(
+                                        props.chipInputComp ?
+                                            openFileSelector
+                                            : undefined
+                                    )}
                                 />
                                 <div>{props.usernameComp}</div>
                             </Stack>
@@ -268,10 +281,23 @@ function MyPageBase(props: Props) {
         </Paper>
     );
 
-
     return (
         <div>
             {header}
+
+            <Backdrop
+                sx={{
+                    color: '#fff',
+                    zIndex: (theme) => theme.zIndex.drawer + 1
+                }}
+                open={Boolean(filesContent.length === 1)}
+            >
+                <EditAvatar
+                    userId={targetUserId}
+                    filesContent={filesContent}
+                    clear={clear}
+                />
+            </Backdrop>
 
             <Grid container direction="column">
                 <Grid item>
