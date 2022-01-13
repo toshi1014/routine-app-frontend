@@ -72,6 +72,9 @@ function EditAvatar(props: Props) {
                 props.filesContent[0].content,
                 croppedAreaPixels,
             );
+
+            localStorage.setItem("myAvatar", croppedImage);
+
             await uploadDataURLImage(croppedImage, "avatar-" + props.userId);
             props.clear();
         }

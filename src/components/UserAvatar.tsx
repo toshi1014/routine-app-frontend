@@ -9,6 +9,7 @@ import { Badge as TypeBadge } from "../utils/Types";
 import { Link } from "react-router-dom";
 import { decodeJwt } from "../utils/utils";
 import { downloadImageURL } from "../firebase/handler";
+import { defaultId } from "../utils/defaultValues";
 
 type Props = {
     userId: number;
@@ -50,8 +51,16 @@ function UserAvatar(props: Props) {
 
             setBadgeIcon(badgeIconTmp);
 
-            const imageURL = await downloadImageURL("avatar-" + props.userId);
-            setAvatarSrc(imageURL);
+            // if my avatar, get from localStorage
+            // if not, fetch from cloud storage
+            if (myId === props.userId) {
+                const imageURL = localStorage.getItem("myAvatar")
+                if (imageURL) setAvatarSrc(imageURL);
+            } else if (props.userId === defaultId) {
+                // ignore when defaultUserId came
+            } else {
+                setAvatarSrc(await downloadImageURL("avatar-" + props.userId));
+            }
         }
 
         init();

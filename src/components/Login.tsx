@@ -15,6 +15,8 @@ import {
 } from "../utils/validations";
 import { ValidationStatus } from "../utils/Types";
 import { loginApi } from "../api_handlers/handle";
+import { downloadImageURL } from "../firebase/handler";
+import { decodeJwt } from "../utils/utils";
 
 
 function Login() {
@@ -66,6 +68,12 @@ function Login() {
 
                 const boolSuccess = await loginApi(email, password);
                 if (boolSuccess) {
+                    // store my avatar
+                    const token = localStorage.getItem("token")
+                    const myId = (token === null) ? null : decodeJwt(token).id;
+                    const imageURL = await downloadImageURL("avatar-" + myId);
+                    localStorage.setItem("myAvatar", imageURL);
+
                     navigate("/mypage_login");
                     window.location.reload();
                 } else {
