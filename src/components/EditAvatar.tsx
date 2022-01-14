@@ -4,6 +4,7 @@ import {
     Button,
     Stack,
 } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import Cropper from "react-easy-crop";
 import { uploadDataURLImage } from "../firebase/handler";
 
@@ -66,7 +67,11 @@ function EditAvatar(props: Props) {
         setCroppedAreaPixels(croppedAreaPixels);
     }, [])
 
+    const [uploading, setUploading] = React.useState(false);
+
     const handleClickUpload = async () => {
+        setUploading(true);
+
         if (croppedAreaPixels) {
             const croppedImage = getCroppedImage(
                 props.filesContent[0].content,
@@ -77,7 +82,10 @@ function EditAvatar(props: Props) {
 
             await uploadDataURLImage(croppedImage, "avatar-" + props.userId);
             props.clear();
+            window.location.reload();
         }
+
+        setUploading(false);
     }
 
     return (
@@ -113,16 +121,18 @@ function EditAvatar(props: Props) {
                         color="secondary"
                         variant="outlined"
                         onClick={props.clear}
+                        disabled={uploading}
                     >
                         Canel
                     </Button>
 
-                    <Button
+                    <LoadingButton
                         variant="outlined"
                         onClick={handleClickUpload}
+                        loading={uploading}
                     >
                         Upload
-                    </Button>
+                    </LoadingButton>
                 </Stack>
             </Grid>
 

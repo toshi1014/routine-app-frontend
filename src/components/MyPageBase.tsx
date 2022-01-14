@@ -24,6 +24,7 @@ import {
     RoutinePackContents,
     Badge,
 } from "../utils/Types";
+import { defaultId } from "../utils/defaultValues";
 import FollowButton from "./FollowButton";
 import {
     deleteApi,
@@ -71,19 +72,28 @@ type Props = {
 }
 
 
-const token = localStorage.getItem("token")
-const userIdFromToken = (token === null) ? null : decodeJwt(token).id;
-
-const href = window.location.href;
-const splitHref = href.split('/');
-const splitHrefLength = splitHref.length;
-const userIdFromUrl = Number(splitHref[splitHrefLength - 1]);
-
-const targetUserId = (isNaN(userIdFromUrl) ? userIdFromToken : userIdFromUrl);
-
 function MyPageBase(props: Props) {
     const navigate = useNavigate();
     const AVATAR_SIZE = 70;
+
+    const [targetUserId, setTargetUserId] = React.useState(defaultId);
+
+    // force avatar change without reloading, when page got changed
+    React.useEffect(() => {
+        const token = localStorage.getItem("token")
+        const userIdFromToken = (token === null) ? null : decodeJwt(token).id;
+
+        const href = window.location.href;
+        const splitHref = href.split('/');
+        const splitHrefLength = splitHref.length;
+        const userIdFromUrl = Number(splitHref[splitHrefLength - 1]);
+
+        if (isNaN(userIdFromUrl)) {
+            setTargetUserId(userIdFromToken);
+        } else {
+            setTargetUserId(userIdFromUrl);
+        }
+    }, [props.usernameComp])
 
     const handleClickEdit = (strPostOrDraft: string, id: number) => {
         navigate("edit/" + strPostOrDraft + "/" + id);
