@@ -34,6 +34,7 @@ import { decodeJwt } from "../utils/utils";
 import UserAvatar from "./UserAvatar";
 import SNSLink from "./SNSLink";
 import EditAvatar from "./EditAvatar";
+import CircularProgressWithText from "./CircularProgressWithText";
 
 const Accordion = styled((props: AccordionProps) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -99,8 +100,13 @@ function MyPageBase(props: Props) {
         navigate("edit/" + strPostOrDraft + "/" + id);
     }
 
+    const [openCircularProgress, setOpenCircularProgress] = React.useState(false);
+
     const handleClickDelete = async (strPostOrDraft: string, id: number) => {
+        setOpenCircularProgress(true);
         const res = await deleteApi(strPostOrDraft, id);
+        setOpenCircularProgress(false);
+
         if (!res.status) {
             // force logout & redirect to login
             localStorage.removeItem("token");
@@ -293,6 +299,11 @@ function MyPageBase(props: Props) {
 
     return (
         <div>
+            <CircularProgressWithText
+                open={openCircularProgress}
+                whatURwating4="Deleting"
+            />
+
             {header}
 
             <Backdrop

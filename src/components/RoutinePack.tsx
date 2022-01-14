@@ -70,6 +70,11 @@ function RoutinePack(props: Props) {
         setOpenDeleteDialog(false);
     }
 
+    const handleClickDelete = () => {
+        handleCloseDeleteDialog();
+        if (props.handleClickDelete) props.handleClickDelete();
+    }
+
     const deleteDialogComp = (
         <Dialog
             open={openDeleteDialog}
@@ -87,7 +92,7 @@ function RoutinePack(props: Props) {
 
             <DialogActions>
                 <Button onClick={handleCloseDeleteDialog}>Cancel</Button>
-                <Button onClick={props.handleClickDelete} autoFocus>Delete</Button>
+                <Button onClick={handleClickDelete} autoFocus>Delete</Button>
             </DialogActions>
 
         </Dialog>

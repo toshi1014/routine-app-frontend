@@ -4,6 +4,7 @@ import {
     uploadBytes,
     uploadString,
     getDownloadURL,
+    deleteObject,
 } from "firebase/storage";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
@@ -39,5 +40,15 @@ export const downloadImageURL = async (filename: string) => {
         return await getDownloadURL(pathReference);
     } catch (err) {
         return "broken";
+    }
+}
+
+export const deleteImage = async (filename: string) => {
+    const storageRef = ref(storage, filename);
+    try {
+        await deleteObject(storageRef);
+        return true;
+    } catch (err) {
+        return false;
     }
 }

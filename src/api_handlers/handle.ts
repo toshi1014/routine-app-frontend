@@ -16,6 +16,7 @@ import {
     RoutineContents,
     AuthEmail,
 } from "../utils/Types";
+import { deleteImage } from "../firebase/handler";
 
 const baseUrl = "http://localhost:8000/";
 
@@ -167,9 +168,14 @@ export const deleteApi = async (strPostOrDraft: string, id: number) => {
     const promiseRes = await axios.post(baseUrl + "mypage_login/delete_post_or_draft/", req);
     const res: Response<null> = promiseRes.data[0];
 
+    for (let i = 0; i < 10; i++) {
+        await deleteImage(`post-${id}-element-${i}`);
+    }
+
     if (res.status) {
         localStorage.setItem("token", res.token);
     }
+
     return res;
 }
 
