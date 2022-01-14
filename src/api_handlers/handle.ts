@@ -9,6 +9,7 @@ import {
     UserList,
     DbTable,
     AdminUser,
+    Post,
 } from "./protocols";
 import {
     RoutineElement,
@@ -126,7 +127,7 @@ export const postOrDraftApi = async (
     }
     console.log("req:", req);
     const promiseRes = await axios.post(baseUrl + "post_or_draft/", req);
-    const res: Response<null> = promiseRes.data[0];
+    const res: Response<Post> = promiseRes.data[0];
 
     if (res.status) {
         localStorage.setItem("token", res.token);

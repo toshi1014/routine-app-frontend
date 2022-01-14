@@ -11,6 +11,7 @@ import {
     Button,
     Box,
     IconButton,
+    Backdrop,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
@@ -19,12 +20,14 @@ import {
     RoutineHeaderInput,
     RoutineElement,
     RoutineElementInput,
+    IndexedImage,
 } from "../utils/Types";
 import FollowButton from "./FollowButton";
 import UserAvatar from "./UserAvatar";
 import LikeButton from "./LikeButton";
 import FavoriteButton from "./FavoriteButton";
 import MenuButton from "./MenuButton";
+import { downloadImageURL } from "../firebase/handler";
 
 type Props = {
     id: number;
@@ -33,10 +36,66 @@ type Props = {
     hashtagChipList: Array<React.ReactElement>;
     uniqueCompHeader?: React.ReactElement;
     uniqueComp?: React.ReactElement;
+    imagePicker?: (selectedIdx: number) => void;
+    deleteImage?: (selectedIdx: number) => void;
+    indexedImageDict?: IndexedImage;
 }
 
 function ContentsBase(props: Props) {
     const [myLikeCnt, setMyLikeCnt] = React.useState(0);
+
+    const [imageView, setImageView] = React.useState<any>();
+
+    const [openBackdrop, setOpenBackdrop] = React.useState(false);
+    const handleClickImage = (selectedIdx: number) => {
+        // if post or edit, call file picker
+        if (props.imagePicker) {
+            props.imagePicker(selectedIdx);
+        } else {
+            setOpenBackdrop(true);
+
+            const img = new Image();
+            img.src = imageURLList[selectedIdx];
+            const imgComp = (
+                img.width > img.height
+                    ? <img
+                        width="100%"
+                        src={imageURLList[selectedIdx]}
+                    />
+                    : <img
+                        height="100%"
+                        src={imageURLList[selectedIdx]}
+                    />
+            )
+            setImageView(imgComp);
+        }
+    }
+
+    const deleteImage = (selectedIdx: number) => {
+        if (props.deleteImage) { props.deleteImage(selectedIdx); }
+    }
+
+    const [imageURLList, setImageURLList] = React.useState<Array<string>>([]);
+    React.useEffect(() => {
+        const init = async () => {
+            let imageURLListTmp = [];
+            // if draft || edit
+            if (props.id === 0) {
+            // if post, fetch & set image
+            } else {
+                for (let elementIdx = 0; elementIdx < props.routineElementList.length; elementIdx++) {
+                    // fetch image titles as e.g. post-2-element-1
+                    // if not image, imgTmp := "broken"
+                    const imgTmp = await downloadImageURL(
+                        `post-${props.id}-element-${elementIdx}`
+                    );
+                    imageURLListTmp.push(imgTmp);
+                }
+                setImageURLList(imageURLListTmp);
+            }
+        }
+        init();
+    }, [])
 
     const header = (
         <Paper sx={{ my: 1 }}>
@@ -188,17 +247,49 @@ function ContentsBase(props: Props) {
                                     {routineElement.desc}
                                 </CardContent>
                                 <CardActions>
-                                    <Button size="small">Learn More</Button>
+                                    <Button
+                                        size="small"
+                                        onClick={() => handleClickImage(idx)}
+                                        disabled={Boolean(imageURLList[idx] === "broken")}
+                                    >
+                                        Open image
+                                    </Button>
+
+                                    {(props.deleteImage
+                                        ? <Button
+                                            size="small"
+                                            color="secondary"
+                                            onClick={() => deleteImage(idx)}
+                                            disabled={!Boolean(
+                                                props.indexedImageDict && props.indexedImageDict[idx]
+                                            )}
+                                        >
+                                            Delete image
+                                            </Button>
+                                        : <div />
+                                    )}
                                 </CardActions>
                             </Card>
                         </Grid>
 
-                        <Grid item>
-                            <img
-                                height="200"
-                                src={process.env.PUBLIC_URL + "/" + routineElement.imagePath}
-                                alt="img"
-                            />
+                        <Grid item sx={{ maxWidth: 200, maxHeight: 300 }}>
+                            {(props.id !== 0 && imageURLList[idx] !== "broken"
+                                ? <img
+                                    src={imageURLList[idx]}
+                                    alt="loading..."
+                                    onClick={() => handleClickImage(idx)}
+                                />
+                                : <div />
+                            )}
+
+                            {(props.indexedImageDict && props.indexedImageDict[idx]
+                                ? <img
+                                    src={props.indexedImageDict[idx]}
+                                    alt="loading..."
+                                    onClick={() => handleClickImage(idx)}
+                                />
+                                : <div />
+                            )}
                         </Grid>
                     </Grid>
                 </CardContent>
@@ -208,6 +299,17 @@ function ContentsBase(props: Props) {
 
     return (
         <div>
+            <Backdrop
+                sx={{
+                    color: '#fff',
+                    zIndex: (theme) => theme.zIndex.drawer + 1
+                }}
+                open={openBackdrop}
+                onClick={() => setOpenBackdrop(false)}
+            >
+                {imageView}
+            </Backdrop>
+
             <Stack spacing={3} direction="column">
                 {header}
 

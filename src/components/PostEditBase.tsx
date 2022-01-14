@@ -4,12 +4,9 @@ import {
     TextField,
     Stack,
     Fab,
-    Grid,
-    Box,
     Button,
     IconButton,
     CardContent,
-    Typography,
     InputBase,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -17,6 +14,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import {
     useNavigate,
 } from "react-router-dom";
+import { useFilePicker } from "use-file-picker";
 import {
     RoutineHeader,
     RoutineElement,
@@ -25,6 +23,7 @@ import {
     RoutineHeaderRef,
     RoutineElementRef,
     ChipData,
+    IndexedImage,
 } from "../utils/Types";
 import ContentsBase from "./ContentsBase";
 import { ListItem } from "../utils/ListItem";
@@ -45,6 +44,8 @@ import {
     defaultLastUpdated,
     defaultBadge,
 } from "../utils/defaultValues";
+import { uploadDataURLImage } from "../firebase/handler";
+import CircularProgressWithText from "./CircularProgressWithText";
 
 
 const hashtagList = <h1>None</h1>;  // dummy
@@ -166,7 +167,6 @@ function PostEditBase(props: Props) {
                 />
             ),
 
-            imagePath: "logo192.png",
         };
         return routineElement;
     }
@@ -260,7 +260,6 @@ function PostEditBase(props: Props) {
                     title: r.title.value,
                     subtitle: r.subtitle.value,
                     desc: r.desc.value,
-                    imagePath: "logo192.png"
                 })
             }
         }
@@ -276,7 +275,6 @@ function PostEditBase(props: Props) {
                     title: r.title,
                     subtitle: r.subtitle,
                     desc: r.desc,
-                    imagePath: "logo192.png"
                 })
             }
         }
@@ -284,7 +282,10 @@ function PostEditBase(props: Props) {
         return withoutNullEmpty.reverse();
     };
 
+    const [openCircularProgress, setOpenCircularProgress] = React.useState(false);
     const postDraftBase = async (strPostOrDraft: string) => {
+        setOpenCircularProgress(true);
+
         const routineElementsInputValue: Array<RoutineElement> = removeNullFromInput(routineElementRefList);
         const res = await postOrDraftApi(
             strPostOrDraft,
@@ -297,6 +298,15 @@ function PostEditBase(props: Props) {
         );
 
         if (res.status) {
+            const postId = res.contents.postId;
+            for (let key of Object.keys(indexedImageDict)) {
+                await uploadDataURLImage(
+                    indexedImageDict[Number(key)],
+                    `post-${postId}-element-${key}`
+                );
+            }
+
+            setOpenCircularProgress(false);
             navigate("/mypage_login");
         } else {
             // force logout & redirect to login
@@ -332,6 +342,42 @@ function PostEditBase(props: Props) {
     const handleDraft = async () => {
         await postDraftBase("draft");
     };
+
+
+    // image
+    const [openFileSelector, { filesContent, loading, clear }] = useFilePicker({
+        readAs: 'DataURL',
+        accept: "image/*",
+        multiple: false,
+        limitFilesConfig: { max: 1 },
+        maxFileSize: 50,
+    });
+
+    const [indexedImageDict, setIndexedImageDict] = React.useState<IndexedImage>([]);
+    const [selectedImageIdx, setSelectedImageIdx] = React.useState<number>(0);
+
+    const imagePicker = (selectedIdx: number) => {
+        openFileSelector();
+        setSelectedImageIdx(selectedIdx);
+    }
+
+    const deleteImage = (selectedIdx: number) => {
+        let indexedImageListTmp: IndexedImage = [];
+        for (let key of Object.keys(indexedImageDict)) {
+            if (Number(key) !== selectedIdx) {
+                indexedImageDict[Number(key)] = indexedImageDict[Number(key)];
+            }
+        }
+        setIndexedImageDict(indexedImageListTmp);
+    }
+
+    React.useEffect(() => {
+        if (filesContent.length !== 0) {
+            let indexedImageListTmp = indexedImageDict;
+            indexedImageDict[selectedImageIdx] = filesContent[0].content;
+            setIndexedImageDict(indexedImageListTmp);
+        }
+    }, [filesContent])
 
 
     React.useEffect(() => {
@@ -405,7 +451,6 @@ function PostEditBase(props: Props) {
                 title: "",
                 subtitle: "",
                 desc: "",
-                imagePath: "",
             };
             console.log("deleted", deletedIdx);
         }
@@ -457,14 +502,23 @@ function PostEditBase(props: Props) {
     );
 
     return (
-        <ContentsBase
-            id={0}
-            routineHeader={routineHeaderInput}
-            routineElementList={routineElementList}
-            hashtagChipList={hashtagChipList}
-            uniqueCompHeader={hashtagInput}
-            uniqueComp={submitButtonsComp}
-        />
+        <div>
+            <CircularProgressWithText
+                open={openCircularProgress}
+                whatURwating4="Posting"
+            />
+            <ContentsBase
+                id={(props.postId ? props.postId : 0)}
+                routineHeader={routineHeaderInput}
+                routineElementList={routineElementList}
+                hashtagChipList={hashtagChipList}
+                uniqueCompHeader={hashtagInput}
+                uniqueComp={submitButtonsComp}
+                imagePicker={imagePicker}
+                deleteImage={deleteImage}
+                indexedImageDict={indexedImageDict}
+            />
+        </div>
     );
 }
 

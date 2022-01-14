@@ -69,13 +69,11 @@ function Debug() {
                     title: "Go to fishing shops",
                     subtitle: "Why not?",
                     desc: "Firstly, Heat oil in a (14- to 16-inch)",
-                    imagePath: "logo192.png",
                 },
                 {
                     title: "Buy goods",
                     subtitle: "e.g. hooks, rots",
                     desc: "I recommend you to ...",
-                    imagePath: "logo192.png",
                 },
             ]
         );
@@ -96,13 +94,11 @@ function Debug() {
                     title: "Go to fishing shops",
                     subtitle: "Why not?",
                     desc: "Firstly, Heat oil in a (14- to 16-inch)",
-                    imagePath: "logo192.png",
                 },
                 {
                     title: "Buy goods",
                     subtitle: "e.g. hooks, rots",
                     desc: "I recommend you to ...",
-                    imagePath: "logo192.png",
                 },
             ]
         );

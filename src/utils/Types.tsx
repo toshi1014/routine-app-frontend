@@ -24,14 +24,12 @@ export type RoutineElement = {
     title: string;
     subtitle: string;
     desc: string;
-    imagePath: string;
 }
 
 export type RoutineElementInput = {
     title: React.ReactElement;
     subtitle: React.ReactElement;
     desc: React.ReactElement;
-    imagePath: string;
 }
 
 export type RoutineHeaderRef = {
@@ -114,3 +112,5 @@ export type TableName =
     ;
 
 export type SupportedSNSMedium = "Facebook" | "Twitter" | "Instagram";
+
+export type IndexedImage = { [idx: number]: string };

@@ -62,3 +62,7 @@ export type DbTable = {
 export type AdminUser = {
     boolAdminUser: boolean;
 }
+
+export type Post = {
+    postId: number;
+}
