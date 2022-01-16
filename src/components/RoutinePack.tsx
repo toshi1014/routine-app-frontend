@@ -52,7 +52,7 @@ type Props = RoutinePackContents & {
 }
 
 function RoutinePack(props: Props) {
-    const packWidth = 345;
+    const PACK_WIDTH = 345;
 
     const [expanded, setExpanded] = React.useState(false);
     const handleExpandMoreClick = () => {
@@ -104,8 +104,8 @@ function RoutinePack(props: Props) {
             {deleteDialogComp}
 
             <Card sx={{
-                minWidth: packWidth,
-                maxWidth: packWidth
+                minWidth: PACK_WIDTH,
+                maxWidth: PACK_WIDTH
             }}>
 
                 <CardHeader
@@ -145,7 +145,7 @@ function RoutinePack(props: Props) {
 
                 <CardContent>
                     <TextWithLimitation
-                        maxWidth={packWidth}
+                        maxWidth={PACK_WIDTH}
                         text={props.desc}
                     />
                 </CardContent>
@@ -193,11 +193,11 @@ function RoutinePack(props: Props) {
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <CardContent>
                         <TextWithLimitation
-                            maxWidth={packWidth}
+                            maxWidth={PACK_WIDTH}
                             text={"1. " + props.titleStep1}
                         />
                         <TextWithLimitation
-                            maxWidth={packWidth}
+                            maxWidth={PACK_WIDTH}
                             text={props.descStep1}
                         />
                         <Typography paragraph>...</Typography>

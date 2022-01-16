@@ -234,13 +234,13 @@ export const likeApi = async (postId: number, boolUnlike: boolean) => {
 }
 
 
-export const favoriteApi = async (postId: number, boolUnlike: boolean) => {
+export const favoriteApi = async (postId: number, boolUnfavorite: boolean) => {
     const req = {
         token: localStorage.getItem("token"),
         postId: postId,
     }
 
-    const favoriteOrUnfavorite = (boolUnlike ? "unfavorite" : "favorite");
+    const favoriteOrUnfavorite = (boolUnfavorite ? "unfavorite" : "favorite");
     const promiseRes = await axios.post(baseUrl + "mypage_login/" + favoriteOrUnfavorite + "/", req);
     const res: Response<NewToken> = promiseRes.data[0];
 

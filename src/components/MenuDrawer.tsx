@@ -14,9 +14,7 @@ import {
     Avatar,
     Collapse,
 } from "@mui/material";
-import {
-    styled,
-} from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import WebIcon from '@mui/icons-material/Web';
 import HomeIcon from '@mui/icons-material/Home';
@@ -118,7 +116,6 @@ const lowerIconNameList: Array<IconName> = [
 
 function MenuDrawer(props: Props) {
     const navigate = useNavigate();
-    const avatarSize = 35;
 
     const [expanded, setExpanded] = React.useState(false);
     const handleExpandMoreClick = () => {

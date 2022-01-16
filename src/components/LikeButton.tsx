@@ -33,14 +33,14 @@ function LikeButton(props: Props) {
     const handleClickLike = async () => {
         let res;
         if (likeList.includes(props.postId)) {
-            res = await likeApi(props.postId, true);
+            res = await likeApi(props.postId, /* boolUnlike= */true);
             if (props.myLikeCnt === 0) {
                 props.setMyLikeCnt(-1);
             } else {
                 props.setMyLikeCnt(0);
             }
         } else {
-            res = await likeApi(props.postId, false);
+            res = await likeApi(props.postId, /* boolUnlike= */false);
             if (props.myLikeCnt === 0) {
                 props.setMyLikeCnt(1);
             } else {

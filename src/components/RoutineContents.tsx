@@ -1,13 +1,8 @@
 import React from 'react';
-import {
-    Chip,
-} from "@mui/material";
 import { RoutineHeader, RoutineElement } from "../utils/Types";
 import ContentsBase from "./ContentsBase";
 import { ListItem } from "../utils/ListItem";
-import {
-    getContentsApi,
-} from "../api_handlers/handle";
+import { getContentsApi } from "../api_handlers/handle";
 import HashtagLink from "./HashtagLink";
 import ErrorPage from "./ErrorPage";
 import {

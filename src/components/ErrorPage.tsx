@@ -13,7 +13,7 @@ type Props = {
 }
 
 function ErrorPage(props: Props) {
-    const iconSize = 50;
+    const ICON_SIZE = 50;
 
     return (
         <Grid container direction="column">
@@ -25,7 +25,12 @@ function ErrorPage(props: Props) {
                             spacing={1}
                             alignItems="flex-start"
                         >
-                            <ErrorOutlineIcon sx={{ width: iconSize, height: iconSize }} />
+                            <ErrorOutlineIcon
+                                sx={{
+                                    width: ICON_SIZE,
+                                    height: ICON_SIZE,
+                                }}
+                            />
                             <Typography variant="h3">Oops!</Typography>
                         </Stack>
                     </CardContent>

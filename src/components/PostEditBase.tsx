@@ -11,9 +11,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import {
-    useNavigate,
-} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useFilePicker } from "use-file-picker";
 import {
     RoutineHeader,
@@ -31,9 +29,7 @@ import {
     isAuthenticated,
     decodeJwt,
 } from "../utils/utils";
-import {
-    Badge,
-} from "../utils/Types";
+import { Badge } from "../utils/Types";
 import {
     postOrDraftApi,
 } from "../api_handlers/handle";
@@ -440,7 +436,6 @@ function PostEditBase(props: Props) {
 
     const addElement = () => {
         let routineElementRefListTmp = routineElementRefList;
-        const routineElementRefListOrgn = routineElementRefListTmp;
         routineElementRefListTmp.push(routineElementRef);
         setRoutineElementRefList(routineElementRefListTmp);
 

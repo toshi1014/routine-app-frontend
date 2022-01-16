@@ -26,9 +26,7 @@ import {
 } from "../utils/Types";
 import { defaultId } from "../utils/defaultValues";
 import FollowButton from "./FollowButton";
-import {
-    deleteApi,
-} from "../api_handlers/handle";
+import { deleteApi } from "../api_handlers/handle";
 import FollowList from "./FollowList";
 import { decodeJwt } from "../utils/utils";
 import UserAvatar from "./UserAvatar";

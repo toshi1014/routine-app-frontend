@@ -1,11 +1,8 @@
 import React from 'react';
-import {
-    Chip,
-} from '@mui/material';
+import { Chip } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 import { followApi } from "../api_handlers/handle";
 import { decodeJwt } from "../utils/utils";
-
 
 const token = localStorage.getItem("token")
 const boolLoginStatus = (token === null) ? false : true;
@@ -35,7 +32,7 @@ function FollowButton(props: Props) {
     const handleClickFollow = async () => {
         let res;
         if (followingList.includes(props.targetUserId)) {
-            res = await followApi(props.targetUserId, true);
+            res = await followApi(props.targetUserId, /* boolUnfollow= */true);
             if (props.setMyFollowCnt) {
                 if (props.myFollowCnt === 0) {
                     props.setMyFollowCnt(-1);
@@ -44,7 +41,7 @@ function FollowButton(props: Props) {
                 }
             }
         } else {
-            res = await followApi(props.targetUserId, false)
+            res = await followApi(props.targetUserId, /* boolUnfollow= */false)
             if (props.setMyFollowCnt) {
                 if (props.myFollowCnt === 0) {
                     props.setMyFollowCnt(1);

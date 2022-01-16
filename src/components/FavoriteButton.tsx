@@ -29,7 +29,10 @@ function FavoriteButton(props: Props) {
     }
 
     const handleClickFavorite = async () => {
-        const res = await favoriteApi(props.postId, favoriteList.includes(props.postId));
+        const res = await favoriteApi(
+            props.postId,
+            favoriteList.includes(props.postId) // boolUnfavorite
+        );
 
         if (res.status) {
             updateFavoriteList(res.contents.newToken);

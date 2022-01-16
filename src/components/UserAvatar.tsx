@@ -26,13 +26,17 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     },
 }));
 
-const defaultAvatarSize = 40;
+const DEFAULT_AVATARSIZE = 40;
 const token = localStorage.getItem("token")
 const myId = (token === null) ? null : decodeJwt(token).id;
 
 function UserAvatar(props: Props) {
     const badgeSizeOrgn = 30;
-    const badgeSize = (props.size ? badgeSizeOrgn * (props.size / defaultAvatarSize) : badgeSizeOrgn);
+    const badgeSize = (
+        props.size
+            ? badgeSizeOrgn * (props.size / DEFAULT_AVATARSIZE)
+            : badgeSizeOrgn
+    );
 
     const [badgeIcon, setBadgeIcon] = React.useState("");
     const [avatarSrc, setAvatarSrc] = React.useState("");

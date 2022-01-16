@@ -1,10 +1,6 @@
 import React from 'react';
-import {
-    Chip,
-} from "@mui/material";
-import {
-    useNavigate,
-} from "react-router-dom";
+import { Chip } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
     hashtag: string;

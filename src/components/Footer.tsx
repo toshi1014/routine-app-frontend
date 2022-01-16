@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-    Link,
-} from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
     Stack,
     Box,
@@ -17,7 +15,7 @@ import Instagram from "@mui/icons-material/Instagram";
 
 // TEMP:
 const logoFilename = "logo192.png";
-const logoSize = "40";
+const LOGO_SIZE = "40";
 const copyright = "(c) 2021 Foo. All rights reserved";
 
 
@@ -115,8 +113,8 @@ function Footer() {
                     <Stack direction="row" spacing={3} alignItems="center">
                         <img
                             src={process.env.PUBLIC_URL + "/" + logoFilename}
-                            width={logoSize}
-                            height={logoSize}
+                            width={LOGO_SIZE}
+                            height={LOGO_SIZE}
                             alt="logo"
                         />
                         <Typography variant="h5">Foo</Typography>

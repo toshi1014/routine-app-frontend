@@ -1,14 +1,10 @@
 import React from 'react';
-import {
-    Typography,
-} from "@mui/material";
+import { Typography } from "@mui/material";
 import MyPageBase from "./MyPageBase";
 import { ListItem } from "../utils/ListItem";
 import HashtagLink from "./HashtagLink";
 import ErrorPage from "./ErrorPage";
-import {
-    getMypageApi,
-} from "../api_handlers/handle";
+import { getMypageApi } from "../api_handlers/handle";
 import {
     RoutinePackContents,
     Badge,

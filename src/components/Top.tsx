@@ -18,16 +18,13 @@ import {
     defaultTitle,
     defaultContributor,
     defaultContributorId,
-    defaultBadge,
     defaultDesc,
     defaultTitleStep1,
     defaultDescStep1,
     defaultLike,
     defaultHashtagList,
 } from "../utils/defaultValues";
-import {
-    Badge,
-} from "../utils/Types";
+import { Badge } from "../utils/Types";
 
 
 // TEMP:

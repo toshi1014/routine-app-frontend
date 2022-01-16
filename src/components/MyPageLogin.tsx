@@ -17,7 +17,6 @@ import {
 } from "react-router-dom";
 import {
     RoutinePackContents,
-    MenuChildProps,
     ChipData,
 } from "../utils/Types";
 import MyPageBase from "./MyPageBase";

@@ -6,7 +6,6 @@ import {
     Box,
     Grid,
     AppBar,
-    Avatar,
     Typography,
     Paper,
     Stack,

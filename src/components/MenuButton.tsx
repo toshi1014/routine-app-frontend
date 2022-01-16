@@ -25,7 +25,7 @@ import { reportApi } from "../api_handlers/handle";
 
 // TEMP:
 const reasonList = ["A", "B", "C", "D", "E", "F", "Other"];
-const maxLenReportComment = 140;
+const MAX_LEN_REPORT_COMMENT = 140;
 
 type Props ={
     postId: number;
@@ -61,9 +61,9 @@ function MenuButton(props: Props) {
     const [reportCommentHelperText, setReportCommentHelperText] = React.useState("");
     const handleChangeReportComment = (event: React.ChangeEvent<HTMLInputElement>) => {
         const ipt = event.target.value;
-        if (ipt.length > maxLenReportComment) {
+        if (ipt.length > MAX_LEN_REPORT_COMMENT) {
             setReportCommentError(true);
-            setReportCommentHelperText("Max " + maxLenReportComment + " letters. Now, " + ipt.length);
+            setReportCommentHelperText("Max " + MAX_LEN_REPORT_COMMENT + " letters. Now, " + ipt.length);
         } else {
             setReportCommentError(false);
             setReportCommentHelperText("");
@@ -72,7 +72,7 @@ function MenuButton(props: Props) {
     }
 
     const handleClickReport = async () => {
-        if (reportComment !== "" && reportComment.length <= maxLenReportComment) {
+        if (reportComment !== "" && reportComment.length <= MAX_LEN_REPORT_COMMENT) {
             handleCloseReportDialog();
             const res = await reportApi(props.postId, reason, reportComment);
             console.log(res);
