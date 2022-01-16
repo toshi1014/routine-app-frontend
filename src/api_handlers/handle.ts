@@ -168,6 +168,7 @@ export const deleteApi = async (strPostOrDraft: string, id: number) => {
     const promiseRes = await axios.post(baseUrl + "mypage_login/delete_post_or_draft/", req);
     const res: Response<null> = promiseRes.data[0];
 
+    await deleteImage(`post-${id}`);
     for (let i = 0; i < 10; i++) {
         await deleteImage(`post-${id}-element-${i}`);
     }

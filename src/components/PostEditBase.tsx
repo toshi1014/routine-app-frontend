@@ -224,7 +224,7 @@ function PostEditBase(props: Props) {
     const hashtagInput = (
         <Chip
             label={
-                <Stack direction="row" spacing={1}>
+                <Stack direction="row" spacing={1} alignItems="center">
                     <p>#</p>
                     <InputBase
                         sx={{
@@ -299,6 +299,11 @@ function PostEditBase(props: Props) {
 
         if (res.status) {
             const postId = res.contents.postId;
+
+            if (themeImage !== "") {
+                await uploadDataURLImage(themeImage, `post-${postId}`);
+            }
+
             for (let key of Object.keys(indexedImageDict)) {
                 await uploadDataURLImage(
                     indexedImageDict[Number(key)],
@@ -353,29 +358,38 @@ function PostEditBase(props: Props) {
         maxFileSize: 50,
     });
 
+    const [themeImage, setThemeImage] = React.useState<string>("");
     const [indexedImageDict, setIndexedImageDict] = React.useState<IndexedImage>([]);
-    const [selectedImageIdx, setSelectedImageIdx] = React.useState<number>(0);
+    const [selectedImageIdx, setSelectedImageIdx] = React.useState<number | "theme">(0);
 
-    const imagePicker = (selectedIdx: number) => {
+    const imagePicker = (selectedIdx: number | "theme") => {
         openFileSelector();
         setSelectedImageIdx(selectedIdx);
     }
 
-    const deleteImage = (selectedIdx: number) => {
-        let indexedImageListTmp: IndexedImage = [];
-        for (let key of Object.keys(indexedImageDict)) {
-            if (Number(key) !== selectedIdx) {
-                indexedImageDict[Number(key)] = indexedImageDict[Number(key)];
+    const deleteImage = (selectedIdx: number | "theme") => {
+        if (selectedIdx === "theme") {
+            setThemeImage("");
+        } else {
+            let indexedImageListTmp: IndexedImage = [];
+            for (let key of Object.keys(indexedImageDict)) {
+                if (Number(key) !== selectedIdx) {
+                    indexedImageDict[Number(key)] = indexedImageDict[Number(key)];
+                }
             }
+            setIndexedImageDict(indexedImageListTmp);
         }
-        setIndexedImageDict(indexedImageListTmp);
     }
 
     React.useEffect(() => {
         if (filesContent.length !== 0) {
-            let indexedImageListTmp = indexedImageDict;
-            indexedImageDict[selectedImageIdx] = filesContent[0].content;
-            setIndexedImageDict(indexedImageListTmp);
+            if (selectedImageIdx === "theme") {
+                setThemeImage(filesContent[0].content);
+            } else {
+                let indexedImageListTmp = indexedImageDict;
+                indexedImageDict[selectedImageIdx] = filesContent[0].content;
+                setIndexedImageDict(indexedImageListTmp);
+            }
         }
     }, [filesContent])
 
@@ -507,6 +521,7 @@ function PostEditBase(props: Props) {
                 open={openCircularProgress}
                 whatURwating4="Posting"
             />
+
             <ContentsBase
                 id={(props.postId ? props.postId : 0)}
                 routineHeader={routineHeaderInput}
@@ -516,6 +531,7 @@ function PostEditBase(props: Props) {
                 uniqueComp={submitButtonsComp}
                 imagePicker={imagePicker}
                 deleteImage={deleteImage}
+                themeImage={themeImage}
                 indexedImageDict={indexedImageDict}
             />
         </div>

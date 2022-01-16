@@ -36,8 +36,9 @@ type Props = {
     hashtagChipList: Array<React.ReactElement>;
     uniqueCompHeader?: React.ReactElement;
     uniqueComp?: React.ReactElement;
-    imagePicker?: (selectedIdx: number) => void;
-    deleteImage?: (selectedIdx: number) => void;
+    imagePicker?: (selectedIdx: number | "theme") => void;
+    deleteImage?: (selectedIdx: number | "theme") => void;
+    themeImage?: string;
     indexedImageDict?: IndexedImage;
 }
 
@@ -47,42 +48,52 @@ function ContentsBase(props: Props) {
     const [imageView, setImageView] = React.useState<any>();
 
     const [openBackdrop, setOpenBackdrop] = React.useState(false);
-    const handleClickImage = (selectedIdx: number) => {
+    const handleClickImage = (selectedIdx: number | "theme") => {
         // if post or edit, call file picker
         if (props.imagePicker) {
             props.imagePicker(selectedIdx);
         } else {
             setOpenBackdrop(true);
 
+            let targetImgSrc: string;
+            if (selectedIdx === "theme") {
+                targetImgSrc = themeImageURL;
+            } else {
+                targetImgSrc = imageURLList[selectedIdx];
+            }
+
             const img = new Image();
-            img.src = imageURLList[selectedIdx];
+            img.src = targetImgSrc;
             const imgComp = (
                 img.width > img.height
                     ? <img
                         width="100%"
-                        src={imageURLList[selectedIdx]}
+                        src={targetImgSrc}
                     />
                     : <img
                         height="100%"
-                        src={imageURLList[selectedIdx]}
+                        src={targetImgSrc}
                     />
             )
             setImageView(imgComp);
         }
     }
 
-    const deleteImage = (selectedIdx: number) => {
+    const deleteImage = (selectedIdx: number | "theme") => {
         if (props.deleteImage) { props.deleteImage(selectedIdx); }
     }
 
+    const [themeImageURL, setThemeImageURL] = React.useState<string>("");
     const [imageURLList, setImageURLList] = React.useState<Array<string>>([]);
     React.useEffect(() => {
         const init = async () => {
             let imageURLListTmp = [];
             // if draft || edit
             if (props.id === 0) {
-            // if post, fetch & set image
             } else {
+                // if post, fetch & set image
+                setThemeImageURL(await downloadImageURL(`post-${props.id}`));
+
                 for (let elementIdx = 0; elementIdx < props.routineElementList.length; elementIdx++) {
                     // fetch image titles as e.g. post-2-element-1
                     // if not image, imgTmp := "broken"
@@ -145,82 +156,132 @@ function ContentsBase(props: Props) {
                     </Grid>
 
                     <Grid item sx={{ mt: 2, mb: 1, mr: 1 }}>
-                        <Paper
-                            variant="outlined"
-                            sx={{
-                                width: 300,
-                                borderRadius: 3,
-                            }}
-                        >
-                            <CardContent>
-                                <Grid container wrap="nowrap" spacing={2} direction="column">
-                                    <Grid item xs zeroMinWidth>
-                                        <Stack direction="row" alignItems="flex-end" spacing={2}>
-                                            <UserAvatar
-                                                userId={props.routineHeader.contributorId}
-                                                badge={props.routineHeader.badge}
-                                            />
-                                            <Typography noWrap variant="h6">
-                                                {props.routineHeader.contributor}
-                                            </Typography>
-                                        </Stack>
-                                    </Grid>
-
-                                    <Grid item>
-                                        <Grid container direction="row" spacing={3} alignItems="center">
-                                            <Grid item>
-                                                <FollowButton
-                                                    targetUserId={props.routineHeader.contributorId}
+                        <Stack direction="column" spacing={3}>
+                            <Paper
+                                variant="outlined"
+                                sx={{
+                                    width: 300,
+                                    borderRadius: 3,
+                                }}
+                            >
+                                <CardContent>
+                                    <Grid container wrap="nowrap" spacing={2} direction="column">
+                                        <Grid item xs zeroMinWidth>
+                                            <Stack direction="row" alignItems="flex-end" spacing={2}>
+                                                <UserAvatar
+                                                    userId={props.routineHeader.contributorId}
+                                                    badge={props.routineHeader.badge}
                                                 />
-                                            </Grid>
+                                                <Typography noWrap variant="h6">
+                                                    {props.routineHeader.contributor}
+                                                </Typography>
+                                            </Stack>
+                                        </Grid>
 
-                                            <Grid item>
-                                                <Stack
-                                                    direction="row"
-                                                    spacing={1}
-                                                >
-                                                    <FavoriteIcon />
+                                        <Grid item>
+                                            <Grid container direction="row" spacing={3} alignItems="center">
+                                                <Grid item>
+                                                    <FollowButton
+                                                        targetUserId={props.routineHeader.contributorId}
+                                                    />
+                                                </Grid>
 
-                                                    <Typography
-                                                        variant="body1"
+                                                <Grid item>
+                                                    <Stack
+                                                        direction="row"
+                                                        spacing={1}
                                                     >
-                                                        {props.routineHeader.like + myLikeCnt} Like
+                                                        <FavoriteIcon />
+
+                                                        <Typography
+                                                            variant="body1"
+                                                        >
+                                                            {props.routineHeader.like + myLikeCnt} Like
                                                     </Typography>
-                                                </Stack>
+                                                    </Stack>
+                                                </Grid>
                                             </Grid>
+                                        </Grid>
+
+                                        <Grid item>
+                                            <Typography variant="body1">
+                                                last updated: {props.routineHeader.lastUpdated}
+                                            </Typography>
+                                        </Grid>
+
+                                        <Grid item>
+                                            <Stack direction="row">
+                                                <LikeButton
+                                                    postId={props.id}
+                                                    contributorId={Number(props.routineHeader.contributorId)}
+                                                    myLikeCnt={myLikeCnt}
+                                                    setMyLikeCnt={setMyLikeCnt}
+                                                />
+
+                                                <IconButton>
+                                                    <ShareIcon />
+                                                </IconButton>
+
+                                                <FavoriteButton
+                                                    postId={props.id}
+                                                    contributorId={Number(props.routineHeader.contributorId)}
+                                                />
+
+                                                <MenuButton postId={props.id} />
+                                            </Stack>
                                         </Grid>
                                     </Grid>
 
-                                    <Grid item>
-                                        <Typography variant="body1">
-                                            last updated: {props.routineHeader.lastUpdated}
-                                        </Typography>
-                                    </Grid>
+                                </CardContent>
+                            </Paper>
 
-                                    <Grid item>
-                                        <Stack direction="row">
-                                            <LikeButton
-                                                postId={props.id}
-                                                contributorId={Number(props.routineHeader.contributorId)}
-                                                myLikeCnt={myLikeCnt}
-                                                setMyLikeCnt={setMyLikeCnt}
-                                            />
+                            <Stack direction="row" spacing={1}>
+                                <Button
+                                    size="small"
+                                    disabled={Boolean(themeImageURL === "broken")}
+                                    onClick={() => handleClickImage("theme")}
+                                >
+                                    Open image
+                                </Button>
 
-                                            <IconButton>
-                                                <ShareIcon />
-                                            </IconButton>
+                                {(props.deleteImage
+                                    ?
+                                    <Button
+                                        size="small"
+                                        color="secondary"
+                                        onClick={() => deleteImage("theme")}
+                                        disabled={!Boolean(
+                                            props.themeImage && props.themeImage !== ""
+                                        )}
+                                    >
+                                        Delete image
+                                        </Button>
+                                    : <div />
+                                )}
 
-                                            <FavoriteButton
-                                                postId={props.id}
-                                                contributorId={Number(props.routineHeader.contributorId)}
-                                            />
+                                {(props.themeImage && props.themeImage !== ""
+                                    ? <img
+                                        width="30"
+                                        height="30"
+                                        src={props.themeImage}
+                                        alt="loading..."
+                                        onClick={() => handleClickImage("theme")}
+                                    />
+                                    : <div />
+                                )}
 
-                                            <MenuButton postId={props.id} />
-                                        </Stack>
-                                    </Grid>
-                                </Grid>
-                            </CardContent>
-                        </Paper>
+                                {(themeImageURL !== "" && themeImageURL !== "broken"
+                                    ? <img
+                                        width="50"
+                                        height="30"
+                                        src={themeImageURL}
+                                        alt="loading..."
+                                        onClick={() => handleClickImage("theme")}
+                                    />
+                                    : <div />
+                                )}
+                            </Stack>
+                        </Stack>
                     </Grid>
                 </Grid>
             </Box >
@@ -247,27 +308,29 @@ function ContentsBase(props: Props) {
                                     {routineElement.desc}
                                 </CardContent>
                                 <CardActions>
-                                    <Button
-                                        size="small"
-                                        onClick={() => handleClickImage(idx)}
-                                        disabled={Boolean(imageURLList[idx] === "broken")}
-                                    >
-                                        Open image
+                                    <Stack direction="row" spacing={1}>
+                                        <Button
+                                            size="small"
+                                            onClick={() => handleClickImage(idx)}
+                                            disabled={Boolean(imageURLList[idx] === "broken")}
+                                        >
+                                            Open image
                                     </Button>
 
-                                    {(props.deleteImage
-                                        ? <Button
-                                            size="small"
-                                            color="secondary"
-                                            onClick={() => deleteImage(idx)}
-                                            disabled={!Boolean(
-                                                props.indexedImageDict && props.indexedImageDict[idx]
-                                            )}
-                                        >
-                                            Delete image
+                                        {(props.deleteImage
+                                            ? <Button
+                                                size="small"
+                                                color="secondary"
+                                                onClick={() => deleteImage(idx)}
+                                                disabled={!Boolean(
+                                                    props.indexedImageDict && props.indexedImageDict[idx]
+                                                )}
+                                            >
+                                                Delete image
                                             </Button>
-                                        : <div />
-                                    )}
+                                            : <div />
+                                        )}
+                                    </Stack>
                                 </CardActions>
                             </Card>
                         </Grid>
