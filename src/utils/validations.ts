@@ -1,6 +1,4 @@
-import {
-    ValidationStatus
-} from "./Types";
+import { ValidationStatus } from "./Types";
 import { isUniqueApi } from "../api_handlers/handle";
 
 
@@ -35,7 +33,8 @@ export const isValidEmail = async (email: string, uniqueReguired: boolean)
         boolValid: boolValid,
         helperText: helperText
     };
-};
+}
+
 
 export const isValidPassword = (password: string): ValidationStatus => {
     let boolValid = true;
@@ -55,7 +54,7 @@ export const isValidPassword = (password: string): ValidationStatus => {
         boolValid: boolValid,
         helperText: helperText
     };
-};
+}
 
 export const isValidUsername = (username: string): ValidationStatus => {
     let boolValid = true;
@@ -75,4 +74,22 @@ export const isValidUsername = (username: string): ValidationStatus => {
         boolValid: boolValid,
         helperText: helperText
     };
-};
+}
+
+
+const illegalCharacterList = [
+    "illegal",      // DEBUG:
+];
+
+export const basicValidation = (str: string, maxLen: number) => {
+    for (let illegalCharacter of illegalCharacterList) {
+        if (str.includes(illegalCharacter)) {
+            return "illegal char - " + illegalCharacter
+        }
+    }
+
+    if (str.length > maxLen) {
+        return "max " + maxLen + " letters, " + (str.length > maxLen) + " over"
+    }
+    return "";
+}

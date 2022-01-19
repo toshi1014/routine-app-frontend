@@ -30,9 +30,7 @@ import {
     decodeJwt,
 } from "../utils/utils";
 import { Badge } from "../utils/Types";
-import {
-    postOrDraftApi,
-} from "../api_handlers/handle";
+import { postOrDraftApi } from "../api_handlers/handle";
 import {
     defaultUsername,
     defaultId as defaultUserId,
@@ -42,7 +40,8 @@ import {
 } from "../utils/defaultValues";
 import { uploadDataURLImage } from "../firebase/handler";
 import CircularProgressWithText from "./CircularProgressWithText";
-
+import { basicValidation } from "../utils/validations";
+import { maxInputLength } from "../config";
 
 const hashtagList = <h1>None</h1>;  // dummy
 
@@ -61,6 +60,9 @@ function PostEditBase(props: Props) {
     const [userId, setUserId] = React.useState(defaultUserId);
     const [badge, setBadge] = React.useState<Badge>(defaultBadge);
 
+    const [helperTextTitle, setHelperTextTitle] = React.useState("");
+    const [helperTextDesc, setHelperTextDesc] = React.useState("");
+
     const title = (
         <TextField
             fullWidth
@@ -68,6 +70,8 @@ function PostEditBase(props: Props) {
             variant="filled"
             defaultValue={props.header ? props.header.title : null}
             inputRef={ref => { routineHeaderRef.title = ref; }}
+            error={Boolean(helperTextTitle !== "")}
+            helperText={helperTextTitle}
         />
     );
 
@@ -79,6 +83,8 @@ function PostEditBase(props: Props) {
             variant="standard"
             defaultValue={props.header ? props.header.desc : null}
             inputRef={ref => { routineHeaderRef.desc = ref; }}
+            error={Boolean(helperTextDesc !== "")}
+            helperText={helperTextDesc}
         />
     );
 
@@ -117,6 +123,15 @@ function PostEditBase(props: Props) {
         React.useState<Array<RoutineElementRef>>([routineElementRef]);
 
 
+    const helperTextElement = {
+        title: "",
+        subtitle: "",
+        desc: "",
+    };
+    const [helperTextElementList, setHelperTextElementList] = React.useState(
+        [helperTextElement]
+    );
+
     const getIndexedRoutineElement = (idx: number) => {
         const routineElement: RoutineElementInput = {
             title: (
@@ -130,9 +145,10 @@ function PostEditBase(props: Props) {
                             : null
                     }
                     inputRef={ref => { routineElementRefList[idx].title = ref; }}
+                    error={Boolean(helperTextElementList[idx].title !== "")}
+                    helperText={helperTextElementList[idx].title}
                 />
             ),
-
             subtitle: (
                 <TextField
                     fullWidth
@@ -145,9 +161,10 @@ function PostEditBase(props: Props) {
                             : null
                     }
                     inputRef={ref => { routineElementRefList[idx].subtitle = ref; }}
+                    error={Boolean(helperTextElementList[idx].subtitle !== "")}
+                    helperText={helperTextElementList[idx].subtitle}
                 />
             ),
-
             desc: (
                 <TextField
                     fullWidth
@@ -160,9 +177,10 @@ function PostEditBase(props: Props) {
                             : null
                     }
                     inputRef={ref => { routineElementRefList[idx].desc = ref; }}
+                    error={Boolean(helperTextElementList[idx].desc !== "")}
+                    helperText={helperTextElementList[idx].desc}
                 />
             ),
-
         };
         return routineElement;
     }
@@ -279,41 +297,105 @@ function PostEditBase(props: Props) {
     };
 
     const [openCircularProgress, setOpenCircularProgress] = React.useState(false);
-    const postDraftBase = async (strPostOrDraft: string) => {
-        setOpenCircularProgress(true);
 
-        const routineElementsInputValue: Array<RoutineElement> = removeNullFromInput(routineElementRefList);
-        const res = await postOrDraftApi(
-            strPostOrDraft,
-            (props.postId ? props.postId : null),
-            (props.boolEditedDraft ? props.boolEditedDraft : false),
+    // check whether valid
+    // if not, show error & helperText
+    const isValidPost = (
+        routineHeaderRef: RoutineHeaderRef,
+        routineElementsInputValue: Array<RoutineElement>
+    ) => {
+        let concatedHelperText = "";
+
+        const helperTextTitleTmp = basicValidation(
             routineHeaderRef.title.value,
-            routineHeaderRef.desc.value,
-            hashtagAddedList.map(hashtagAdded => { return hashtagAdded.label }),        // get labels
-            routineElementsInputValue,
+            maxInputLength.postTitle
         );
+        setHelperTextTitle(helperTextTitleTmp);
+        concatedHelperText += helperTextTitleTmp;
 
-        if (res.status) {
-            const postId = res.contents.postId;
+        const helperTextDescTmp = basicValidation(
+            routineHeaderRef.desc.value,
+            maxInputLength.postDesc
+        );
+        setHelperTextDesc(helperTextDescTmp);
+        concatedHelperText += helperTextDescTmp;
 
-            if (themeImage !== "") {
-                await uploadDataURLImage(themeImage, `post-${postId}`);
+        let helperTextElementListTmp = [];
+        for (let idx = 0; idx < routineElementsInputValue.length; idx++) {
+            const routineElementsInput = routineElementsInputValue[idx];
+            const helperTextElemTitleTmp = basicValidation(
+                routineElementsInput.title,
+                maxInputLength.elementTitle,
+            );
+            const helperTextElemSubtitleTmp = basicValidation(
+                routineElementsInput.subtitle,
+                maxInputLength.elementSubtitle,
+            );
+            const helperTextElemDescTmp = basicValidation(
+                routineElementsInput.desc,
+                maxInputLength.elementDesc,
+            );
+
+            helperTextElementListTmp.push(
+                {
+                    title: helperTextElemTitleTmp,
+                    subtitle: helperTextElemSubtitleTmp,
+                    desc: helperTextElemDescTmp,
+                }
+            )
+
+            concatedHelperText += helperTextElemTitleTmp +
+                helperTextElemSubtitleTmp + helperTextElemDescTmp;
+        }
+
+        // XXX: not working
+        setHelperTextElementList(helperTextElementListTmp);
+
+        return Boolean(concatedHelperText === "");
+    }
+
+    const postDraftBase = async (strPostOrDraft: string) => {
+        const routineElementsInputValue: Array<RoutineElement> = removeNullFromInput(routineElementRefList);
+
+        const boolValidPost = isValidPost(routineHeaderRef, routineElementsInputValue);
+
+        console.log("helperText:", helperTextElementList);
+
+        if (boolValidPost) {
+            setOpenCircularProgress(true);
+
+            const res = await postOrDraftApi(
+                strPostOrDraft,
+                (props.postId ? props.postId : null),
+                (props.boolEditedDraft ? props.boolEditedDraft : false),
+                routineHeaderRef.title.value,
+                routineHeaderRef.desc.value,
+                hashtagAddedList.map(hashtagAdded => { return hashtagAdded.label }),        // get labels
+                routineElementsInputValue,
+            );
+
+            if (res.status) {
+                const postId = res.contents.postId;
+
+                if (themeImage !== "") {
+                    await uploadDataURLImage(themeImage, `post-${postId}`);
+                }
+
+                for (let key of Object.keys(indexedImageDict)) {
+                    await uploadDataURLImage(
+                        indexedImageDict[Number(key)],
+                        `post-${postId}-element-${key}`
+                    );
+                }
+
+                setOpenCircularProgress(false);
+                navigate("/mypage_login");
+            } else {
+                // force logout & redirect to login
+                localStorage.removeItem("token");
+                navigate("/login");
+                window.location.reload();
             }
-
-            for (let key of Object.keys(indexedImageDict)) {
-                await uploadDataURLImage(
-                    indexedImageDict[Number(key)],
-                    `post-${postId}-element-${key}`
-                );
-            }
-
-            setOpenCircularProgress(false);
-            navigate("/mypage_login");
-        } else {
-            // force logout & redirect to login
-            localStorage.removeItem("token");
-            navigate("/login");
-            window.location.reload();
         }
 
         try {
@@ -335,15 +417,6 @@ function PostEditBase(props: Props) {
         } catch{ }
 
     }
-
-    const handlePost = async () => {
-        await postDraftBase("post");
-    };
-
-    const handleDraft = async () => {
-        await postDraftBase("draft");
-    };
-
 
     // image
     const [openFileSelector, { filesContent, loading, clear }] = useFilePicker({
@@ -439,6 +512,10 @@ function PostEditBase(props: Props) {
         routineElementRefListTmp.push(routineElementRef);
         setRoutineElementRefList(routineElementRefListTmp);
 
+        let helperTextElementListTmp = helperTextElementList;
+        helperTextElementListTmp.push(helperTextElement);
+        setHelperTextElementList(helperTextElementListTmp);
+
         let routineElementListTmp = routineElementList;
         const newIdx = routineElementListTmp.length;
         routineElementListTmp.push(getIndexedRoutineElement(newIdx));
@@ -493,7 +570,7 @@ function PostEditBase(props: Props) {
                     variant="contained"
                     color="primary"
                     type="submit"
-                    onClick={handlePost}
+                    onClick={async () => await postDraftBase("post")}
                 >
                     POST
                 </Button>
@@ -502,7 +579,7 @@ function PostEditBase(props: Props) {
                     variant="outlined"
                     color="secondary"
                     type="submit"
-                    onClick={handleDraft}
+                    onClick={async () => await postDraftBase("draft")}
                 >
                     SAVE
                 </Button>
