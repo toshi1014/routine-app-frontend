@@ -82,9 +82,10 @@ export type ChipData = {
     label: string;
 }
 
-export type UserNameId = {
+export type UserNameIdBadge = {
     username: string;
     userId: number;
+    badge: Badge;
 }
 
 export type EmailAddress = {

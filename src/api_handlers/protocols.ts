@@ -1,6 +1,6 @@
 import {
     RoutinePackContents,
-    UserNameId,
+    UserNameIdBadge,
     Badge,
 } from "../utils/Types";
 
@@ -51,7 +51,7 @@ export type SearchResults = {
 }
 
 export type UserList = {
-    userList: Array<UserNameId>;
+    userList: Array<UserNameIdBadge>;
 }
 
 export type DbTable = {

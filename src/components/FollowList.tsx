@@ -4,14 +4,14 @@ import {
     ListItem,
     ListItemText,
     ListItemAvatar,
-    Avatar,
     Dialog,
     DialogTitle,
 } from '@mui/material';
 import { useNavigate } from "react-router-dom";
-import { UserNameId } from "../utils/Types";
+import { UserNameIdBadge } from "../utils/Types";
 import { defaultUserList } from "../utils/defaultValues";
 import { getFollowingOrFollowersApi } from "../api_handlers/handle";
+import UserAvatar from "./UserAvatar";
 
 
 type Props = {
@@ -22,12 +22,11 @@ type Props = {
 }
 
 function FollowList(props: Props) {
-    const avatarSize = 35;
     const navigate = useNavigate();
 
-    const [userList, setUserList] = React.useState<Array<UserNameId>>(defaultUserList);
+    const [userList, setUserList] = React.useState<Array<UserNameIdBadge>>(defaultUserList);
 
-    const handleClickListItem = (user: UserNameId) => {
+    const handleClickListItem = (user: UserNameIdBadge) => {
         props.onClose();
         navigate("/mypage/" + user.userId);
         window.location.reload();
@@ -56,16 +55,12 @@ function FollowList(props: Props) {
         <Dialog onClose={props.onClose} open={props.open}>
             <DialogTitle>{props.title}</DialogTitle>
             <List sx={{ pt: 0, minWidth: 200 }}>
-                {userList.map((user: UserNameId, idx: number) => (
+                {userList.map((user: UserNameIdBadge, idx: number) => (
                     <ListItem button onClick={() => handleClickListItem(user)} key={idx}>
                         <ListItemAvatar>
-                            <Avatar
-                                alt="Smiley"
-                                src={process.env.PUBLIC_URL + "/static/demo/face.png"}
-                                sx={{
-                                    width: avatarSize,
-                                    height: avatarSize,
-                                }}
+                            <UserAvatar
+                                userId={user.userId}
+                                badge="noBadge"
                             />
                         </ListItemAvatar>
                         <ListItemText primary={user.username} />

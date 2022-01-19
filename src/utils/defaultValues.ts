@@ -1,7 +1,7 @@
 import {
     RoutineHeader,
     RoutineElement,
-    UserNameId,
+    UserNameIdBadge,
 } from "./Types";
 
 
@@ -60,17 +60,20 @@ export const defaultElementList: Array<RoutineElement> = [
 
 export const defaultPostId = 0;
 
-export const defaultUserList: Array<UserNameId> = [
+export const defaultUserList: Array<UserNameIdBadge> = [
     {
         username: "Alice",
         userId: 1,
+        badge: "noBadge",
     },
     {
         username: "Bob",
         userId: 2,
+        badge: "l1",
     },
     {
         username: "Chris",
         userId: 3,
+        badge: "l2",
     },
 ];
