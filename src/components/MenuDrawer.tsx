@@ -14,9 +14,7 @@ import {
     Avatar,
     Collapse,
 } from "@mui/material";
-import {
-    styled,
-} from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import WebIcon from '@mui/icons-material/Web';
 import HomeIcon from '@mui/icons-material/Home';
@@ -27,13 +25,24 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
     Link,
+    useNavigate,
 } from "react-router-dom";
+import { decodeJwt } from "../utils/utils";
+import UserAvatar from "./UserAvatar";
 
 
 // TEMP:
-const username = "John Smith";
-const email = "john.smith@gmail.com";
-const userinfo = "foo";
+const defaultUsername = "Guest";
+const defaultEmail = "";
+
+const token = localStorage.getItem("token")
+const boolLoginStatus = (token === null) ? false : true;
+
+const username = (token === null) ? defaultUsername : decodeJwt(token).username;
+const userId = (token === null) ? defaultUsername : decodeJwt(token).id;
+const email = (token === null) ? defaultEmail : decodeJwt(token).email;
+const badge = (token === null) ? defaultEmail : decodeJwt(token).badge;
+const userinfo = "foo";     // TEMP: user info @ MenuDrawer
 
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -73,7 +82,7 @@ const upperIconNameList: Array<IconName> = [
     {
         icon: <HomeIcon />,
         name: "MyPage",
-        link: "mypage",
+        link: "mypage_login",
     },
     {
         icon: <PostAddIcon />,
@@ -83,41 +92,50 @@ const upperIconNameList: Array<IconName> = [
     {
         icon: <SearchIcon />,
         name: "Search",
-        link: "search_results",
+        link: "search_results/",
     },
 ];
 
-const lowerIconNameList: Array<IconName> = [
-    {
-        icon: <LoginIcon />,
-        name: "Login",
-        link: "login"
-    },
+const loginOrLogout: IconName = (boolLoginStatus) ?
     {
         icon: <LogoutIcon />,
         name: "Logout",
         link: "",        // TEMP: link for logout
-    },
+    }
+    :
+    {
+        icon: <LoginIcon />,
+        name: "Login",
+        link: "login"
+    };
+
+const lowerIconNameList: Array<IconName> = [
+    loginOrLogout,
 ];
 
 
 function MenuDrawer(props: Props) {
-    const avatarSize = 35;
+    const navigate = useNavigate();
 
     const [expanded, setExpanded] = React.useState(false);
     const handleExpandMoreClick = () => {
         setExpanded(!expanded);
     };
 
+    const handleLogout = (link: string) => {
+        localStorage.removeItem("token");
+        navigate(link);
+        window.location.reload();
+    }
+
     const myStatus = (
         <Card sx={{ maxWidth: 345 }}>
             <CardHeader
                 avatar={
-                    <Avatar
-                        alt="Smiley"
-                        src="static/demo/face.jpg"
-                        sx={{ width: avatarSize, height: avatarSize }}
-                    />
+                    (username === defaultUsername ?
+                        <Avatar src="/broken-image" />
+                        : <UserAvatar userId={userId} badge={badge} />
+                    )
                 }
                 title={username}
                 subheader={email}
@@ -180,7 +198,14 @@ function MenuDrawer(props: Props) {
                         }}
                         key={idx}
                     >
-                        <ListItem button>
+                        <ListItem
+                            button
+                            onClick={() => {
+                                if (iconNameLink.name === "Logout") {
+                                    handleLogout(iconNameLink.link);
+                                }
+                            }}
+                        >
                             <ListItemIcon>
                                 {iconNameLink.icon}
                             </ListItemIcon>
@@ -191,6 +216,7 @@ function MenuDrawer(props: Props) {
             </List>
         </Box>
     );
+
 
     return (
         <div>

@@ -13,39 +13,37 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import {
+    useNavigate,
+} from "react-router-dom";
+import {
     RoutinePackContents,
-    MenuChildProps,
     ChipData,
 } from "../utils/Types";
 import MyPageBase from "./MyPageBase";
 import { ListItem } from "../utils/ListItem";
-
-
-// TEMP:
-const hashtagList = [
-    "fishing",
-    "hobby",
-    "cooking",
-    "DIY",
-    "English",
-    "workout",
-];
-const usernameOrgn = "John Smith";
-const contributor = usernameOrgn;
-const hashtagListOrgn: Array<ChipData> = hashtagList.map((val: string, idx: number) => {
-    return {
-        key: idx,
-        label: val,
-    }
-});
-const title = "Happy Coding";
-const desc = "Best Way to Create App, set aside off of the heat to let rest for 10 minutes, and then serve.";
-const lastUpdated = "2021, Dec 31";
-const titleStep1 = "Buy Computer";
-const descStep1 = "Choose best computer for you, set aside off of the heat to let rest for 10 minutes, and then serve.";
-const statusMessageOrgn = "G'day!";
-const followersNum = 10;
-const followingNum = 10;
+import {
+    getMypageLoginApi,
+    updateUserInfoApi,
+} from "../api_handlers/handle";
+import HashtagLink from "./HashtagLink";
+import {
+    defaultId,
+    defaultUsername,
+    defaultStatusMessage,
+    defaultHashtagList,
+    defaultHashtagAddedList,
+    defaultFollowingNum,
+    defaultFollowersNum,
+    defaultTitle,
+    defaultContributor,
+    defaultContributorId,
+    defaultBadge,
+    defaultDesc,
+    defaultTitleStep1,
+    defaultDescStep1,
+    defaultLike,
+} from "../utils/defaultValues";
+import { Badge } from "../utils/Types";
 
 
 enum EnumTextFieldLabel {
@@ -53,9 +51,21 @@ enum EnumTextFieldLabel {
     StatusMessage = "Edit Status Message",
 }
 
+
 function MyPageLogin() {
-    const [username, setUsername] = React.useState(usernameOrgn);
-    const [statusMessage, setStatusMessage] = React.useState(statusMessageOrgn);
+    const navigate = useNavigate();
+
+    const [username, setUsername] = React.useState(defaultUsername);
+    const [usernameOrgn, setUsernameOrgn] = React.useState(defaultUsername);
+    const contributor = usernameOrgn;
+    const [badge, setBadge] = React.useState<Badge>(defaultBadge);
+    const [statusMessage, setStatusMessage] = React.useState(defaultStatusMessage);
+    const [hashtagList, setHashtagList] = React.useState<Array<string>>(defaultHashtagList);
+    const [followingNum, setFollowingNum] = React.useState(defaultFollowingNum);
+    const [followersNum, setFollowersNum] = React.useState(defaultFollowersNum);
+    const [Facebook, setFacebook] = React.useState("");
+    const [Twitter, setTwitter] = React.useState("");
+    const [Instagram, setInstagram] = React.useState("");
 
     const [textInputValue, setTextInputValue] = React.useState("");
     const handleTextInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,12 +85,24 @@ function MyPageLogin() {
 
     const [textFieldLabel, setTexFieldLabel] = React.useState("");
 
-    const handleChangeClick = () => {
+    const updateUserInfoWrapper = async (column: string, val: string) => {
+        const res = await updateUserInfoApi(column, val);
+        if (!res.status) {
+            // force logout & redirect to login
+            localStorage.removeItem("token");
+            navigate("/login");
+            window.location.reload();
+        }
+    }
+
+    const handleChangeClick = async () => {
         if (textFieldLabel === EnumTextFieldLabel.Username) {
             setUsername(textInputValue);
-            console.log("username changed");
+            await updateUserInfoWrapper("username", textInputValue);
+            console.log("username changed successfully");
         } else if (textFieldLabel === EnumTextFieldLabel.StatusMessage) {
             setStatusMessage(textInputValue);
+            await updateUserInfoWrapper("status_message", textInputValue);
             console.log("statusMessage changed");
         } else {
             throw new Error;
@@ -88,16 +110,17 @@ function MyPageLogin() {
     };
 
     const usernameEdit = (
-        <h1>
+        <Typography variant="h4">
             {username}
             <IconButton onClick={handleEditUsername}>
                 <EditIcon />
             </IconButton>
-        </h1>
+        </Typography>
     );
 
     const statusMessageEdit = (
-        <Typography paragraph>{statusMessage}
+        <Typography variant="body1">
+            {statusMessage}
             <IconButton onClick={handleEditStatusMessage}>
                 <EditIcon fontSize="small" />
             </IconButton>
@@ -107,9 +130,9 @@ function MyPageLogin() {
 
     // hashtag
     const [hashtagAddedList, setHashtagAddedList] =
-        React.useState<Array<ChipData>>(hashtagListOrgn);
+        React.useState<Array<ChipData>>(defaultHashtagAddedList);
 
-    const handleAddHashtag = () => {
+    const handleAddHashtag = async () => {
         hashtagRef.value = hashtagRef.value.replace(/\s/g, '');
         if (hashtagRef.value !== "") {
             let hashtagAddedListTmp = hashtagAddedList;
@@ -125,6 +148,12 @@ function MyPageLogin() {
             console.log("Hashtag added");
 
             setHashtagAddedList(hashtagAddedListTmp);
+            await updateUserInfoWrapper(
+                "hashtag_list",
+                hashtagAddedListTmp.map(hashtagAdded => {
+                    return hashtagAdded.label
+                }).join(",")        // get label & concat with ","
+            );
             hashtagRef.value = "";
             update();
         }
@@ -141,10 +170,9 @@ function MyPageLogin() {
 
     const hashtagChipList = hashtagAddedList.map((hashtagAdded: ChipData) =>
         <ListItem key={hashtagAdded.key}>
-            <Chip
-                label={"# " + hashtagAdded.label}
+            <HashtagLink
+                hashtag={hashtagAdded.label}
                 onDelete={handleDeleteHashtag(hashtagAdded)}
-                key={hashtagAdded.key}
             />
         </ListItem>
     );
@@ -182,41 +210,26 @@ function MyPageLogin() {
     );
     // end; hashtag
 
-    const postedList: Array<RoutinePackContents> = [
-        {
-            contributor: contributor,
-            title: title,
-            desc: desc,
-            lastUpdated: lastUpdated,
-            titleStep1: titleStep1,
-            descStep1: descStep1,
-        },
-        {
-            contributor: contributor,
-            title: title,
-            desc: desc,
-            lastUpdated: lastUpdated,
-            titleStep1: titleStep1,
-            descStep1: descStep1,
-        },
-    ];
-    const faboriteList = postedList;
-    const draftList = postedList;
+    const [postedList, setPostedList] =
+        React.useState<Array<RoutinePackContents>>([
+            {
+                id: defaultId,
+                contributor: defaultContributor,
+                contributorId: defaultContributorId,
+                badge: defaultBadge,
+                title: defaultTitle,
+                desc: defaultDesc,
+                titleStep1: defaultTitleStep1,
+                descStep1: defaultDescStep1,
+                like: defaultLike,
+            }
+        ]);
 
-    // Menu
-    const [searchBoxValue, setSearchBoxValue] = React.useState("");
-    const handleSearchBox = (
-        event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-    ) => {
-        const input = event.target.value;
-        setSearchBoxValue(input);
-    }
-    const menuChildProps: MenuChildProps = {
-        searchBoxValue: searchBoxValue,
-        setSearchBoxValue: setSearchBoxValue,
-        handleSearchBox: handleSearchBox,
-    }
-    // end; Menu
+    const [favoriteList, setFavoriteList] =
+        React.useState<Array<RoutinePackContents>>(postedList);
+
+    const [draftList, setDraftList] =
+        React.useState<Array<RoutinePackContents>>(postedList);
 
     const [openBackdrop, setOpenBackdrop] = React.useState(false);
     const [focusTextInput, setFocusTextInput] = React.useState(false);
@@ -247,6 +260,45 @@ function MyPageLogin() {
     }, [foo]);
     // end; XXX
 
+    React.useEffect(() => {
+        const init = async () => {
+            const res = await getMypageLoginApi();
+            if (res.status) {
+                setUsername(res.contents.header.username);
+                setUsernameOrgn(res.contents.header.username);
+                setBadge(res.contents.header.badge);
+                setStatusMessage(res.contents.header.statusMessage);
+                setHashtagList(res.contents.header.hashtagList);
+
+                const hashtagAddedListTmp: Array<ChipData> =
+                    res.contents.header.hashtagList.map((val: string, idx: number) => {
+                        return {
+                            key: idx,
+                            label: val,
+                        }
+                    });
+                setHashtagAddedList(hashtagAddedListTmp);
+                setFollowingNum(res.contents.header.followingNum);
+                setFollowersNum(res.contents.header.followersNum);
+                setFacebook(res.contents.header.Facebook);
+                setTwitter(res.contents.header.Twitter);
+                setInstagram(res.contents.header.Instagram);
+                setPostedList(res.contents.postedList);
+                setFavoriteList(res.contents.favoriteList);
+                setDraftList(res.contents.draftList);
+                console.log("contents:", res.contents);
+            } else {
+                console.log("is_authentication failed");
+
+                // force logout & redirect to login
+                localStorage.removeItem("token");
+                navigate("/login");
+                window.location.reload();
+            }
+        }
+        init();
+    }, [])
+
 
     return (
         <div>
@@ -273,16 +325,19 @@ function MyPageLogin() {
 
             <MyPageBase
                 usernameComp={usernameEdit}
+                badge={badge}
                 statusMessageComp={statusMessageEdit}
                 followingNum={followingNum}
                 followersNum={followersNum}
+                Facebook={Facebook}
+                Twitter={Twitter}
+                Instagram={Instagram}
                 hashtagList={hashtagList}
                 hashtagChipList={hashtagChipList}
                 chipInputComp={hashtagInput}
                 postedList={postedList}
-                faboriteList={faboriteList}
+                favoriteList={favoriteList}
                 draftList={draftList}
-                menuChildProps={menuChildProps}
             />
         </div>
     );

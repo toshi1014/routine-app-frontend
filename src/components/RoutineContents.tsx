@@ -1,82 +1,74 @@
 import React from 'react';
-import {
-    Chip,
-} from "@mui/material";
 import { RoutineHeader, RoutineElement } from "../utils/Types";
 import ContentsBase from "./ContentsBase";
 import { ListItem } from "../utils/ListItem";
-
-
-// TEMP:
-const title = "Fishing for Biginners";
-const desc = "Firstly, Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a";
-const like = 30;
-const contributor = "John Smith";
-const lastUpdated = "2021, Jul 4";
-const hashtagList = [
-    "fishing",
-    "hoby",
-];
-
-
-const routineElementList: Array<RoutineElement> = [
-    {
-        title: "Go to fishing shops",
-        subtitle: "Why not?",
-        desc: "Firstly, Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a",
-        imagePath: "logo192.png",
-    },
-    {
-        title: "Buy goods",
-        subtitle: "e.g. hooks, rots",
-        desc: "I recommend you to ...",
-        imagePath: "logo192.png",
-    },
-    {
-        title: "Go to sea",
-        subtitle: "Beware the sunburn",
-        desc: "When you get...",
-        imagePath: "logo192.png",
-    },
-]
+import { getContentsApi } from "../api_handlers/handle";
+import HashtagLink from "./HashtagLink";
+import ErrorPage from "./ErrorPage";
+import {
+    defaultHeader,
+    defaultElementList,
+} from "../utils/defaultValues";
 
 
 function RoutineContents() {
-    const routineHeader: RoutineHeader = {
-        title: title,
-        desc: desc,
-        hashtagList: hashtagList,
-        like: like,
-        contributor: contributor,
-        lastUpdated: lastUpdated,
-    };
+    const href = window.location.href;
+    const splitHref = href.split('/');
+    const splitHrefLength = splitHref.length;
+    const id = Number(splitHref[splitHrefLength - 1]);
 
-    const handleFavorite = () => {
-        console.log("Favorite");
-    }
+    const [header, setHeader] = React.useState<RoutineHeader>(defaultHeader);
+    const [elementList, setElementList] = React.useState<Array<RoutineElement>>(defaultElementList);
 
-    const handleShare = () => {
-        console.log("Share");
-    }
-
-    const hashtagChipList = hashtagList.map((hashtag: string, idx: number) =>
+    const defaultHashtagChipList = defaultHeader.hashtagList.map((hashtag: string, idx: number) =>
         <ListItem key={idx}>
-            <Chip clickable label={"# " + hashtag} key={idx} />
+            <HashtagLink
+                hashtag={hashtag}
+                key={idx}
+            />
         </ListItem>
     );
+    const [hashtagChipList, setHashtagChipList] = React.useState<Array<React.ReactElement>>(defaultHashtagChipList);
 
-    const handlePost = () => {
-        throw new Error("Should never be called")
-    }
+    const [apiErrorMessage, setApiErrorMessage] = React.useState("");
+
+    React.useEffect(() => {
+        const init = async () => {
+            const res = await getContentsApi(id);
+
+            if (res.status) {
+                console.log(res.contents);
+                setHeader(res.contents.header);
+                setElementList(res.contents.elementList);
+                const hashtagChipListTmp = res.contents.header.hashtagList.map((hashtag: string, idx: number) =>
+                    <ListItem key={idx}>
+                        <HashtagLink
+                            hashtag={hashtag}
+                            key={idx}
+                        />
+                    </ListItem>
+                );
+                setHashtagChipList(hashtagChipListTmp);
+            } else {
+                setApiErrorMessage(res.errorMessage);
+            }
+        }
+
+        if (id !== 0) {
+            init();
+        }
+    }, [])
+
 
     return (
-        <ContentsBase
-            routineHeader={routineHeader}
-            routineElementList={routineElementList}
-            hashtagChipList={hashtagChipList}
-            handleFavorite={handleFavorite}
-            handleShare={handleShare}
-        />
+        apiErrorMessage === ""
+            ? <ContentsBase
+                id={id}
+                routineHeader={header}
+                routineElementList={elementList}
+                hashtagChipList={hashtagChipList}
+            />
+            : <ErrorPage errorMessage={apiErrorMessage} />
     );
 }
 

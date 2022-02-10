@@ -1,96 +1,121 @@
 import React from 'react';
-import {
-    Typography,
-    Chip,
-} from "@mui/material";
-import { RoutinePackContents, MenuChildProps } from "../utils/Types";
+import { Typography } from "@mui/material";
 import MyPageBase from "./MyPageBase";
 import { ListItem } from "../utils/ListItem";
-
-
-// TEMP:
-const hashtagList = [
-    "fishing",
-    "hobby",
-    "cooking",
-    "DIY",
-    "English",
-    "workout",
-];
-const username = "John Smith";
-const contributor = username;
-const title = "Happy Coding";
-const desc = "Best Way to Create App, set aside off of the heat to let rest for 10 minutes, and then serve.";
-const lastUpdated = "2021, Dec 31";
-const titleStep1 = "Buy Computer";
-const descStep1 = "Choose best computer for you, set aside off of the heat to let rest for 10 minutes, and then serve.";
-const statusMessage = "G'day!";
-const followersNum = 10;
-const followingNum = 10;
+import HashtagLink from "./HashtagLink";
+import ErrorPage from "./ErrorPage";
+import { getMypageApi } from "../api_handlers/handle";
+import {
+    RoutinePackContents,
+    Badge,
+} from "../utils/Types";
+import {
+    defaultId,
+    defaultUsername,
+    defaultStatusMessage,
+    defaultHashtagList,
+    defaultFollowingNum,
+    defaultFollowersNum,
+    defaultTitle,
+    defaultContributor,
+    defaultContributorId,
+    defaultBadge,
+    defaultDesc,
+    defaultTitleStep1,
+    defaultDescStep1,
+    defaultLike,
+} from "../utils/defaultValues";
 
 
 function MyPage() {
-    const usernameComp = (
-        <h1>{username}</h1>
-    );
-    const statusMessageComp = (
-        <Typography paragraph>{statusMessage}</Typography>
-    );
+    const href = window.location.href;
+    const splitHref = href.split('/');
+    const splitHrefLength = splitHref.length;
+    const userId = Number(splitHref[splitHrefLength - 1]);
 
-    const postedList: Array<RoutinePackContents> = [
-        {
-            contributor: contributor,
-            title: title,
-            desc: desc,
-            lastUpdated: lastUpdated,
-            titleStep1: titleStep1,
-            descStep1: descStep1,
-        },
-        {
-            contributor: contributor,
-            title: title,
-            desc: desc,
-            lastUpdated: lastUpdated,
-            titleStep1: titleStep1,
-            descStep1: descStep1,
-        },
-    ];
-    const faboriteList = postedList;
+    const [username, setUsername] = React.useState(defaultUsername);
+    const [badge, setBadge] = React.useState<Badge>(defaultBadge);
+    const [statusMessage, setStatusMessage] = React.useState(defaultStatusMessage);
+    const [hashtagList, setHashtagList] = React.useState<Array<string>>(defaultHashtagList);
+    const [followingNum, setFollowingNum] = React.useState(defaultFollowingNum);
+    const [followersNum, setFollowersNum] = React.useState(defaultFollowersNum);
+    const [Facebook, setFacebook] = React.useState("");
+    const [Twitter, setTwitter] = React.useState("");
+    const [Instagram, setInstagram] = React.useState("");
 
-    // Menu
-    const [searchBoxValue, setSearchBoxValue] = React.useState("");
-    const handleSearchBox = (
-        event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-    ) => {
-        const input = event.target.value;
-        setSearchBoxValue(input);
-    }
-    const menuChildProps: MenuChildProps = {
-        searchBoxValue: searchBoxValue,
-        setSearchBoxValue: setSearchBoxValue,
-        handleSearchBox: handleSearchBox,
-    }
-    // end; Menu
-
+    // hashtag
     const hashtagChipList = hashtagList.map((hashtag: string, idx: number) =>
         <ListItem key={idx}>
-            <Chip clickable label={"# " + hashtag} key={idx} />
+            <HashtagLink
+                hashtag={hashtag}
+            />
         </ListItem>
     );
+    // end; hashtag
+
+    const [postedList, setPostedList] =
+        React.useState<Array<RoutinePackContents>>([
+            {
+                id: defaultId,
+                contributor: defaultContributor,
+                contributorId: defaultContributorId,
+                badge: defaultBadge,
+                title: defaultTitle,
+                desc: defaultDesc,
+                titleStep1: defaultTitleStep1,
+                descStep1: defaultDescStep1,
+                like: defaultLike,
+            }
+        ]);
+
+    const [favoriteList, setFavoriteList] =
+        React.useState<Array<RoutinePackContents>>(postedList);
+
+    const [apiErrorMessage, setApiErrorMessage] = React.useState("");
+
+    React.useEffect(() => {
+        const init = async () => {
+            const res = await getMypageApi(userId);
+            if (res.status) {
+                setUsername(res.contents.header.username);
+                setBadge(res.contents.header.badge);
+                setStatusMessage(res.contents.header.statusMessage);
+                setHashtagList(res.contents.header.hashtagList);
+                setFollowingNum(res.contents.header.followingNum);
+                setFollowersNum(res.contents.header.followersNum);
+                setFacebook(res.contents.header.Facebook);
+                setTwitter(res.contents.header.Twitter);
+                setInstagram(res.contents.header.Instagram);
+                setPostedList(res.contents.postedList);
+                setFavoriteList(res.contents.favoriteList);
+            } else {
+                setApiErrorMessage(res.errorMessage);
+            }
+        }
+        if (userId !== 0) {
+            init();
+        }
+    }, [])
 
 
     return (
-        <MyPageBase
-            usernameComp={usernameComp}
-            statusMessageComp={statusMessageComp}
-            followingNum={followingNum}
-            followersNum={followersNum}
-            hashtagList={hashtagList}
-            hashtagChipList={hashtagChipList}
-            postedList={postedList}
-            faboriteList={faboriteList}
-            menuChildProps={menuChildProps}
-        />
+        apiErrorMessage === ""
+            ?
+            <MyPageBase
+                usernameComp={<Typography variant="h4">{username}</Typography>}
+                badge={badge}
+                statusMessageComp={<Typography variant="body1">{statusMessage}</Typography>}
+                followingNum={followingNum}
+                followersNum={followersNum}
+                Facebook={Facebook}
+                Twitter={Twitter}
+                Instagram={Instagram}
+                hashtagList={hashtagList}
+                hashtagChipList={hashtagChipList}
+                postedList={postedList}
+                favoriteList={favoriteList}
+            />
+            : <ErrorPage errorMessage={apiErrorMessage} />
     );
 }
 

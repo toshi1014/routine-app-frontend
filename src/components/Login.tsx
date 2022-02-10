@@ -2,21 +2,26 @@ import React from 'react';
 import {
     Stack,
     Button,
+    Typography,
 } from "@mui/material";
 import {
     Link,
+    useNavigate,
 } from "react-router-dom";
 import LoginSignupBase from "./LoginSignupBase";
 import {
     isValidEmail,
     isValidPassword,
 } from "../utils/validations";
-import {
-    ValidationStatus,
-} from "../utils/Types";
+import { ValidationStatus } from "../utils/Types";
+import { loginApi } from "../api_handlers/handle";
+import { downloadImageURL } from "../firebase/handler";
+import { decodeJwt } from "../utils/utils";
 
 
 function Login() {
+    const navigate = useNavigate();
+
     const [errorEmail, setErrorEmail] = React.useState(false);
     const [errorPassword, setErrorPassword] = React.useState(false);
 
@@ -33,11 +38,11 @@ function Login() {
         }
     }
 
-    const isValid = () => {
+    const isValid = async () => {
         const email = inputRef.email.value;
         const password = inputRef.password.value;
 
-        const emailStatus: ValidationStatus = isValidEmail(email);
+        const emailStatus: ValidationStatus = await isValidEmail(email, false);
         const passwordStatus: ValidationStatus = isValidPassword(password);
 
         setErrorEmail(!emailStatus.boolValid);
@@ -50,18 +55,37 @@ function Login() {
     };
 
 
-    const handleLogin = () => {
-        if ((inputRef.email.value !== "") && (inputRef.password.value !== "")) {
-            const valid = isValid();
+    const handleLogin = async () => {
+        const email = inputRef.email.value;
+        const password = inputRef.password.value;
+
+        if ((email !== "") && (password !== "")) {
+            const valid = await isValid();
 
             console.log("==========================");
             if (valid) {
                 console.log("valid");
+
+                const boolSuccess = await loginApi(email, password);
+                if (boolSuccess) {
+                    // store my avatar
+                    const token = localStorage.getItem("token")
+                    const myId = (token === null) ? null : decodeJwt(token).id;
+                    const imageURL = await downloadImageURL("avatar-" + myId);
+                    localStorage.setItem("myAvatar", imageURL);
+
+                    navigate("/mypage_login");
+                    window.location.reload();
+                } else {
+                    setErrorMessage("login failed");
+                    setOpenSnackBar(true);
+                }
+
             } else {
                 console.log("invalid");
             }
-            console.log(inputRef.email.value);
-            console.log(inputRef.password.value);
+            console.log("email:", email);
+            console.log("password: ", password);
         }
     }
 
@@ -74,25 +98,39 @@ function Login() {
                 onClick={handleLogin}
             >
                 Login
-                </Button>
+            </Button>
         ),
     ];
 
     const uniqueComp = (
-        <Stack direction="row" spacing={1}>
-            <p>New to Foo?</p>
-            <div>
-                <Link
-                    to="/signup"
-                    style={{
-                        textDecoration: "none"
-                    }}
-                >
-                    <Button sx={{ my: 1 }}>Singup!</Button>
-                </Link>
-            </div>
+        <Stack direction="row" spacing={1} alignItems="center">
+            <Typography variant="body1">New to Foo?</Typography>
+
+            <Link
+                to="/signup"
+                style={{
+                    textDecoration: "none"
+                }}
+            >
+                <Button sx={{ my: 1 }}>Singup!</Button>
+            </Link>
         </Stack>
     );
+
+    // error snackbar
+    const [errorMessage, setErrorMessage] = React.useState("");
+    const [openSnackBar, setOpenSnackBar] = React.useState(false);
+    const handleCloseSnackBar = (
+        event?: React.SyntheticEvent,
+        reason?: string
+    ) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setOpenSnackBar(false);
+    };
+    // end; error snackbar
+
 
     return (
         <LoginSignupBase
@@ -104,6 +142,10 @@ function Login() {
             helperTextPassword={helperTextPassword}
             elementList={elementList}
             uniqueComp={uniqueComp}
+
+            openSnackBar={openSnackBar}
+            handleCloseSnackBar={handleCloseSnackBar}
+            errorMessage={errorMessage}
         />
     );
 }

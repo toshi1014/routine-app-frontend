@@ -5,13 +5,13 @@ import {
     Grid,
     Typography,
     Container,
+    Alert,
     Stack,
-    Button,
+    Snackbar,
     CardContent,
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import KeyIcon from "@mui/icons-material/Key";
-import CheckIcon from '@mui/icons-material/Check';
 
 
 type InputRef = {
@@ -31,77 +31,92 @@ type Props = {
     errorPassword: boolean;
     helperTextPassword: string;
     elementList: Array<React.ReactElement>;
+    disableTextField?: boolean;
     uniqueComp?: React.ReactElement;
+
+    openSnackBar: boolean;
+    handleCloseSnackBar: () => void;
+    errorMessage: string;
 }
 
 
 function LoginSignupBase(props: Props) {
     const emailComp = (
         <Grid item>
-            <AccountCircleIcon
-                sx={{
-                    fontSize: 40,
-                    mx: 2,
-                    my: 0.5,
-                }}
-            />
-            <TextField
-                variant="outlined"
-                label="Email Address"
-                error={props.errorEmail}
-                helperText={props.helperTextEmail}
-                inputRef={ref => { props.inputRef.email = ref; }}
-            />
+            <Stack direction="row" spacing={2} alignItems="center">
+                <AccountCircleIcon sx={{ fontSize: 40 }}/>
+                <TextField
+                    variant="outlined"
+                    label="Email Address"
+                    disabled={props.disableTextField}
+                    error={props.errorEmail}
+                    helperText={props.helperTextEmail}
+                    inputRef={ref => { props.inputRef.email = ref; }}
+                />
+            </Stack>
         </Grid>
     );
 
     const passwordComp = (
         <Grid item>
-            <KeyIcon
-                sx={{
-                    fontSize: 40,
-                    mx: 2,
-                    my: 0.5,
-                }}
-            />
-            <TextField
-                variant="outlined"
-                label="Password"
-                type="password"
-                error={props.errorPassword}
-                helperText={props.helperTextPassword}
-                inputRef={ref => { props.inputRef.password = ref; }}
-            />
+            <Stack direction="row" spacing={2} alignItems="center">
+                <KeyIcon sx={{ fontSize: 40 }}/>
+                <TextField
+                    variant="outlined"
+                    label="Password"
+                    type="password"
+                    disabled={props.disableTextField}
+                    error={props.errorPassword}
+                    helperText={props.helperTextPassword}
+                    inputRef={ref => { props.inputRef.password = ref; }}
+                />
+            </Stack>
         </Grid>
     );
 
+
     return (
-        <Container maxWidth="sm">
-            <h1>{props.header}</h1>
-            <Paper variant="outlined" sx={{ width: 450 }}>
-                <CardContent sx={{ my: 3 }}>
-                    <Grid
-                        container
-                        direction="column"
-                        spacing={2}
-                        justifyContent="center"
-                        alignItems="center"
-                    >
-                        {emailComp}
-                        {passwordComp}
+        <div>
+            <Snackbar
+                open={props.openSnackBar}
+                onClose={props.handleCloseSnackBar}
+                anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                }}
+            >
+                <Alert severity="error" onClose={props.handleCloseSnackBar}>
+                    {props.errorMessage}
+                </Alert>
+            </Snackbar>
 
-                        {props.elementList.map((element: React.ReactElement, idx: number) =>
-                            <Grid item key={idx}>
-                                {element}
-                            </Grid>
-                        )}
-                    </Grid>
-                </CardContent>
-            </Paper>
+            <Container maxWidth="sm">
+                <Typography variant="h4" sx={{ mt: 5, mb: 3 }}>{props.header}</Typography>
+                <Paper variant="outlined" sx={{ maxWidth: 450 }}>
+                    <CardContent sx={{ my: 3 }}>
+                        <Grid
+                            container
+                            direction="column"
+                            spacing={2}
+                            justifyContent="center"
+                            alignItems="center"
+                        >
+                            {emailComp}
+                            {passwordComp}
 
-            {props.uniqueComp}
+                            {props.elementList.map((element: React.ReactElement, idx: number) =>
+                                <Grid item key={idx}>
+                                    {element}
+                                </Grid>
+                            )}
+                        </Grid>
+                    </CardContent>
+                </Paper>
 
-        </Container>
+                {props.uniqueComp}
+
+            </Container>
+        </div>
     );
 }
 

@@ -1,19 +1,10 @@
-import {
-} from "@mui/material";
-import {
-    Link,
-} from "react-router-dom";
+import React from 'react';
 import ApplicationBar from "./ApplicationBar";
-
-// TEMP:
-const boolLoginStatus = true;
 
 function Header() {
     return (
         <div>
-            <ApplicationBar
-                boolLoginStatus={boolLoginStatus}
-            />
+            <ApplicationBar />
         </div>
     );
 }

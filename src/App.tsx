@@ -18,6 +18,9 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import MyPage from "./components/MyPage";
 import MyPageLogin from "./components/MyPageLogin";
+import Edit from "./components/Edit";
+import ErrorPage from "./components/ErrorPage";
+import Admin from "./components/Admin";
 import Debug from "./components/Debug";
 
 
@@ -41,14 +44,18 @@ function App() {
                 <Header />
                 <Routes>
                     <Route path="/" element={<Top />} />
-                    <Route path="/routine_contents" element={<RoutineContents />} />
-                    <Route path="/search_results" element={<SearchResults />} />
+                    <Route path="/routine_contents/:id" element={<RoutineContents />} />
+                    <Route path="/search_results/" element={<SearchResults />} />
+                    <Route path="/search_results/:keyword/:tagret/:page" element={<SearchResults />} />
                     <Route path="/post" element={<Post />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<Signup />} />
-                    <Route path="/mypage" element={<MyPage />} />
+                    <Route path="/mypage/:userId" element={<MyPage />} />
                     <Route path="/mypage_login" element={<MyPageLogin />} />
+                    <Route path="/mypage_login/edit/:postOrDraft/:id" element={<Edit />} />
+                    <Route path="/admin" element={<Admin />} />
                     <Route path="/debug" element={<Debug />} />
+                    <Route path="*" element={<ErrorPage errorMessage="Page not found"/>} />
                 </Routes>
                 <Footer />
             </BrowserRouter>

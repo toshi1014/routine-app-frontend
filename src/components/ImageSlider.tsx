@@ -11,25 +11,25 @@ function ImageSlider() {
     const items = range(1, slideImageNum + 1).map((idx: number) =>
         <img
             src={
-                "static/slide_images/slide_image" + idx + ".png"
+                process.env.PUBLIC_URL + "/static/slide_images/slide_image" + idx + ".png"
             }
+            width="100%"
+            height="100%"
             onDragStart={handleDragStart}
             role="presentation"
         />
     );
 
     return (
-        <div>
-            <AliceCarousel
-                mouseTracking
-                items={items}
-                autoPlay={true}
-                autoPlayInterval={4000}
-                animationDuration={2000}
-                infinite={true}
-                disableButtonsControls={true}
-            />
-        </div>
+        <AliceCarousel
+            mouseTracking
+            items={items}
+            autoPlay={true}
+            autoPlayInterval={4000}
+            animationDuration={2000}
+            infinite={true}
+            disableButtonsControls={true}
+        />
     );
 }
 

@@ -3,9 +3,7 @@ import {
     Paper,
     Grid,
     CardContent,
-    Container,
     Box,
-    Chip,
 } from "@mui/material";
 import AliceCarousel from 'react-alice-carousel';
 import "react-alice-carousel/lib/alice-carousel.css";
@@ -15,73 +13,59 @@ import SearchBox from './SearchBox';
 import { range } from "../utils/utils";
 import useWindowSize from "../utils/useWindowSize";
 import { ListItem } from "../utils/ListItem";
+import HashtagLink from "./HashtagLink";
+import {
+    defaultTitle,
+    defaultContributor,
+    defaultContributorId,
+    defaultDesc,
+    defaultTitleStep1,
+    defaultDescStep1,
+    defaultLike,
+    defaultHashtagList,
+} from "../utils/defaultValues";
+import { Badge } from "../utils/Types";
 
 
 // TEMP:
-const hashtagList = [
-    "fishing",
-    "hobby",
-    "cooking",
-    "DIY",
-    "English",
-    "workout",
+const badgeList: Array<Badge> = ["noBadge", "l1", "l2", "l3"];
+
+const menuContentList = [
+    "All",
+    "Trend",
+    "Popular",
+    "Hashtag",
 ];
-const menuContentList = hashtagList;
-const contributor = "John Smith";
-const title = "Happy Coding";
-const desc = "Best Way to Create App, set aside off of the heat to let rest for 10 minutes, and then serve.";
-const lastUpdated = "2021, Dec 31";
-const titleStep1 = "Buy Computer";
-const descStep1 = "Choose best computer for you, set aside off of the heat to let rest for 10 minutes, and then serve.";
 
 
 function Top() {
     const [innerWidth, innerHeight] = useWindowSize();
-    const [searchBoxValue, setSearchBoxValue] = React.useState("");
 
-    const polularHashtagChipList = hashtagList.map((hashtag: string, idx: number) =>
+    const xxxWidth = 450;
+
+    const polularHashtagChipList = defaultHashtagList.map((hashtag: string, idx: number) =>
         <ListItem key={idx}>
-            <Chip clickable label={"# " + hashtag} key={idx} />
+            <HashtagLink
+                hashtag={hashtag}
+                key={idx}
+            />
         </ListItem>
     );
 
-    const polularRoutineList = range(0, 5).map((idx: number) =>
+    const polularRoutineList = range(0, 10).map((idx: number) =>
         <RoutinePack
-            contributor={contributor}
-            title={title + idx}
-            desc={desc}
-            lastUpdated={lastUpdated}
-            titleStep1={titleStep1}
-            descStep1={descStep1}
+            id={0}
+            contributor={defaultContributor}
+            contributorId={defaultContributorId}
+            badge={badgeList[idx % badgeList.length]}
+            title={defaultTitle + idx}
+            desc={defaultDesc}
+            titleStep1={defaultTitleStep1}
+            descStep1={defaultDescStep1}
+            like={defaultLike}
             key={idx}
         />
     );
-
-    const handleSearchBox = (
-        event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-    ) => {
-        const input = event.target.value;
-        setSearchBoxValue(input);
-    }
-
-    // Menu
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const handleMenuClick = (
-        event: React.MouseEvent<HTMLButtonElement>
-    ) => {
-        setAnchorEl(event.currentTarget);
-    }
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    }
-    const handleMenuContentClick = (
-        event: React.MouseEvent<HTMLElement>,
-        idx: number
-    ) => {
-        setSearchBoxValue(menuContentList[idx]);
-        handleMenuClose();
-    }
-    // end; Menu
 
 
     return (
@@ -91,25 +75,20 @@ function Top() {
             <Grid container direction="column" spacing={3}>
                 <Grid item>
                     <Paper>
-                        <Container>
+                        <CardContent>
                             <h1>Expand Your Routine</h1>
                             <h3>aaaaaaaaaaaaaaaaaaaaaaaaaaaaa</h3>
-                        </Container>
+                        </CardContent>
                     </Paper>
                 </Grid>
-
 
                 <Grid item>
                     <CardContent>
                         <h1>Find Routines</h1>
                         <SearchBox
-                            anchorEl={anchorEl}
-                            searchBoxValue={searchBoxValue}
-                            onChange={handleSearchBox}
-                            menuContents={menuContentList}
-                            handleMenuClick={handleMenuClick}
-                            handleMenuClose={handleMenuClose}
-                            handleMenuContentClick={handleMenuContentClick}
+                            defaultValue=""
+                            defaultTarget=""
+                            menuContentList={menuContentList}
                         />
                     </CardContent>
                 </Grid>
@@ -147,8 +126,8 @@ function Top() {
                     animationDuration={400}
                     disableButtonsControls={true}
                     disableDotsControls={true}
-                    paddingLeft={50}
-                    paddingRight={innerWidth - 450}
+                    paddingLeft={(innerWidth > xxxWidth ? 50 : 10)}
+                    paddingRight={Math.max(innerWidth - xxxWidth, 15)}
                 />
             </div>
         </div>

@@ -1,100 +1,184 @@
 import React from 'react';
 import {
     Grid,
+    Button,
     CardContent,
-    Avatar,
     Box,
     Container,
     Typography,
-    IconButton,
-    Card,
     Paper,
+    Backdrop,
     Stack,
-    Chip,
+    AccordionSummary,
 } from "@mui/material";
+import { styled } from '@mui/material/styles';
 import SearchBox from './SearchBox';
 import RoutinePack from './RoutinePack';
-import Facebookicon from "@mui/icons-material/Facebook";
-import Twitter from "@mui/icons-material/Twitter";
-import Instagram from "@mui/icons-material/Instagram";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
-import { MenuChildProps, RoutinePackContents } from "../utils/Types";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
+import { useNavigate } from "react-router-dom";
+import { useFilePicker } from "use-file-picker";
+import {
+    RoutinePackContents,
+    Badge,
+} from "../utils/Types";
+import { defaultId } from "../utils/defaultValues";
+import FollowButton from "./FollowButton";
+import { deleteApi } from "../api_handlers/handle";
+import FollowList from "./FollowList";
+import { decodeJwt } from "../utils/utils";
+import UserAvatar from "./UserAvatar";
+import SNSLink from "./SNSLink";
+import EditAvatar from "./EditAvatar";
+import CircularProgressWithText from "./CircularProgressWithText";
+
+const Accordion = styled((props: AccordionProps) => (
+    <MuiAccordion disableGutters elevation={0} square {...props} />
+))(({ theme }) => ({
+    '&:not(:last-child)': {
+        borderBottom: 3,
+    },
+    '&:before': {
+        display: 'none',
+    },
+}));
+
+const menuContentList = [
+    "All",
+    "Fabs",
+    "Posted",
+    "Liked",
+];
 
 
 type Props = {
     usernameComp: React.ReactElement;
+    badge: Badge;
     statusMessageComp: React.ReactElement;
     followingNum: number;
     followersNum: number;
+    Facebook: string;
+    Twitter: string;
+    Instagram: string;
     hashtagList: Array<string>;
     hashtagChipList: Array<React.ReactElement>;
     chipInputComp?: React.ReactElement;
     postedList: Array<RoutinePackContents>;
-    faboriteList: Array<RoutinePackContents>;
+    favoriteList: Array<RoutinePackContents>;
     draftList?: Array<RoutinePackContents>;
-    menuChildProps: MenuChildProps;
 }
 
 
 function MyPageBase(props: Props) {
-    const avatarSize = 80;
+    const navigate = useNavigate();
+    const AVATAR_SIZE = 70;
 
-    // Menu
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const handleMenuClick = (
-        event: React.MouseEvent<HTMLButtonElement>
-    ) => {
-        setAnchorEl(event.currentTarget);
+    const [targetUserId, setTargetUserId] = React.useState(defaultId);
+
+    // force avatar change without reloading, when page got changed
+    React.useEffect(() => {
+        const token = localStorage.getItem("token")
+        const userIdFromToken = (token === null) ? null : decodeJwt(token).id;
+
+        const href = window.location.href;
+        const splitHref = href.split('/');
+        const splitHrefLength = splitHref.length;
+        const userIdFromUrl = Number(splitHref[splitHrefLength - 1]);
+
+        if (isNaN(userIdFromUrl)) {
+            setTargetUserId(userIdFromToken);
+        } else {
+            setTargetUserId(userIdFromUrl);
+        }
+    }, [props.usernameComp])
+
+    const handleClickEdit = (strPostOrDraft: string, id: number) => {
+        navigate("edit/" + strPostOrDraft + "/" + id);
     }
-    const handleMenuClose = () => {
-        setAnchorEl(null);
+
+    const [openCircularProgress, setOpenCircularProgress] = React.useState(false);
+
+    const handleClickDelete = async (strPostOrDraft: string, id: number) => {
+        setOpenCircularProgress(true);
+        const res = await deleteApi(strPostOrDraft, id);
+        setOpenCircularProgress(false);
+
+        if (!res.status) {
+            // force logout & redirect to login
+            localStorage.removeItem("token");
+            navigate("/login");
+        }
+        window.location.reload();
     }
-    const handleMenuContentClick = (
-        event: React.MouseEvent<HTMLElement>,
-        idx: number
-    ) => {
-        props.menuChildProps.setSearchBoxValue(props.hashtagList[idx]);
-        handleMenuClose();
-    }
-    // end; Menu
+
+    const [myFollowCnt, setMyFollowCnt] = React.useState(0);
 
     const postedListComp = props.postedList.map((posted, idx: number) =>
         <Grid item key={idx}>
             <RoutinePack
+                id={posted.id}
                 contributor={posted.contributor}
-                title={posted.title + idx}
+                contributorId={posted.contributorId}
+                badge={posted.badge}
+                title={posted.title}
                 desc={posted.desc}
-                lastUpdated={posted.lastUpdated}
                 titleStep1={posted.titleStep1}
                 descStep1={posted.descStep1}
-                editable={props.chipInputComp ? true : false}
+                like={posted.like}
+                editable={Boolean(props.chipInputComp)}
+                handleClickEdit={
+                    () => handleClickEdit("post", posted.id)
+                }
+                handleClickDelete={
+                    () => handleClickDelete("post", posted.id)
+                }
             />
         </Grid>
     );
 
-    const faboriteListComp = props.faboriteList.map((faborite, idx: number) =>
+    const favoriteListComp = props.favoriteList.map((favorite, idx: number) =>
         <Grid item key={idx}>
             <RoutinePack
-                contributor={faborite.contributor}
-                title={faborite.title + idx}
-                desc={faborite.desc}
-                lastUpdated={faborite.lastUpdated}
-                titleStep1={faborite.titleStep1}
-                descStep1={faborite.descStep1}
+                id={favorite.id}
+                contributor={favorite.contributor}
+                contributorId={favorite.contributorId}
+                badge={favorite.badge}
+                title={favorite.title}
+                desc={favorite.desc}
+                titleStep1={favorite.titleStep1}
+                descStep1={favorite.descStep1}
+                like={favorite.like}
             />
         </Grid>
     );
 
+    const [followListTitle, setFollowListTitle] = React.useState("FollowList");
+    const [openFollowList, setOpenFollwList] = React.useState(false);
+    const handleCloseFollowList = () => {
+        setOpenFollwList(false);
+    }
+    const handleClickFollow = (followingOrFollowers: string) => {
+        if (followingOrFollowers === "following") {
+            setOpenFollwList(true);
+            setFollowListTitle("Following");
+        } else if (followingOrFollowers === "followers") {
+            setOpenFollwList(true);
+            setFollowListTitle("Followers");
+        } else {
+            throw new Error("unknown followingOrFollowers " + followingOrFollowers);
+        }
+    }
 
-    const handleFacebook = () => {
-        console.log("Facebook");
-    }
-    const handleTwitter = () => {
-        console.log("Twitter");
-    }
-    const handleInstagram = () => {
-        console.log("Instaragram");
-    }
+    // edit Avatar
+    const [openFileSelector, { filesContent, loading, clear }] = useFilePicker({
+        readAs: 'DataURL',
+        accept: "image/*",
+        multiple: false,
+        limitFilesConfig: { max: 1 },
+        maxFileSize: 50,
+    });
 
     const header = (
         <Paper sx={{ my: 1 }}>
@@ -103,46 +187,26 @@ function MyPageBase(props: Props) {
                     <Grid container direction="column" spacing={2}>
 
                         <Grid item>
-                            <Grid container direction="row" spacing={3}>
-                                <Grid item>
-                                    <Avatar
-                                        alt="Smiley"
-                                        src="static/demo/face.png"
-                                        sx={{
-                                            width: avatarSize,
-                                            height: avatarSize,
-                                            my: 1.2,
-                                        }}
-                                    />
-                                </Grid>
-
-                                <Grid item>
-                                    <Box
-                                        component="div"
-                                        sx={{
-                                            whiteSpace: 'nowrap',
-                                            my: 6,
-                                        }}
-                                    >
-                                    </Box>
-                                    {props.usernameComp}
-                                </Grid>
-                            </Grid>
+                            <Stack direction="row" spacing={3} alignItems="flex-end">
+                                <UserAvatar
+                                    userId={targetUserId}
+                                    badge={props.badge}
+                                    size={AVATAR_SIZE}
+                                    openFileSelector={(
+                                        props.chipInputComp ?
+                                            openFileSelector
+                                            : undefined
+                                    )}
+                                />
+                                <div>{props.usernameComp}</div>
+                            </Stack>
                         </Grid>
 
-                        <Grid item sx={{ mx: 2, my: -3 }}>
-                            <Stack direction="row" spacing={1}>
+                        <Grid item sx={{ mt: 1 }}>
+                            <Stack direction="row" spacing={1} alignItems="center">
                                 <ChatBubbleOutlineIcon />
                                 {props.statusMessageComp}
                             </Stack>
-                            <Box
-                                component="div"
-                                sx={{
-                                    whiteSpace: 'nowrap',
-                                    my: 4,
-                                }}
-                            >
-                            </Box>
                         </Grid>
 
                         <Grid item>
@@ -165,27 +229,63 @@ function MyPageBase(props: Props) {
                         </Grid>
 
                         <Grid item>
-                            <Grid container direction="row" spacing={2}>
-                                <Grid item sx={{ my: 2 }}>
-                                    <Chip clickable variant="outlined" label="follow" />
+                            <Grid container alignItems="center" direction="row" spacing={3}>
+                                <Grid item>
+                                    <FollowButton
+                                        targetUserId={targetUserId}
+                                        disabled={Boolean(props.draftList)}
+                                        myFollowCnt={myFollowCnt}
+                                        setMyFollowCnt={setMyFollowCnt}
+                                    />
                                 </Grid>
                                 <Grid item>
-                                    <h4>Following {props.followingNum} / Followers {props.followersNum}</h4>
+                                    <FollowList
+                                        open={openFollowList}
+                                        userId={targetUserId}
+                                        title={followListTitle}
+                                        onClose={handleCloseFollowList}
+                                    />
+
+                                    Following
+                                    <Button
+                                        variant="text"
+                                        size="small"
+                                        disabled={props.followingNum === 0 ? true : false}
+                                        onClick={() => handleClickFollow("following")}
+                                    >
+                                        {props.followingNum}
+                                    </Button>
+
+                                    Followers
+                                        <Button
+                                        variant="text"
+                                        size="small"
+                                        disabled={(props.followersNum + myFollowCnt) === 0 ? true : false}
+                                        onClick={() => handleClickFollow("followers")}
+                                    >
+                                        {props.followersNum + myFollowCnt}
+                                    </Button>
                                 </Grid>
                             </Grid>
                         </Grid>
 
                         <Grid item>
                             <Stack direction="row" spacing={2}>
-                                <IconButton onClick={handleFacebook}>
-                                    <Facebookicon />
-                                </IconButton>
-                                <IconButton onClick={handleTwitter}>
-                                    <Twitter />
-                                </IconButton>
-                                <IconButton onClick={handleInstagram}>
-                                    <Instagram />
-                                </IconButton>
+                                <SNSLink
+                                    medium="Facebook"
+                                    editable={Boolean(props.chipInputComp)}
+                                    link={props.Facebook}
+                                />
+                                <SNSLink
+                                    medium="Twitter"
+                                    editable={Boolean(props.chipInputComp)}
+                                    link={props.Twitter}
+                                />
+                                <SNSLink
+                                    medium="Instagram"
+                                    editable={Boolean(props.chipInputComp)}
+                                    link={props.Instagram}
+                                />
                             </Stack>
                         </Grid>
 
@@ -195,56 +295,106 @@ function MyPageBase(props: Props) {
         </Paper>
     );
 
-
     return (
         <div>
+            <CircularProgressWithText
+                open={openCircularProgress}
+                whatURwating4="Deleting"
+            />
+
             {header}
+
+            <Backdrop
+                sx={{
+                    color: '#fff',
+                    zIndex: (theme) => theme.zIndex.drawer + 1
+                }}
+                open={Boolean(filesContent.length === 1)}
+            >
+                <EditAvatar
+                    userId={targetUserId}
+                    filesContent={filesContent}
+                    clear={clear}
+                />
+            </Backdrop>
 
             <Grid container direction="column">
                 <Grid item>
                     <CardContent>
                         <SearchBox
-                            anchorEl={anchorEl}
-                            searchBoxValue={props.menuChildProps.searchBoxValue}
-                            onChange={props.menuChildProps.handleSearchBox}
-                            menuContents={props.hashtagList}
-                            handleMenuClick={handleMenuClick}
-                            handleMenuClose={handleMenuClose}
-                            handleMenuContentClick={handleMenuContentClick}
+                            defaultValue=""
+                            defaultTarget=""
+                            menuContentList={menuContentList}
                         />
                     </CardContent>
                 </Grid>
 
                 <CardContent>
-                    <h2>Posted</h2>
-                    <Grid container direction="row" spacing={1}>
-                        {postedListComp}
-                    </Grid>
+                    <Accordion>
+                        <Paper variant="outlined" sx={{ mb: 2 }}>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                <Typography variant="h5">Posted</Typography>
+                            </AccordionSummary>
+                        </Paper>
+
+                        {props.postedList.length == 0
+                            ? <Typography variant="body1">no posts yet</Typography>
+                            : <Grid container direction="row" spacing={1}>
+                                {postedListComp}
+                            </Grid>
+                        }
+                    </Accordion>
                 </CardContent>
 
                 <CardContent>
-                    <h2>Faborites</h2>
-                    <Grid container direction="row" spacing={1}>
-                        {faboriteListComp}
-                    </Grid>
+                    <Accordion>
+                        <Paper variant="outlined" sx={{ mb: 2 }}>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                <Stack direction="row" alignItems="flex-start">
+                                    <Typography variant="h5">
+                                        Favorites
+                                </Typography>
+
+                                    <BookmarkIcon />
+                                </Stack>
+                            </AccordionSummary>
+                        </Paper>
+
+                        <CardContent sx={{ mt: -2 }}>
+                            {props.favoriteList.length == 0
+                                ? <Typography variant="body1">no favorites yet</Typography>
+                                : <Grid container direction="row" spacing={1}>
+                                    {favoriteListComp}
+                                </Grid>
+                            }
+                        </CardContent>
+                    </Accordion>
                 </CardContent>
 
                 {
-                    (props.draftList)
-                        ?
-                        <CardContent>
-                            <h2>Drafts</h2>
+                    (props.draftList && props.draftList.length !== 0)
+                        ? <CardContent>
+                            <Typography variant="h5">Drafts</Typography>
                             <Grid container direction="row" spacing={1}>
                                 {props.draftList.map((draft, idx: number) =>
                                     <Grid item key={idx}>
                                         <RoutinePack
+                                            id={draft.id}
                                             contributor={draft.contributor}
-                                            title={draft.title + idx}
+                                            contributorId={draft.contributorId}
+                                            badge={draft.badge}
+                                            title={draft.title}
                                             desc={draft.desc}
-                                            lastUpdated={draft.lastUpdated}
                                             titleStep1={draft.titleStep1}
                                             descStep1={draft.descStep1}
-                                            editable={props.chipInputComp ? true : false}
+                                            like={draft.like}
+                                            editable={Boolean(props.chipInputComp)}
+                                            handleClickEdit={
+                                                () => handleClickEdit("draft", draft.id)
+                                            }
+                                            handleClickDelete={
+                                                () => handleClickDelete("draft", draft.id)
+                                            }
                                         />
                                     </Grid>
                                 )}

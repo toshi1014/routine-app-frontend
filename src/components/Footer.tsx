@@ -1,10 +1,9 @@
 import React from 'react';
-import {
-    Link,
-} from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
     Stack,
     Box,
+    Typography,
     Grid,
     IconButton,
     Divider,
@@ -16,7 +15,7 @@ import Instagram from "@mui/icons-material/Instagram";
 
 // TEMP:
 const logoFilename = "logo192.png";
-const logoSize = "40";
+const LOGO_SIZE = "40";
 const copyright = "(c) 2021 Foo. All rights reserved";
 
 
@@ -32,7 +31,7 @@ const footerLinkList: Array<LinkName> = [
     },
     {
         name: "RoutineContents",
-        link: "routine_contents"
+        link: "routine_contents/0"
     },
     {
         name: "SearchResults",
@@ -52,11 +51,15 @@ const footerLinkList: Array<LinkName> = [
     },
     {
         name: "MyPage",
-        link: "mypage"
+        link: "mypage/0"
     },
     {
         name: "MyPageLogin",
         link: "mypage_login"
+    },
+    {
+        name: "Admin",
+        link: "admin"
     },
     {
         name: "Debug",
@@ -88,16 +91,7 @@ function Footer() {
     }
 
     return (
-        <div>
-            <Box
-                component="div"
-                sx={{
-                    whiteSpace: 'nowrap',
-                    my: 10,
-                }}
-            >
-            </Box>
-
+        <Box sx={{ mt: 5 }}>
             <Divider
                 sx={{
                     m: 3
@@ -113,22 +107,22 @@ function Footer() {
                 direction="column"
                 justifyContent="center"
                 alignItems="center"
-                spacing="20px"
+                spacing={3}
             >
                 <Grid item>
-                    <Stack direction="row" spacing={3}>
+                    <Stack direction="row" spacing={3} alignItems="center">
                         <img
-                            src={logoFilename}
-                            width={logoSize}
-                            height={logoSize}
+                            src={process.env.PUBLIC_URL + "/" + logoFilename}
+                            width={LOGO_SIZE}
+                            height={LOGO_SIZE}
                             alt="logo"
                         />
-                        <h2>Foo</h2>
+                        <Typography variant="h5">Foo</Typography>
                     </Stack>
                 </Grid>
 
                 <Grid item>
-                    <Stack direction="row" spacing={4}>
+                    <Stack spacing={3}>
                         {footerLinks}
                     </Stack>
                 </Grid>
@@ -138,24 +132,26 @@ function Footer() {
                         <IconButton onClick={handleFacebook}>
                             <Facebookicon />
                         </IconButton>
+
                         <IconButton onClick={handleTwitter}>
                             <Twitter />
                         </IconButton>
+
                         <IconButton onClick={handleInstagram}>
                             <Instagram />
                         </IconButton>
                     </Stack>
                 </Grid>
 
-                <Box
-                    sx={{
-                        textAlign: "center",
-                    }}
-                >
-                    <h5 style={{ color: "gray" }}>{copyright}</h5>
-                </Box>
+                <Grid item sx={{ mb: 3 }}>
+                    <Box sx={{ textAlign: "center" }}>
+                        <Typography variant="body2" style={{ color: "gray" }}>
+                            {copyright}
+                        </Typography>
+                    </Box>
+                </Grid>
             </Grid>
-        </div >
+        </Box>
     );
 }
 

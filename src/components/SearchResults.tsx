@@ -2,107 +2,154 @@ import React from 'react';
 import {
     Grid,
     CardContent,
+    Stack,
+    Pagination,
+    Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import SearchBox from './SearchBox';
 import RoutinePack from './RoutinePack';
-import { range } from "../utils/utils";
+import { RoutinePackContents } from "../utils/Types";
+import { searchApi } from "../api_handlers/handle";
+import {
+    defaultId,
+    defaultTitle,
+    defaultContributor,
+    defaultContributorId,
+    defaultBadge,
+    defaultDesc,
+    defaultTitleStep1,
+    defaultDescStep1,
+    defaultLike,
+} from "../utils/defaultValues";
 
 
-// TEMP:
-const hashtagList = [
-    "fishing",
-    "hobby",
-    "cooking",
-    "DIY",
-    "English",
-    "workout",
+const menuContentList = [
+    "All",
+    "Trend",
+    "Popular",
+    "Hashtag",
 ];
-const menuContentList = hashtagList;
-const contributor = "John Smith";
-const title = "Happy Coding";
-const desc = "Best Way to Create App, set aside off of the heat to let rest for 10 minutes, and then serve.";
-const lastUpdated = "2021, Dec 31";
-const titleStep1 = "Buy Computer";
-const descStep1 = "Choose best computer for you, set aside off of the heat to let rest for 10 minutes, and then serve.";
-
 
 function SearchResults() {
-    const [searchBoxValue, setSearchBoxValue] = React.useState("");
+    const navigate = useNavigate();
 
-    const handleSearchBox = (
-        event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-    ) => {
-        const input = event.target.value;
-        setSearchBoxValue(input);
-    }
+    const href = window.location.href;
+    const splitHref = href.split('/');
+    const splitHrefLength = splitHref.length;
 
-    // Menu
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const handleMenuClick = (
-        event: React.MouseEvent<HTMLButtonElement>
-    ) => {
-        setAnchorEl(event.currentTarget);
-    }
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    }
-    const handleMenuContentClick = (
-        event: React.MouseEvent<HTMLElement>,
-        idx: number
-    ) => {
-        setSearchBoxValue(menuContentList[idx]);
-        handleMenuClose();
-    }
-    // end; Menu
+    const page = Number(splitHref[splitHrefLength - 1]);
+    const boolInitial = ((page === 0 || isNaN(page)) ? true : false);
+    const keyword = (boolInitial ? "" : splitHref[splitHrefLength - 3]);
+    const target = (boolInitial ? "" : splitHref[splitHrefLength - 2]);
 
-    const resultList = range(0, 5).map((idx: number) =>
+    const [pageLength, setPageLength] = React.useState(1);
+
+    const [resultList, setResultList] = React.useState<Array<RoutinePackContents>>([
+        {
+            id: defaultId,
+            contributor: defaultContributor,
+            contributorId: defaultContributorId,
+            badge: defaultBadge,
+            title: defaultTitle,
+            desc: defaultDesc,
+            titleStep1: defaultTitleStep1,
+            descStep1: defaultDescStep1,
+            like: defaultLike,
+        }
+    ]);
+
+    const resultListComp = resultList.map((result: RoutinePackContents, idx: number) =>
         <Grid item key={idx}>
             <RoutinePack
-                contributor={contributor}
-                title={title + idx}
-                desc={desc}
-                lastUpdated={lastUpdated}
-                titleStep1={titleStep1}
-                descStep1={descStep1}
+                id={result.id}
+                contributor={result.contributor}
+                contributorId={result.contributorId}
+                badge={result.badge}
+                title={result.title}
+                desc={result.desc}
+                titleStep1={result.titleStep1}
+                descStep1={result.descStep1}
+                like={result.like}
             />
         </Grid>
     );
 
+    const handleChangePagination = (event: React.ChangeEvent<unknown>, val: number) => {
+        navigate(`/search_results/${keyword}/${target}/${val}`);
+        window.location.reload();
+    }
+
+    React.useEffect(() => {
+        const init = async () => {
+            const res = await searchApi(keyword, target, page);
+            if (res.status) {
+                setResultList(res.contents.resultList);
+                setPageLength(res.contents.pageLength);
+            } else {
+                console.log("Err at RoutineContents");
+            }
+            console.log(res);
+        }
+
+        if (!boolInitial) {
+            console.log("init");
+            init();
+        } else {
+            setResultList([]);
+            console.log("init not called");
+        }
+
+    }, [])
+
+
     return (
-        <div>
-            <Grid container direction="column">
-                <Grid item>
-                    <CardContent>
-                        <h1>SearchResults</h1>
-                        <Grid container direction="row" spacing={2}>
-                            <Grid item>
-                                <SearchBox
-                                    anchorEl={anchorEl}
-                                    searchBoxValue={searchBoxValue}
-                                    onChange={handleSearchBox}
-                                    menuContents={menuContentList}
-                                    handleMenuClick={handleMenuClick}
-                                    handleMenuClose={handleMenuClose}
-                                    handleMenuContentClick={handleMenuContentClick}
-                                />
-                            </Grid>
-
-                            <Grid item>
-                                <h4 style={{ color: "gray" }}>
-                                    {resultList.length} results
-                                </h4>
-                            </Grid>
-                        </Grid>
-                    </CardContent>
-                </Grid>
-
+        <Grid container direction="column">
+            <Grid item>
                 <CardContent>
-                    <Grid container direction="row" spacing={1}>
-                        {resultList}
+                    <Typography variant="h4" sx={{ mt: 3, mb: 2 }}>SearchResults</Typography>
+                    <Grid container direction="row" spacing={2}>
+                        <Grid item>
+                            <SearchBox
+                                defaultValue={keyword}
+                                defaultTarget={target}
+                                menuContentList={menuContentList}
+                            />
+                        </Grid>
+
+                        <Grid item>
+                            <Typography variant="body1" style={{ color: "gray" }}>
+                                {resultList.length} results
+                            </Typography>
+                        </Grid>
                     </Grid>
                 </CardContent>
             </Grid>
-        </div >
+
+            <Grid item>
+                <CardContent>
+                    <Grid container direction="row" spacing={1}>
+                        {resultListComp}
+                    </Grid>
+                </CardContent>
+            </Grid>
+
+            <Grid item sx={{ mt: 5 }}>
+                <Stack
+                    direction="row"
+                    spacing={2}
+                    alignItems="flex-end"
+                    justifyContent="center"
+                >
+                    <Pagination
+                        count={pageLength}
+                        page={boolInitial ? 1 : page}
+                        shape="rounded"
+                        onChange={handleChangePagination}
+                    />
+                </Stack>
+            </Grid>
+        </Grid>
     );
 }
 
